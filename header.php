@@ -32,7 +32,7 @@
 
     <!-- Container do Sistema -->
     <div class="container-fluid bg-dark d-flex align-items-center position-fixed" style="top: 0; left: 0; height: 50px; z-index: 1030;">
-        <h4 style="color: white; margin-left: 195px;">Gestão Samuka Bikes</h4>
+        <h4 style="color: white; margin-left: 170px;">Gestão Samuka Bikes</h4>
     </div>
 
 
@@ -59,7 +59,7 @@
     ?>
 
     <!-- Barra de Navegação do Sistema -->
-    <nav class="navbar bg-dark navbar-dark flex-column vh-100 position-fixed p-2" style="width: 200px; margin-top: 50px;">
+    <nav class="navbar bg-dark navbar-dark flex-column vh-100 position-fixed p-2" style="width: 170px; margin-top: 50px;">
 
         <div class="container-fluid">
             <?php
@@ -145,6 +145,6 @@
     </nav>
 
     <!-- Container PRINCIPAL do Sistema-->
-    <div class="container" style="margin-left: 200px; padding-top: 60px; ">
+    <div class="container" style="margin-left: 170px; padding-top:52px;">
         <div class="row">
             <div class="col-12"></div>
