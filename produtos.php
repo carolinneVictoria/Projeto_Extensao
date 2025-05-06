@@ -1,8 +1,8 @@
 <?php include "header.php"; ?>
 
 <!-- Navbar horizontal dentro do conteúdo principal -->
-<nav class="navbar navbar-expand-sm navbar-dark bg-dark rounded mb-4" style="margin-right: 15px;">
-  <div class="container-fluid">
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark " >
+  <div class="container w-100">
     
     <div class="collapse navbar-collapse" id="mynavbar">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
@@ -71,3 +71,5 @@
         echo "</table>";
 
 ?>
+
+<?php include "footer.php"; ?>
