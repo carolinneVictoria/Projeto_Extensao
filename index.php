@@ -1,4 +1,4 @@
-<?php include("header.php"); ?>
+<?php include("app/header.php"); ?>
 
 <h4 style="color: black;">Seja Bem-Vindo!</h4>
 
@@ -32,4 +32,4 @@
 
 </div>
 
-<?php include("footer.php"); ?>
+<?php include("app/footer.php"); ?>
