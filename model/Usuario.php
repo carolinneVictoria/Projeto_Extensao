@@ -57,5 +57,20 @@ class Usuario {
         $stmt->bind_param("sssssi", $fotoUsuario, $nomeUsuario, $telefoneUsuario, $emailUsuario, $senhaCriptografada, $idUsuario);
         return $stmt->execute();
     }
+
+    public function excluirUsuario($idUsuario){
+        $query = "DELETE Usuario WHERE idUsuario=?";
+        $stmt = $this->conn->prepare($query);
+        if ($stmt === false) {
+             echo "Erro na preparação da consulta.";
+        return false;
+    }
+    $stmt->bind_param("i", $idUsuario);
+    if ($stmt->execute()) {
+        return true;
+    } else {
+        return false;
+    }
+        }
 }
 ?>
