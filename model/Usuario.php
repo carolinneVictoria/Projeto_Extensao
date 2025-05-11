@@ -2,30 +2,60 @@
 class Usuario {
     private $conn;
 
-    // Construtor para a conexão com o banco de dados
     public function __construct($dbConnection) {
         $this->conn = $dbConnection;
     }
 
-    // Método para verificar o login
     public function verificarLogin($emailUsuario, $senhaUsuario) {
-        $emailUsuario = mysqli_real_escape_string($this->conn, $emailUsuario);
-        $senhaUsuario = mysqli_real_escape_string($this->conn, $senhaUsuario);
-        $query = "SELECT * FROM Usuario WHERE emailUsuario = '{$emailUsuario}' AND senhaUsuario = MD5('{$senhaUsuario}')";
-        
-        // Executa a query e retorna o resultado
-        $resultado = mysqli_query($this->conn, $query);
-        return $resultado;
+        $query = "SELECT * FROM Usuario WHERE emailUsuario = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("s", $emailUsuario);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $usuario = $result->fetch_assoc();
+
+        if ($usuario && password_verify($senhaUsuario, $usuario['senhaUsuario'])) {
+            return $usuario;
+        }
+
+        return false;
     }
 
-    // Método para cadastrar um novo usuário
     public function cadastrarUsuario($fotoUsuario, $nomeUsuario, $telefoneUsuario, $emailUsuario, $senhaUsuario) {
-        $query = "INSERT INTO Usuario (fotoUsuario, nomeUsuario, telefoneUsuario, emailUsuario, senhaUsuario, tipoUsuario, statusUsuario)
-                  VALUES ('$fotoUsuario', '$nomeUsuario', '$telefoneUsuario', '$emailUsuario', '$senhaUsuario', 'admin', 'ativo')";
+        $senhaCriptografada = password_hash($senhaUsuario, PASSWORD_DEFAULT);
 
-        // Executa a consulta de inserção no banco de dados
-        $result = mysqli_query($this->conn, $query);
-        return $result;
+        $query = "INSERT INTO Usuario (fotoUsuario, nomeUsuario, telefoneUsuario, emailUsuario, senhaUsuario, tipoUsuario, statusUsuario)
+                    VALUES (?, ?, ?, ?, ?, 'admin', 'ativo')";
+
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("sssss", $fotoUsuario, $nomeUsuario, $telefoneUsuario, $emailUsuario, $senhaCriptografada);
+        return $stmt->execute();
+    }
+
+    public function listarUsuarios() {
+        $query = "SELECT * FROM Usuario";
+        $res = mysqli_query($this->conn, $query);
+        return $res;
+    }
+
+    public function buscarUsuarioPorId($idUsuario) {
+    $stmt = $this->conn->prepare("SELECT * FROM Usuario WHERE idUsuario = ?");
+    $stmt->bind_param("i", $idUsuario);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($row = $result->fetch_assoc()) {
+        return $row; // Retorna os dados do usuário
+    } else {
+        return null; // Caso o usuário não seja encontrado
+    }
+}
+    public function atualizarUsuario($idUsuario, $fotoUsuario, $nomeUsuario, $telefoneUsuario, $emailUsuario, $senhaUsuario) {
+        $senhaCriptografada = password_hash($senhaUsuario, PASSWORD_DEFAULT);
+        $query = "UPDATE Usuario SET fotoUsuario=?, nomeUsuario=?, telefoneUsuario=?, emailUsuario=?, senhaUsuario=? WHERE idUsuario=?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("sssssi", $fotoUsuario, $nomeUsuario, $telefoneUsuario, $emailUsuario, $senhaCriptografada, $idUsuario);
+        return $stmt->execute();
     }
 }
 ?>
