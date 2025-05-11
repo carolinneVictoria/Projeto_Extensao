@@ -59,11 +59,12 @@ $dadosUsuario = $headerController->carregarHeader();
                     <li class="nav-item"><a class="nav-link" href="../Projeto_Extensao/view/produtos.php">Produtos</a></li>
                     <li class="nav-item"><a class="nav-link" href="../estoque.php">Estoque</a></li>
                     <li class="nav-item"><a class="nav-link" href="../vendas.php">Vendas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../Projeto_Extensao/view/usuarios.php">Usuarios</a></li>
                 </ul>
             </div>
         </div>
     </nav>
  <!-- Container PRINCIPAL do Sistema-->
- <div class="container" style="margin-left: 200px; padding-top: 60px; ">
+ <div class="container" style="margin-left: 170px; padding-top: 50px;">
         <div class="row">
             <div class="col-12"></div>
