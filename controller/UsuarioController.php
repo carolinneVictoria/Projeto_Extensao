@@ -1,64 +1,121 @@
 <?php
-session_start(); // Inicia a sessão
-include_once '../models/Usuario.php';
-include_once '../conexaoBD.php'; // Arquivo de conexão com o banco de dados
+include_once '../model/Usuario.php';
+include_once '../config/conexaoBD.php';
 
-// Instanciando o Model de Usuario
+session_start();
+
+// Instância do Model
 $usuarioModel = new Usuario($conn);
 
-// Verifica se o formulário foi enviado via POST
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $fotoUsuario = $_FILES['fotoUsuario'];
-    $nomeUsuario = $_POST['nomeUsuario'];
-    $telefoneUsuario = $_POST['telefoneUsuario'];
-    $emailUsuario = $_POST['emailUsuario'];
-    $senhaUsuario = md5($_POST['senhaUsuario']); // Senha criptografada
-    $confirmarSenhaUsuario = md5($_POST['confirmarSenhaUsuario']); // Senha confirmada
+function cadastrarUsuario($usuarioModel) {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $fotoUsuario = $_FILES['fotoUsuario'];
+        $nomeUsuario = $_POST['nomeUsuario'];
+        $telefoneUsuario = $_POST['telefoneUsuario'];
+        $emailUsuario = $_POST['emailUsuario'];
+        $senhaUsuario = $_POST['senhaUsuario'];
+        $confirmarSenhaUsuario = $_POST['confirmarSenhaUsuario'];
 
-    // Validação de campos
-    $erroPreenchimento = false;
-    if (empty($nomeUsuario)) {
-        $_SESSION['erroNome'] = "O campo NOME é obrigatório!";
-        $erroPreenchimento = true;
-    }
+        $erroPreenchimento = false;
 
-    if (empty($telefoneUsuario)) {
-        $_SESSION['erroTelefone'] = "O campo TELEFONE é obrigatório!";
-        $erroPreenchimento = true;
-    }
+        if (empty($nomeUsuario)) {
+            $_SESSION['erroNome'] = "O campo NOME é obrigatório!";
+            $erroPreenchimento = true;
+        }
+        if (empty($telefoneUsuario)) {
+            $_SESSION['erroTelefone'] = "O campo TELEFONE é obrigatório!";
+            $erroPreenchimento = true;
+        }
+        if (empty($emailUsuario)) {
+            $_SESSION['erroEmail'] = "O campo EMAIL é obrigatório!";
+            $erroPreenchimento = true;
+        }
+        if (empty($senhaUsuario)) {
+            $_SESSION['erroSenha'] = "O campo SENHA é obrigatório!";
+            $erroPreenchimento = true;
+        }
+        if ($senhaUsuario !== $confirmarSenhaUsuario) {
+            $_SESSION['erroSenhaConfirmar'] = "As senhas não coincidem!";
+            $erroPreenchimento = true;
+        }
 
-    if (empty($emailUsuario)) {
-        $_SESSION['erroEmail'] = "O campo EMAIL é obrigatório!";
-        $erroPreenchimento = true;
-    }
+        $fotoUsuarioPath = "img/" . basename($fotoUsuario['name']);
+        if ($fotoUsuario['size'] > 5000000) {
+            $_SESSION['erroFoto'] = "A foto não pode ser maior do que 5MB!";
+            $erroPreenchimento = true;
+        }
 
-    if (empty($senhaUsuario)) {
-        $_SESSION['erroSenha'] = "O campo SENHA é obrigatório!";
-        $erroPreenchimento = true;
-    }
+        if (!$erroPreenchimento) {
+            move_uploaded_file($fotoUsuario['tmp_name'], $fotoUsuarioPath);
 
-    if ($senhaUsuario != $confirmarSenhaUsuario) {
-        $_SESSION['erroSenhaConfirmar'] = "As senhas não coincidem!";
-        $erroPreenchimento = true;
-    }
+            $usuarioModel->cadastrarUsuario(
+                $fotoUsuarioPath,
+                $nomeUsuario,
+                $telefoneUsuario,
+                $emailUsuario,
+                $senhaUsuario
+            );
 
-    // Validação de Foto
-    $fotoUsuarioPath = "img/" . basename($fotoUsuario['name']);
-    if ($fotoUsuario['size'] > 5000000) {
-        $_SESSION['erroFoto'] = "A foto não pode ser maior do que 5MB!";
-        $erroPreenchimento = true;
-    }
-
-    // Se não houver erro de preenchimento, insere o usuário no banco
-    if (!$erroPreenchimento) {
-        move_uploaded_file($fotoUsuario['tmp_name'], $fotoUsuarioPath);
-        $usuarioModel->cadastrarUsuario($fotoUsuarioPath, $nomeUsuario, $telefoneUsuario, $emailUsuario, $senhaUsuario);
-        header('Location: ../views/usuarioCadastrado.php'); // Redireciona para página de sucesso
-        exit();
-    } else {
-        // Caso haja erro, redireciona com os erros de preenchimento
-        header('Location: ../views/formUsuario.php');
-        exit();
+            header('Location: ../views/usuarioCadastrado.php');
+            exit();
+        } else {
+            header('Location: ../views/formUsuario.php');
+            exit();
+        }
     }
 }
+
+function listarUsuarios($usuarioModel) {
+    $usuarios = $usuarioModel->listarUsuarios();
+    include('../view/usuarios.php');
+}
+
+
+
+function atualizarUsuario($usuarioModel) {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['idUsuario'])) {
+        $idUsuario = $_POST['idUsuario'];
+        $fotoUsuario = $_FILES['fotoUsuario'];
+        $nomeUsuario = $_POST['nomeUsuario'];
+        $telefoneUsuario = $_POST['telefoneUsuario'];
+        $emailUsuario = $_POST['emailUsuario'];
+        $senhaUsuario = $_POST['senhaUsuario'];
+
+        $fotoUsuarioPath = "img/" . basename($fotoUsuario['name']);
+        move_uploaded_file($fotoUsuario['tmp_name'], $fotoUsuarioPath);
+
+        if ($usuarioModel->atualizarUsuario(
+            $idUsuario,
+            $fotoUsuarioPath,
+            $nomeUsuario,
+            $telefoneUsuario,
+            $emailUsuario,
+            $senhaUsuario
+        )) {
+            header("Location: ../view/usuarios.php");
+            exit();
+        } else {
+            echo "Erro ao atualizar o usuário!";
+        }
+    }
+}
+
+// Roteamento
+if (isset($_GET['acao'])) {
+    $acao = $_GET['acao'];
+
+    if ($acao == 'cadastrar') {
+        cadastrarUsuario($usuarioModel);
+    } elseif ($acao == 'listar') {
+        listarUsuarios($usuarioModel);
+    } elseif ($acao == 'exibirFormAtualizar' && isset($_GET['idUsuario'])) {
+        $idUsuario = $_GET['idUsuario'];
+        exibirFormAtualizarUsuario( $idUsuario);
+    } elseif ($acao == 'atualizar') {
+        atualizarUsuario($usuarioModel);
+    }
+} else {
+    listarUsuarios($usuarioModel);
+}
+
 ?>
