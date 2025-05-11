@@ -100,6 +100,18 @@ function atualizarUsuario($usuarioModel) {
     }
 }
 
+function excluir($usuarioModel, $idUsuario){
+    $idUsuario = $_GET['id'];
+    $resultado = $usuarioModel->excluirUsuario($idUsuario);
+    if ($resultado) {
+    echo "Usuário excluído com sucesso!";
+    header('Location: usuarios.php');
+    exit();
+    } else {
+    echo "Erro ao excluir o usuário.";
+    }
+}
+
 // Roteamento
 if (isset($_GET['acao'])) {
     $acao = $_GET['acao'];
@@ -108,11 +120,10 @@ if (isset($_GET['acao'])) {
         cadastrarUsuario($usuarioModel);
     } elseif ($acao == 'listar') {
         listarUsuarios($usuarioModel);
-    } elseif ($acao == 'exibirFormAtualizar' && isset($_GET['idUsuario'])) {
-        $idUsuario = $_GET['idUsuario'];
-        exibirFormAtualizarUsuario( $idUsuario);
     } elseif ($acao == 'atualizar') {
         atualizarUsuario($usuarioModel);
+    } elseif($acao == 'excluir'){
+        excluirUsuario($idUsuario);
     }
 } else {
     listarUsuarios($usuarioModel);
