@@ -43,10 +43,12 @@ echo "
                 <th>QUANTIDADE</th>
                 <th>VALOR</th>
                 <th>CATEGORIA</th>
+                <th>AÇÕES</th>
             </tr>
         </thead>";
 
 while ($registro = mysqli_fetch_assoc($produtos)) {
+  $idProduto = $registro['idProduto'];
     echo "
         <tbody>
             <tr>
@@ -55,7 +57,11 @@ while ($registro = mysqli_fetch_assoc($produtos)) {
                 <td>{$registro['descricaoProduto']}</td>
                 <td>{$registro['quantidadeProduto']}</td>
                 <td>{$registro['valorProduto']}</td>
-                <td>{$registro['idCategoria']}</td>
+                <td>{$registro['descricao']}</td>
+                <td>
+                <a href='formAtualizarProdutos.php?id=$idProduto' class='btn btn-primary btn-sm'>Atualizar</a>
+                <a href='excluirProduto.php?id=$idProduto' class='btn btn-danger btn-sm' onclick='return confirm(\"Tem certeza que deseja excluir?\")'>Excluir</a>
+                </td>
             </tr>
         </tbody>
     ";
