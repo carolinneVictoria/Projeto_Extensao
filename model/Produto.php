@@ -7,6 +7,10 @@ class Produto {
         $this->conn = $dbConnection;
     }
 
+    public function getConnection() {
+        return $this->conn;
+    }
+
     // Método para listar todos os produtos
     public function listarProdutos() {
         $listarProdutos = "SELECT Produto.*, Categoria.descricao FROM Produto INNER JOIN Categoria ON Produto.idCategoria = Categoria.idCategoria ORDER BY idProduto";
@@ -15,9 +19,9 @@ class Produto {
     }
 
     // Método para cadastrar um novo produto
-    public function cadastrarProduto($nomeProduto, $descricaoProduto, $quantidadeProduto, $valorProduto, $categoriaProduto) {
+    public function cadastrarProduto($nomeProduto, $descricaoProduto, $quantidadeProduto, $valorProduto, $idCategoria) {
         $inserirProduto = "INSERT INTO Produto (nomeProduto, descricaoProduto, quantidadeProduto, valorProduto, idCategoria)
-                            VALUES ('$nomeProduto', '$descricaoProduto', '$quantidadeProduto', $valorProduto, '$categoriaProduto')";
+                            VALUES ('$nomeProduto', '$descricaoProduto', '$quantidadeProduto', $valorProduto, '$idCategoria')";
 
         $res = mysqli_query($this->conn, $inserirProduto);
         return $res;
@@ -39,13 +43,13 @@ class Produto {
 
 
     //Metódo para atualizar os detalhes de um produto./
-    public function atualizarProduto($idProduto, $nomeProduto, $descricaoProduto, $quantidadeProduto, $valorProduto, $categoriaProduto){
+    public function atualizarProduto($idProduto, $nomeProduto, $descricaoProduto, $quantidadeProduto, $valorProduto, $idCategoria){
         $atualizarProduto = "UPDATE Produto 
                                 SET nomeProduto       = '$nomeProduto',
                                     descricaoProduto  = '$descricaoProduto',
                                     quantidadeProduto = '$quantidadeProduto',
                                     valorProduto      = '$valorProduto',
-                                    categoriaProduto  = '$categoriaProduto'
+                                    idCategoria       = '$idCategoria'
 
                                 WHERE idProduto       = '$idProduto'
                                 ";
