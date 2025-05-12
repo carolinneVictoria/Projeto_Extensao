@@ -1,4 +1,12 @@
-<?php include("../app/header.php") ?>
+<?php include("../app/header.php") ;
+
+include_once('../config/conexaoBD.php');
+include_once ('../model/Categoria.php');
+
+    $modelCategoria = new Categoria($conn);
+    $categorias = $modelCategoria->listarCategorias();
+
+?>
 
 <div class="container-fluid text-left">
 
@@ -7,7 +15,7 @@
     
     <div class="col-sm-12">
 
-    <form action="../controller/ProdutoController.php" class="was-validated" method="POST" enctype="multipart/form-data">
+    <form action="../controller/ProdutoController.php?acao=cadastrar" class="was-validated" method="POST" enctype="multipart/form-data">
 
         <!-- Campos do formulário -->
         <div class="row">
@@ -35,7 +43,13 @@
 
         <div class="col-md-6 mb-3">
             <div class="form-floating">
-                <textarea class="form-control" id="categoriaProduto" name="categoriaProduto" required></textarea>
+                <select class="form-control" id="categoriaProduto" name="categoriaProduto" required>
+                    <?php foreach ($categorias as $categoria): ?>
+                        <option value="<?= $categoria['idCategoria']; ?>">
+                            <?= $categoria['descricao']; ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
                 <label for="categoriaProduto">Categoria do Produto:</label>
             </div>
         </div>
