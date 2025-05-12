@@ -2,10 +2,12 @@
 include_once '../model/Usuario.php';
 include_once '../config/conexaoBD.php';
 
+
 session_start();
 
 // Instância do Model
 $usuarioModel = new Usuario($conn);
+
 
 function cadastrarUsuario($usuarioModel) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -67,6 +69,7 @@ function cadastrarUsuario($usuarioModel) {
 
 function listarUsuarios($usuarioModel) {
     $usuarios = $usuarioModel->listarUsuarios();
+
     include('../view/usuarios.php');
 }
 
@@ -100,7 +103,7 @@ function atualizarUsuario($usuarioModel) {
     }
 }
 
-function excluir($usuarioModel, $idUsuario){
+function excluirUsuario($usuarioModel, $idUsuario){
     $idUsuario = $_GET['id'];
     $resultado = $usuarioModel->excluirUsuario($idUsuario);
     if ($resultado) {
@@ -123,7 +126,7 @@ if (isset($_GET['acao'])) {
     } elseif ($acao == 'atualizar') {
         atualizarUsuario($usuarioModel);
     } elseif($acao == 'excluir'){
-        excluirUsuario($idUsuario);
+        excluirUsuario($usuarioModel, $idUsuario);
     }
 } else {
     listarUsuarios($usuarioModel);
