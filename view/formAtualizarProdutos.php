@@ -2,13 +2,16 @@
 
 include ('../config/conexaoBD.php');
 include ('../model/Produto.php');
+include ('../model/Categoria.php');
 
 $produtoModel = new Produto($conn);
+$categoriaModel = new Categoria($conn);
 
 if (isset($_GET['id'])) {
     $idProduto = $_GET['id'];
     
     $produto = $produtoModel->buscarProdutoPorId($idProduto);
+    $categoria = $categoriaModel->listarCategorias();
 } else {
     echo "ID do produto não informado!";
     exit(); 
@@ -19,7 +22,6 @@ if (isset($_GET['id'])) {
 <div class="container-fluid text-left">
 
     <h3>Atualização de Produto:</h3>
-
     
     <div class="col-sm-12">
 
@@ -55,8 +57,15 @@ if (isset($_GET['id'])) {
 
         <div class="col-md-6 mb-3">
             <div class="form-floating">
-                <input type="text" class="form-control" id="categoriaProduto" name="categoriaProduto" value="<?= $produto['descricao']; ?>" required>
-                <label for="categoriaProduto">Categoria do Produto:</label>
+                <select class="form-control" id="categoriaProduto" name="categoriaProduto" required>
+                    <?php foreach ($categoria as $categorias): ?>
+                        <option value="<?= $categorias['idCategoria']; ?>" 
+                            <?= $categorias['idCategoria'] == $produto['idCategoria'] ? 'selected' : ''; ?>>
+                            <?= $categorias['descricao']; ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            <label for="categoriaProduto">Categoria do Produto:</label>
             </div>
         </div>
 
@@ -72,8 +81,6 @@ if (isset($_GET['id'])) {
         </div>
 
         </div>
-
-        
 
     </form>
     </div>
