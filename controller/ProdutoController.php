@@ -1,9 +1,11 @@
 <?php
 include_once "../model/Produto.php";
-include_once "../conexaoBD.php";
+include_once "../config/conexaoBD.php";
+include_once '../model/Categoria.php';
 
 // Instanciando o Model
 $produtoModel = new Produto($conn);
+$categoriaModel = new Categoria($conn);
 
 // Função para cadastrar o produto
 function cadastrarProduto($produtoModel) {
@@ -12,9 +14,9 @@ function cadastrarProduto($produtoModel) {
         $descricaoProduto = $_POST['descricaoProduto'];
         $quantidadeProduto = $_POST['quantidadeProduto'];
         $valorProduto = $_POST['valorProduto'];
-        $categoriaProduto = $_POST['categoriaProduto'];
+        $idCategoria = $_POST['idCategoria'];
 
-        if ($produtoModel->cadastrarProduto($nomeProduto, $descricaoProduto, $quantidadeProduto, $valorProduto, $categoriaProduto)) {
+        if ($produtoModel->cadastrarProduto($nomeProduto, $descricaoProduto, $quantidadeProduto, $valorProduto, $idCategoria)) {
             header("Location: ../view/produtos.php");
             exit();
         } else {
@@ -23,46 +25,27 @@ function cadastrarProduto($produtoModel) {
     }
 }
 // Função para listar os produtos
-function listarProdutos($produtoModel) {
+function listarProdutos($produtoModel, $categoriaModel) {
     $produtos = $produtoModel->listarProdutos();
+    $categorias = $categoriaModel->listarCategorias();
     include('../view/produtos.php');
-}
-
-// Função para exibir o formulário de atualização de produto
-function exibirFormAtualizarProduto($produtoModel) {
-    if (isset($_GET['id'])) {
-        $idProduto = $_GET['id'];
-
-        echo "ID do produto recebido: " . $idProduto . "<br>";
-
-
-        $produto = $produtoModel->buscarProdutoPorId($idProduto);
-        if ($produto) {
-            include '../view/formAtualizarProdutos.php';
-        } else {
-            echo "Produto não encontrado!";
-        } 
-    }
-        else {
-            echo"Id do produto nao especificado";
-        }
 }
 
 // Função para processar a atualização do produto
 function atualizarProduto($produtoModel) {
-    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['id'])) {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['idProduto'])) {
         $idProduto = $_POST['idProduto'];
         $nomeProduto = $_POST['nomeProduto'];
         $descricaoProduto = $_POST['descricaoProduto'];
         $quantidadeProduto = $_POST['quantidadeProduto'];
         $valorProduto = $_POST['valorProduto'];
-        $categoriaProduto = $_POST['categoriaProduto'];
+        $idCategoria = $_POST['categoriaProduto']; //uso o mesmo name que o do formulario
 
-        if ($produtoModel->atualizarProduto($idProduto, $nomeProduto, $descricaoProduto, $quantidadeProduto, $valorProduto, $categoriaProduto)) {
-            header("Location: produtos.php");
+        if ($produtoModel->atualizarProduto($idProduto, $nomeProduto, $descricaoProduto, $quantidadeProduto, $valorProduto, $idCategoria)) {
+            header("Location: ../view/produtos.php");
             exit();
         } else {
-            echo "Erro ao atualizar o produto!";
+            echo "Erro ao atualizar o produto!" . mysqli_error($produtoModel->getConnection());
         }
     }
 }
@@ -74,13 +57,12 @@ if (isset($_GET['acao'])) {
     if ($acao == 'cadastrar') {
         cadastrarProduto($produtoModel);
     } elseif ($acao == 'listar') {
-        listarProdutos($produtoModel);
+        listarProdutos($produtoModel, $categoriaModel);
     } elseif ($acao == 'atualizar') {
-        exibirFormAtualizarProduto($produtoModel);
         atualizarProduto($produtoModel); // Se o formulário for enviado, processa a atualização
     }
 } else {
     // Caso nenhuma ação seja especificada, exibe a listagem
-    listarProdutos($produtoModel);
+    listarProdutos($produtoModel, $categoriaModel);
 }
 ?>
