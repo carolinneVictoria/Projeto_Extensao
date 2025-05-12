@@ -1,4 +1,6 @@
-<?php include ("../app/header.php"); ?>
+<?php include ("../app/header.php"); 
+
+?>
 
 <!-- Navbar e Barra de Busca -->
 <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
