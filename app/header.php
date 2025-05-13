@@ -40,12 +40,12 @@ $dadosUsuario = $headerController->carregarHeader();
                         <a class='nav-link dropdown-toggle' href='#' role='button' data-bs-toggle='dropdown' style='color: ".($tipoUsuario == 'admin' ? 'white' : 'yellow').";'><strong>$nomeUsuario</strong></a>
                         <ul class='dropdown-menu'>
                             <li><a class='dropdown-item' href='visualizarPerfil.php?pagina=formLogin&idUsuario={$dadosUsuario['idUsuario']}'>Meu Perfil</a></li>
-                            <li><a class='dropdown-item' href='logout.php'>Logout</a></li>
+                            <li><a class='dropdown-item' href='/Projeto_Extensao/controller/logout.php'>Logout</a></li>
                         </ul>
                     </li>";
                 } else {
                     echo "<li class='nav-item'>
-                            <a class='nav-link' href='formLogin.php'>Login</a>
+                            <a class='nav-link' href='/Projeto_Extensao/view/formLogin.php'>Login</a>
                           </li>";
                 }
                 ?>
@@ -56,10 +56,10 @@ $dadosUsuario = $headerController->carregarHeader();
             <div class="collapse navbar-collapse" id="collapsibleNavbar">
                 <ul class="navbar-nav">
                     <li class="nav-item"><a class="nav-link" href="../index.php">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../Projeto_Extensao/view/produtos.php">Produtos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/view/produtos.php">Produtos</a></li>
                     <li class="nav-item"><a class="nav-link" href="../estoque.php">Estoque</a></li>
                     <li class="nav-item"><a class="nav-link" href="../vendas.php">Vendas</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../Projeto_Extensao/view/usuarios.php">Usuarios</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/view/usuarios.php">Usuarios</a></li>
                 </ul>
             </div>
         </div>
