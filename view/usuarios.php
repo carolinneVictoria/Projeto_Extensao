@@ -1,4 +1,6 @@
-<?php include ("../app/header.php"); ?>
+<?php include ("../app/header.php"); 
+
+?>
 
 <!-- Navbar e Barra de Busca -->
 <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
@@ -9,8 +11,9 @@
           <a class="nav-link" href="/Projeto_Extensao/view/formUsuario.php?acao=cadastrar">Cadastrar novo Usuário</a>
         </li>
       </ul>
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Buscar" aria-label="Buscar">
+      <form method="GET" action="../controller/UsuarioController.php" class="d-flex" role="search">
+        <input type="hidden" name="acao" value="buscar">
+        <input type="text" name="busca" class="form-control me-2" placeholder="Buscar por Nome" value="<?= $_GET['busca'] ?? '' ?>">
         <button class="btn btn-outline-light" type="submit">Buscar</button>
       </form>
     </div>
