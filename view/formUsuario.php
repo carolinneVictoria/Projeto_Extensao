@@ -1,16 +1,33 @@
-<?php include("../app/header.php"); ?>
+<?php include("../app/header.php"); 
+session_start();
+
+if (isset($_SESSION['erroSenhaConfirmar'])) {
+    echo "<p style='color:red'>" . $_SESSION['erroSenhaConfirmar'] . "</p>";
+    unset($_SESSION['erroSenhaConfirmar']);
+}
+
+if (isset($_SESSION['erroUpload'])) {
+    echo "<p style='color:red'>" . $_SESSION['erroUpload'] . "</p>";
+    unset($_SESSION['erroUpload']);
+}
+
+if (isset($_SESSION['erroCadastro'])) {
+    echo "<p style='color:red'>" . $_SESSION['erroCadastro'] . "</p>";
+    unset($_SESSION['erroCadastro']);
+}
+?>
 
 <div class="container-fluid">
     <h3>Cadastro de Usuário:</h3>
 
     <div class="col-sm-12">
 
-        <form action="../controller/UsuarioController.php" method="POST" enctype="multipart/form-data" class="was-validated">
+        <form action="../controller/UsuarioController.php?acao=cadastrar" method="POST" enctype="multipart/form-data" class="was-validated">
             <div class="row">
 
             <div class="col-md-6 mb-3">
                 <div class="form-floating">
-                    <input type="file" class="form-control" id="fotoUsuario" name="fotoUsuario" required>
+                    <input type="file" class="form-control" id="fotoUsuario" name="fotoUsuario">
                     <label for="fotoUsuario">Foto:</label>
                 </div>
             </div>
