@@ -50,17 +50,7 @@ $primeiroNome = $nomeUsuario ? explode(' ', $nomeUsuario)[0] : '';
     </script>
 </head>
 <body>
-<?php
-    error_reporting(0);
-    session_start();
-    $idUsuario    = $_SESSION["idUsuario"];
-    $tipoUsuario  = $_SESSION["tipoUsuario"];
-    $fotoUsuario  = $_SESSION["fotoUsuario"];
-    $nomeUsuario  = $_SESSION["nomeUsuario"];
-    $emailUsuario = $_SESSION["emailUsuario"];
-    $nomeCompleto = explode(' ', $nomeUsuario);
-    $primeiroNome = $nomeCompleto[0];
-?>
+
 
 <!-- Top Header -->
 <div class="container-fluid bg-dark d-flex align-items-center position-fixed" style="top: 0; left: 0px; height: 50px; z-index: 1030;">
@@ -70,13 +60,10 @@ $primeiroNome = $nomeUsuario ? explode(' ', $nomeUsuario)[0] : '';
 <!-- Sidebar Navbar Lateral -->
 <nav class="navbar bg-dark navbar-dark flex-column vh-100 position-fixed p-2" style="width: 170px; margin-top: 50px;">
     <div class="container-fluid">
-        <a href="index.php" class="navbar-brand mb-3">
-            <img src="img/logo.png" width="100">
-        </a>
 
         <?php if(isset($_SESSION['logado']) && $_SESSION['logado'] === true): ?>
             <div class="text-left mb-3">
-                <img src="<?= $fotoUsuario ?>" class="img-fluid rounded-circle" style="height: 60px;" title="Foto de perfil de <?= $primeiroNome ?>">
+                <img src="<?= $fotoUsuario ?: '/Projeto_Extensao/img/' ?>" class="img-fluid rounded-circle" style="height: 60px;" title="Foto de perfil de <?= $primeiroNome ?>">
                 <p class="text-white mt-2"><?= $nomeUsuario ?></p>
             </div>
 
@@ -86,11 +73,11 @@ $primeiroNome = $nomeUsuario ? explode(' ', $nomeUsuario)[0] : '';
                     <li class="nav-item"><a class="nav-link" href="../estoque.php">Estoque</a></li>
                     <li class="nav-item"><a class="nav-link" href="../vendas.php">Vendas</a></li>
                     <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/view/usuarios.php">Usuarios</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../controller/logout.php">Logout</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/controller/logout.php">Logout</a></li>
             </ul>
         <?php else: ?>
             <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link <?= ($pagina == 'formLogin') ? 'active' : '' ?>" href="../Projeto_Extensao/view/formLogin.php?pagina=formLogin">Login</a></li>
+                <li class="nav-item"><a class="nav-link <?= ($pagina == 'formLogin') ? 'active' : '' ?>" href="/Projeto_Extensao/view/formLogin.php?pagina=formLogin">Login</a></li>
             </ul>
         <?php endif; ?>
     </div>
