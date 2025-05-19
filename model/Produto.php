@@ -57,5 +57,16 @@ class Produto {
         $res = mysqli_query($this->conn, $atualizarProduto);
         return $res;
     }
+
+    public function excluirProduto($idProduto){
+        $query = "DELETE FROM Produto WHERE idProduto=?";
+        $stmt = $this->conn->prepare($query);
+        if ($stmt === false) {
+            echo "Erro na preparação da consulta.";
+        return false;
+    }
+    $stmt->bind_param("i", $idProduto);
+    return ($stmt->execute());
+    }
 }
 ?>
