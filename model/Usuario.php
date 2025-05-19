@@ -12,24 +12,30 @@ class Usuario {
         $stmt->bind_param("s", $emailUsuario);
         $stmt->execute();
         $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
         $usuario = $result->fetch_assoc();
-
-        if ($usuario && password_verify($senhaUsuario, $usuario['senhaUsuario'])) {
-            return $usuario;
+            if (password_verify($senhaUsuario, $usuario['senhaUsuario'])) {
+                return $usuario;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
         }
-
-        return false;
     }
 
     public function cadastrarUsuario($fotoUsuario, $nomeUsuario, $telefoneUsuario, $emailUsuario, $senhaUsuario) {
-        $senhaCriptografada = password_hash($senhaUsuario, PASSWORD_DEFAULT);
+        
 
         $query = "INSERT INTO Usuario (fotoUsuario, nomeUsuario, telefoneUsuario, emailUsuario, senhaUsuario, tipoUsuario, statusUsuario)
-                    VALUES (?, ?, ?, ?, ?, 'admin', 'ativo')";
+                    VALUES ('$fotoUsuario', '$nomeUsuario', '$telefoneUsuario', '$emailUsuario', '$senhaUsuario', 'admin', 'ativo')";
 
-        $stmt = $this->conn->prepare($query);
-        $stmt->bind_param("sssss", $fotoUsuario, $nomeUsuario, $telefoneUsuario, $emailUsuario, $senhaCriptografada);
-        return $stmt->execute();
+        $res = mysqli_query($this->conn, $query);
+        if (!$res) {
+        echo "Erro MySQL: " . mysqli_error($this->conn);
+        }
+        return $res;
     }
 
     public function listarUsuarios() {
@@ -51,26 +57,21 @@ class Usuario {
     }
 }
     public function atualizarUsuario($idUsuario, $fotoUsuario, $nomeUsuario, $telefoneUsuario, $emailUsuario, $senhaUsuario) {
-        $senhaCriptografada = password_hash($senhaUsuario, PASSWORD_DEFAULT);
         $query = "UPDATE Usuario SET fotoUsuario=?, nomeUsuario=?, telefoneUsuario=?, emailUsuario=?, senhaUsuario=? WHERE idUsuario=?";
         $stmt = $this->conn->prepare($query);
-        $stmt->bind_param("sssssi", $fotoUsuario, $nomeUsuario, $telefoneUsuario, $emailUsuario, $senhaCriptografada, $idUsuario);
+        $stmt->bind_param("sssssi", $fotoUsuario, $nomeUsuario, $telefoneUsuario, $emailUsuario, $senhaUsuario, $idUsuario);
         return $stmt->execute();
     }
 
     public function excluirUsuario($idUsuario){
-        $query = "DELETE Usuario WHERE idUsuario=?";
+        $query = "DELETE FROM Usuario WHERE idUsuario=?";
         $stmt = $this->conn->prepare($query);
         if ($stmt === false) {
-             echo "Erro na preparação da consulta.";
+            echo "Erro na preparação da consulta.";
         return false;
     }
     $stmt->bind_param("i", $idUsuario);
-    if ($stmt->execute()) {
-        return true;
-    } else {
-        return false;
+    return ($stmt->execute());
     }
-        }
 }
 ?>
