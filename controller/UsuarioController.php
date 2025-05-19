@@ -1,79 +1,110 @@
 <?php
-include_once '../model/Usuario.php';
+require_once '../model/Usuario.php';
 include_once '../config/conexaoBD.php';
 
-
-session_start();
 
 // Instância do Model
 $usuarioModel = new Usuario($conn);
 
-
 function cadastrarUsuario($usuarioModel) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        $fotoUsuario = $_FILES['fotoUsuario'];
+        session_start();
+
         $nomeUsuario = $_POST['nomeUsuario'];
         $telefoneUsuario = $_POST['telefoneUsuario'];
         $emailUsuario = $_POST['emailUsuario'];
         $senhaUsuario = $_POST['senhaUsuario'];
         $confirmarSenhaUsuario = $_POST['confirmarSenhaUsuario'];
 
-        $erroPreenchimento = false;
-
-        if (empty($nomeUsuario)) {
-            $_SESSION['erroNome'] = "O campo NOME é obrigatório!";
-            $erroPreenchimento = true;
-        }
-        if (empty($telefoneUsuario)) {
-            $_SESSION['erroTelefone'] = "O campo TELEFONE é obrigatório!";
-            $erroPreenchimento = true;
-        }
-        if (empty($emailUsuario)) {
-            $_SESSION['erroEmail'] = "O campo EMAIL é obrigatório!";
-            $erroPreenchimento = true;
-        }
-        if (empty($senhaUsuario)) {
-            $_SESSION['erroSenha'] = "O campo SENHA é obrigatório!";
-            $erroPreenchimento = true;
-        }
+        // Verificação de senha
         if ($senhaUsuario !== $confirmarSenhaUsuario) {
             $_SESSION['erroSenhaConfirmar'] = "As senhas não coincidem!";
-            $erroPreenchimento = true;
+            header('Location: ../view/formUsuario.php');
+            exit();
         }
 
-        $fotoUsuarioPath = "img/" . basename($fotoUsuario['name']);
-        if ($fotoUsuario['size'] > 5000000) {
-            $_SESSION['erroFoto'] = "A foto não pode ser maior do que 5MB!";
+        if(empty($_POST["senhaUsuario"])){
+            echo "<div class='alert alert-warning text-center'>O campo <strong>SENHA</strong> é obrigatório!</div>";
             $erroPreenchimento = true;
+        } else{
+            $senhaUsuario = md5(filtrar_entrada($_POST["senhaUsuario"]));
         }
 
-        if (!$erroPreenchimento) {
-            move_uploaded_file($fotoUsuario['tmp_name'], $fotoUsuarioPath);
+        //Validação do campo confirmarSenhaUsuario
+        if(empty($_POST["confirmarSenhaUsuario"])){
+            echo "<div class='alert alert-warning text-center'>O campo <strong>CONFIRMAR SENHA</strong> é obrigatório!</div>";
+            $erroPreenchimento = true;
+        } else{
+            $confirmarSenhaUsuario = md5(filtrar_entrada($_POST["confirmarSenhaUsuario"]));
+            if($senhaUsuario != $confirmarSenhaUsuario){
+                echo "<div class='alert alert-warning text-center'>As senhas informadas são <strong>DIFERENTES</strong>!</div>";
+                $erroPreenchimento = true;
+            }
+        }
 
-            $usuarioModel->cadastrarUsuario(
-                $fotoUsuarioPath,
+        // Verificação da foto
+        if ($_FILES["fotoUsuario"]["size"] > 0) {
+            $diretorio = "img/";
+            $nomeUnico = uniqid() . '_' . basename($_FILES["fotoUsuario"]["name"]);
+            $fotoUsuario = $diretorio . $nomeUnico; // Caminho relativo para salvar no banco
+            $tipoDaImagem = strtolower(pathinfo($fotoUsuario, PATHINFO_EXTENSION));
+
+            // Tamanho
+            if ($_FILES["fotoUsuario"]["size"] > 5000000) {
+                $_SESSION['erroUpload'] = "A foto não pode ser maior que 5MB!";
+                header('Location: ../view/formUsuario.php');
+                exit();
+            }
+
+            // Tipo
+            if (!in_array($tipoDaImagem, ["jpg", "jpeg", "png", "webp"])) {
+                $_SESSION['erroUpload'] = "A foto precisa estar nos formatos JPG, JPEG, PNG ou WEBP!";
+                header('Location: ../view/formUsuario.php');
+                exit();
+            }
+
+            // Caminho físico do arquivo (fora da view)
+            $caminhoCompleto = __DIR__ . "/../" . $fotoUsuario;
+
+            // Upload da imagem
+            if (!move_uploaded_file($_FILES["fotoUsuario"]["tmp_name"], $caminhoCompleto)) {
+                $_SESSION['erroUpload'] = "Erro ao tentar fazer o upload da foto!";
+                header('Location: ../view/formUsuario.php');
+                exit();
+            }
+}
+
+            // Cadastro no banco via model
+            $resultado = $usuarioModel->cadastrarUsuario(
+                $fotoUsuario,
                 $nomeUsuario,
                 $telefoneUsuario,
                 $emailUsuario,
                 $senhaUsuario
             );
 
-            header('Location: ../views/usuarioCadastrado.php');
-            exit();
+            if ($resultado) {
+                header('Location: ../view/usuarios.php');
+                exit();
+            } else {
+                $_SESSION['erroCadastro'] = "Erro ao cadastrar usuário!";
+                header('Location: ../view/formUsuario.php');
+                exit();
+            }
         } else {
-            header('Location: ../views/formUsuario.php');
+            $_SESSION['erroUpload'] = "Nenhuma foto foi enviada!";
+            header('Location: ../view/formUsuario.php');
             exit();
         }
     }
-}
+
+
 
 function listarUsuarios($usuarioModel) {
     $usuarios = $usuarioModel->listarUsuarios();
 
     include('../view/usuarios.php');
 }
-
-
 
 function atualizarUsuario($usuarioModel) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['idUsuario'])) {
@@ -103,7 +134,7 @@ function atualizarUsuario($usuarioModel) {
     }
 }
 
-function excluirUsuario($usuarioModel, $idUsuario){
+function excluirUsuario($usuarioModel){
     $idUsuario = $_GET['id'];
     $resultado = $usuarioModel->excluirUsuario($idUsuario);
     if ($resultado) {
@@ -126,10 +157,18 @@ if (isset($_GET['acao'])) {
     } elseif ($acao == 'atualizar') {
         atualizarUsuario($usuarioModel);
     } elseif($acao == 'excluir'){
-        excluirUsuario($usuarioModel, $idUsuario);
+        excluirUsuario($usuarioModel);
     }
 } else {
     listarUsuarios($usuarioModel);
 }
+
+function filtrar_entrada($dado){
+        $dado = trim($dado); //Remove espaços desnecessários
+        $dado = stripslashes($dado); //Remove as barras invertidas
+        $dado = htmlspecialchars($dado); //Converte caracteres especiais em entidades HTML
+
+        return($dado); //Retorna o dado já filtrado
+    }
 
 ?>
