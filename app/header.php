@@ -63,7 +63,7 @@ $primeiroNome = $nomeUsuario ? explode(' ', $nomeUsuario)[0] : '';
 
         <?php if(isset($_SESSION['logado']) && $_SESSION['logado'] === true): ?>
             <div class="text-left mb-3">
-                <img src="<?= $fotoUsuario ?: '/Projeto_Extensao/img/' ?>" class="img-fluid rounded-circle" style="height: 60px;" title="Foto de perfil de <?= $primeiroNome ?>">
+                <img src="<?= $fotoUsuario ?: '/Projeto_Extensao/img/..' ?>" class="img-fluid rounded-circle" style="height: 60px;" title="Foto de perfil de <?= $primeiroNome ?>">
                 <p class="text-white mt-2"><?= $nomeUsuario ?></p>
             </div>
 
