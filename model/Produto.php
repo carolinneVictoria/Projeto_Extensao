@@ -68,5 +68,18 @@ class Produto {
     $stmt->bind_param("i", $idProduto);
     return ($stmt->execute());
     }
+
+    public function buscarPorNome($termo) {
+    $buscarProduto = "SELECT Produto.*, Categoria.descricao 
+                      FROM Produto 
+                      INNER JOIN Categoria ON Produto.idCategoria = Categoria.idCategoria
+                      WHERE nomeProduto LIKE ?";
+    $stmt = $this->conn->prepare($buscarProduto);
+    $like = "%" . $termo . "%";
+    $stmt->bind_param("s", $like);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    return $res;
+}
 }
 ?>
