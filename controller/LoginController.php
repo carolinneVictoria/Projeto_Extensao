@@ -1,40 +1,54 @@
 <?php
 session_start(); // Inicia a sessão
+
 include_once '../model/Usuario.php';
 
-include_once '../conexaoBD.php'; // Arquivo de conexão com o banco
+include_once '../config/conexaoBD.php'; // Arquivo de conexão com o banco
+
+include_once '../controller/validarSessao.php';
 
 // Instanciando o Model de Usuario
 $usuarioModel = new Usuario($conn);
 
 // Verifica se o formulário foi submetido
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $emailUsuario = $_POST['emailUsuario'];
-    $senhaUsuario = $_POST['senhaUsuario'];
+        $emailUsuario = mysqli_real_escape_string($conn, $_POST['emailUsuario']);
+        $senhaUsuario = md5(mysqli_real_escape_string($conn, $_POST['senhaUsuario']));
 
-    // Verifica o login com o Model
-    $resultadoLogin = $usuarioModel->verificarLogin($emailUsuario, $senhaUsuario);
+        // Criar a QUERY responsável por realizar a verificação dos dados no BD
+        $buscarLogin = "SELECT * FROM Usuario WHERE emailUsuario = '{$emailUsuario}' AND senhaUsuario = ('{$senhaUsuario}')";
 
-    // Se encontrar o usuário, cria as variáveis de sessão e redireciona
-    if ($registro = mysqli_fetch_assoc($resultadoLogin)) {
-        $_SESSION['idUsuario']    = $registro['idUsuario'];
-        $_SESSION['tipoUsuario']  = $registro['tipoUsuario'];
-        $_SESSION['fotoUsuario']  = $registro['fotoUsuario'];
-        $_SESSION['emailUsuario'] = $registro['emailUsuario'];
-        $_SESSION['nomeUsuario']  = $registro['nomeUsuario'];
-        $_SESSION['logado']       = true;
-        $_SESSION['ultimoAcesso'] = time();
-        
-        header('Location: ../index.php'); // Redireciona para a página principal
-        exit();
-    } else {
-        // Se não encontrar o usuário, redireciona com um erro
-        header('Location: ../views/formLogin.php?erroLogin=dadosInvalidos');
-        exit();
+        // Cria uma variável booleana para verificar se a query foi executada com sucesso
+        $efetuarLogin = mysqli_query($conn, $buscarLogin);
+
+        // Verifica se encontrou algum registro
+        if ($registro = mysqli_fetch_assoc($efetuarLogin)) {
+            // Cria variáveis PHP para armazenar os registros encontrados no BD
+            $idUsuario    = $registro['idUsuario'];
+            $fotoUsuario  = $registro['fotoUsuario'];
+            $emailUsuario = $registro['emailUsuario'];
+            $nomeUsuario  = $registro['nomeUsuario'];
+
+            // Cria variáveis de Sessão para armazenar os valores
+            $_SESSION['idUsuario']    = $idUsuario;
+            $_SESSION['fotoUsuario']  = $fotoUsuario;
+            $_SESSION['emailUsuario'] = $emailUsuario;
+            $_SESSION['nomeUsuario']  = $nomeUsuario;
+            $_SESSION['logado']       = true;
+    
+            header('Location: ../view/dashboard.php'); // Redireciona para a Página Inicial
+            exit(); // Encerra o script para garantir que o redirecionamento ocorra
+        }
+        else {
+            // Se não encontrou registro ou se campos estão vazios, redireciona com erro
+            header('Location: ../view/formLogin.php?erroLogin=dadosInvalidos');
+            exit(); // Encerra o script para garantir que o redirecionamento ocorra
+        }
     }
-} else {
-    // Se o formulário não foi enviado, redireciona para o formulário de login
-    header('Location: ../views/formLogin.php');
-    exit();
-}
+    else {
+        // Se o formulário não foi submetido, redireciona para o formulário de login
+        header('Location: ../view/formLogin.php');
+        exit(); // Encerra o script para garantir que o redirecionamento ocorra
+    }
+
 ?>
