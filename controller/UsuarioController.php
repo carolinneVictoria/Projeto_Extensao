@@ -146,6 +146,17 @@ function excluirUsuario($usuarioModel){
     }
 }
 
+function buscarUsuarios($usuarioModel) {
+    if (isset($_GET['busca'])) {
+        $termo = $_GET['busca'];
+        $usuarios = $usuarioModel->buscarPorNome($termo);
+
+        include('../view/verBuscaUsuario.php'); // Mostra os resultados da busca
+    } else {
+        echo "Nenhum termo de busca informado.";
+    }
+}
+
 // Roteamento
 if (isset($_GET['acao'])) {
     $acao = $_GET['acao'];
@@ -158,6 +169,8 @@ if (isset($_GET['acao'])) {
         atualizarUsuario($usuarioModel);
     } elseif($acao == 'excluir'){
         excluirUsuario($usuarioModel);
+    } elseif ($acao == 'buscar') {
+        buscarUsuarios($usuarioModel);
     }
 } else {
     listarUsuarios($usuarioModel);
