@@ -73,5 +73,17 @@ class Usuario {
     $stmt->bind_param("i", $idUsuario);
     return ($stmt->execute());
     }
+
+    public function buscarPorNome($termo) {
+    $buscarUsuario = "SELECT *
+                      FROM Usuario 
+                      WHERE nomeUsuario LIKE ?";
+    $stmt = $this->conn->prepare($buscarUsuario);
+    $like = "%" . $termo . "%";
+    $stmt->bind_param("s", $like);
+    $stmt->execute();
+    $res = $stmt->get_result();
+    return $res;
+}
 }
 ?>
