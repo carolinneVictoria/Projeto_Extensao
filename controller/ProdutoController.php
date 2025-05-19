@@ -49,6 +49,18 @@ function atualizarProduto($produtoModel) {
         }
     }
 }
+
+function excluirProduto($produtoModel){
+    $idProduto = $_GET['id'];
+    $resultado = $produtoModel->excluirProduto($idProduto);
+    if ($resultado) {
+    echo "Produto excluído com sucesso!";
+    header('Location: ../view/produtos.php');
+    exit();
+    } else {
+    echo "Erro ao excluir o Produto.";
+    }
+}
 // Determina qual ação chamar com base na URL ou método
 if (isset($_GET['acao'])) {
     $acao = $_GET['acao'];
@@ -60,6 +72,8 @@ if (isset($_GET['acao'])) {
         listarProdutos($produtoModel, $categoriaModel);
     } elseif ($acao == 'atualizar') {
         atualizarProduto($produtoModel); // Se o formulário for enviado, processa a atualização
+    } elseif ($acao == 'excluir') {
+        excluirProduto($produtoModel);
     }
 } else {
     // Caso nenhuma ação seja especificada, exibe a listagem
