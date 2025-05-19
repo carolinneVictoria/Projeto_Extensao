@@ -6,7 +6,7 @@
     <div class="collapse navbar-collapse" id="mynavbar">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link" href="formUsuario.php">Cadastrar novo Usuário</a>
+          <a class="nav-link" href="/Projeto_Extensao/view/formUsuario.php?acao=cadastrar">Cadastrar novo Usuário</a>
         </li>
       </ul>
       <form class="d-flex" role="search">
@@ -19,14 +19,12 @@
 
 <?php
 
-// Inclui a conexão ao banco e o modelo de Usuario
-include_once "../config/conexaoBD.php"; 
-include_once "../model/Usuario.php";
-
+include ('../config/conexaoBD.php');
+require_once ('../model/Usuario.php');
 // Instanciando o Model
 $usuarioModel = new Usuario($conn);
 
-// Listando os usuarios
+// Listando os produtos
 $usuarios = $usuarioModel->listarUsuarios();
 
 echo "<h4>Usuarios cadastrados:</h4>";
@@ -66,6 +64,13 @@ while ($registro = mysqli_fetch_assoc($usuarios)) {
     ";
 }
 echo "</table>";
+
+if (isset($_GET['id'])) {
+    $idUsuario = $_GET['id'];
+    
+    $usuario = $usuarioModel->excluirUsuario($idUsuario);
+} 
+
 ?>
 
 <?php include "../app/footer.php"; ?>
