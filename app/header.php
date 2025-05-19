@@ -1,7 +1,18 @@
 <?php
+error_reporting(0);
+session_start();
+
 include_once 'C:/xampp/htdocs/Projeto_Extensao/controller/HeaderController.php';
 $headerController = new HeaderController();
 $dadosUsuario = $headerController->carregarHeader();
+
+$idUsuario    = $_SESSION["idUsuario"] ?? null;
+$tipoUsuario  = $_SESSION["tipoUsuario"] ?? null;
+$fotoUsuario  = $_SESSION["fotoUsuario"] ?? null;
+$nomeUsuario  = $_SESSION["nomeUsuario"] ?? null;
+$emailUsuario = $_SESSION["emailUsuario"] ?? null;
+
+$primeiroNome = $nomeUsuario ? explode(' ', $nomeUsuario)[0] : '';
 ?>
 
 <!DOCTYPE html>
@@ -10,61 +21,83 @@ $dadosUsuario = $headerController->carregarHeader();
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Samuka Bikes</title>
+    <title>
+        <?php
+        if(isset($_GET['pagina'])){
+            $pagina = $_GET['pagina'];
+            switch($pagina){
+                case "index"        : echo "Página Inicial"; break;
+                case "formUsuario"  : echo "Cadastrar Usuário"; break;
+                case "formProduto"  : echo "Cadastrar Produto"; break;
+                case "formLogin"    : echo "Login"; break;
+                default             : echo "Gestão Samuka Bikes"; break;
+            }
+        } else {
+            $pagina = "index";
+            echo "Gestão Samuka Bikes";
+        }
+        ?>
+    </title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $("#telefoneUsuario").mask("(00) 00000-0000");
+        });
+    </script>
 </head>
 <body>
-    <div class="container-fluid bg-dark d-flex align-items-center position-fixed" style="top: 0; left: 0; height: 50px; z-index: 1030;">
-        <h4 style="color: white; margin-left: 170px;">Gestão Samuka Bikes</h4>
-    </div>
+<?php
+    error_reporting(0);
+    session_start();
+    $idUsuario    = $_SESSION["idUsuario"];
+    $tipoUsuario  = $_SESSION["tipoUsuario"];
+    $fotoUsuario  = $_SESSION["fotoUsuario"];
+    $nomeUsuario  = $_SESSION["nomeUsuario"];
+    $emailUsuario = $_SESSION["emailUsuario"];
+    $nomeCompleto = explode(' ', $nomeUsuario);
+    $primeiroNome = $nomeCompleto[0];
+?>
 
-    <!-- Barra de Navegação do Sistema -->
-    <nav class="navbar bg-dark navbar-dark flex-column vh-100 position-fixed p-2" style="width: 170px; margin-top: 50px;">
-        <div class="container-fluid">
-            <ul class="navbar-nav">
-                <?php
-                if ($dadosUsuario) {
-                    $nomeUsuario = $dadosUsuario['nomeUsuario'];
-                    $fotoUsuario = $dadosUsuario['fotoUsuario'];
-                    $tipoUsuario = $dadosUsuario['tipoUsuario'];
-                    $primeiroNome = explode(' ', $nomeUsuario)[0];
+<!-- Top Header -->
+<div class="container-fluid bg-dark d-flex align-items-center position-fixed" style="top: 0; left: 0px; height: 50px; z-index: 1030;">
+    <h4 style="color: white; margin-left: 170px;">Gestão Samuka Bikes</h4>
+</div>
 
-                    echo "
-                    <li>
-                        <div class='container'>
-                            <img src='$fotoUsuario' class='img-fluid max-height rounded' title='Esta é a sua foto de perfil, $primeiroNome!' />
-                        </div>
-                    </li>
-                    <li class='nav-item dropdown'>
-                        <a class='nav-link dropdown-toggle' href='#' role='button' data-bs-toggle='dropdown' style='color: ".($tipoUsuario == 'admin' ? 'white' : 'yellow').";'><strong>$nomeUsuario</strong></a>
-                        <ul class='dropdown-menu'>
-                            <li><a class='dropdown-item' href='visualizarPerfil.php?pagina=formLogin&idUsuario={$dadosUsuario['idUsuario']}'>Meu Perfil</a></li>
-                            <li><a class='dropdown-item' href='/Projeto_Extensao/controller/logout.php'>Logout</a></li>
-                        </ul>
-                    </li>";
-                } else {
-                    echo "<li class='nav-item'>
-                            <a class='nav-link' href='/Projeto_Extensao/view/formLogin.php'>Login</a>
-                          </li>";
-                }
-                ?>
-            </ul>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="collapsibleNavbar">
-                <ul class="navbar-nav">
-                    <li class="nav-item"><a class="nav-link" href="../index.php">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/view/produtos.php">Produtos</a></li>
+<!-- Sidebar Navbar Lateral -->
+<nav class="navbar bg-dark navbar-dark flex-column vh-100 position-fixed p-2" style="width: 170px; margin-top: 50px;">
+    <div class="container-fluid">
+        <a href="index.php" class="navbar-brand mb-3">
+            <img src="img/logo.png" width="100">
+        </a>
+
+        <?php if(isset($_SESSION['logado']) && $_SESSION['logado'] === true): ?>
+            <div class="text-left mb-3">
+                <img src="<?= $fotoUsuario ?>" class="img-fluid rounded-circle" style="height: 60px;" title="Foto de perfil de <?= $primeiroNome ?>">
+                <p class="text-white mt-2"><?= $nomeUsuario ?></p>
+            </div>
+
+            <ul class="navbar-nav w-100">
+                <li class="nav-item"><a class="nav-link" href="../index.php">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../view/produtos.php">Produtos</a></li>
                     <li class="nav-item"><a class="nav-link" href="../estoque.php">Estoque</a></li>
                     <li class="nav-item"><a class="nav-link" href="../vendas.php">Vendas</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/view/usuarios.php">Usuarios</a></li>
-                </ul>
-            </div>
-        </div>
-    </nav>
- <!-- Container PRINCIPAL do Sistema-->
- <div class="container" style="margin-left: 170px; padding-top: 50px;">
+                    <li class="nav-item"><a class="nav-link" href="../view/usuarios.php">Usuarios</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../controller/logout.php">Logout</a></li>
+            </ul>
+        <?php else: ?>
+            <ul class="navbar-nav">
+                <li class="nav-item"><a class="nav-link <?= ($pagina == 'formLogin') ? 'active' : '' ?>" href="../Projeto_Extensao/view/formLogin.php?pagina=formLogin">Login</a></li>
+            </ul>
+        <?php endif; ?>
+    </div>
+</nav>
+
+<!-- Conteúdo Principal -->
+<!-- Container PRINCIPAL do Sistema-->
+<div class="container" style="margin-left: 170px; padding-top: 50px;">
         <div class="row">
             <div class="col-12"></div>
