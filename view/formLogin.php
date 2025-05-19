@@ -37,7 +37,7 @@
     <br>
     <p>
         Ainda não possui cadastro?
-        <a href="formUsuario.php" title="Cadastrar-se">Clique aqui!</a>
+        <a href="/Projeto_Extensao/view/formUsuario.php" title="Cadastrar-se">Clique aqui!</a>
     </p>
 </div>
 
