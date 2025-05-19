@@ -65,7 +65,7 @@ while ($registro = mysqli_fetch_assoc($produtos)) {
                 <td>{$registro['descricao']}</td>
                 <td>
                 <a href='formAtualizarProdutos.php?id=$idProduto' class='btn btn-primary btn-sm'>Atualizar</a>
-                <a href='excluirProduto.php?id=$idProduto' class='btn btn-danger btn-sm' onclick='return confirm(\"Tem certeza que deseja excluir?\")'>Excluir</a>
+                <a href='../controller/ProdutoController.php?acao=excluir&id=$idProduto' class='btn btn-danger btn-sm' onclick='return confirm(\"Tem certeza que deseja excluir?\")'>Excluir</a>
                 </td>
             </tr>
         </tbody>
