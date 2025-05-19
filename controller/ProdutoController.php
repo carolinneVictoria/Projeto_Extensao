@@ -61,6 +61,19 @@ function excluirProduto($produtoModel){
     echo "Erro ao excluir o Produto.";
     }
 }
+
+function buscarProdutos($produtoModel, $categoriaModel) {
+    if (isset($_GET['busca'])) {
+        $termo = $_GET['busca'];
+        $produtos = $produtoModel->buscarPorNome($termo);
+        $categorias = $categoriaModel->listarCategorias();
+
+        include('../view/verBuscaProduto.php'); // Mostra os resultados da busca
+    } else {
+        echo "Nenhum termo de busca informado.";
+    }
+}
+
 // Determina qual ação chamar com base na URL ou método
 if (isset($_GET['acao'])) {
     $acao = $_GET['acao'];
@@ -74,6 +87,8 @@ if (isset($_GET['acao'])) {
         atualizarProduto($produtoModel); // Se o formulário for enviado, processa a atualização
     } elseif ($acao == 'excluir') {
         excluirProduto($produtoModel);
+    } elseif($acao == 'buscar') {
+        buscarProdutos($produtoModel, $categoriaModel);
     }
 } else {
     // Caso nenhuma ação seja especificada, exibe a listagem
