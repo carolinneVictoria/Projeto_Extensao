@@ -1,7 +1,7 @@
 <?php
 class Header {
     public function verificarSessao() {
-        session_start();
+        
         if (isset($_SESSION['logado']) && $_SESSION['logado'] === true) {
             return [
                 'idUsuario'    => $_SESSION["idUsuario"],
