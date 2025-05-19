@@ -81,11 +81,11 @@ $primeiroNome = $nomeUsuario ? explode(' ', $nomeUsuario)[0] : '';
             </div>
 
             <ul class="navbar-nav w-100">
-                <li class="nav-item"><a class="nav-link" href="../index.php">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../view/produtos.php">Produtos</a></li>
+                <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/index.php">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/view/produtos.php">Produtos</a></li>
                     <li class="nav-item"><a class="nav-link" href="../estoque.php">Estoque</a></li>
                     <li class="nav-item"><a class="nav-link" href="../vendas.php">Vendas</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../view/usuarios.php">Usuarios</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/view/usuarios.php">Usuarios</a></li>
                     <li class="nav-item"><a class="nav-link" href="../controller/logout.php">Logout</a></li>
             </ul>
         <?php else: ?>
