@@ -53,31 +53,31 @@ $primeiroNome = $nomeUsuario ? explode(' ', $nomeUsuario)[0] : '';
 
 
 <!-- Top Header -->
-<div class="container-fluid bg-dark d-flex align-items-center position-fixed" style="top: 0; left: 0px; height: 50px; z-index: 1030;">
-    <h4 style="color: white; margin-left: 170px;">Gestão Samuka Bikes</h4>
+<div class="container-fluid bg-dark d-flex align-items-center position-fixed" style="top: 0; left: 170px; height: 50px; z-index: 1030;">
+    <h4 style="color: white; margin-left: 0px;">Gestão Samuka Bikes</h4>
 </div>
 
 <!-- Sidebar Navbar Lateral -->
-<nav class="navbar bg-dark navbar-dark flex-column vh-100 position-fixed p-2" style="width: 170px; margin-top: 50px;">
+<nav class="navbar bg-dark navbar-dark flex-column vh-100 position-fixed p-2" style="width: 170px;">
     <div class="container-fluid">
 
         <?php if(isset($_SESSION['logado']) && $_SESSION['logado'] === true): ?>
             <div class="text-left mb-3">
-                <img src="<?= $fotoUsuario ?: '/Projeto_Extensao/img/..' ?>" class="img-fluid rounded-circle" style="height: 60px;" title="Foto de perfil de <?= $primeiroNome ?>">
+                <img src="/Projeto_Extensao/img/logo.jpg" class="img-fluid rounded-circle" style="height: 120px; margin-top: 10px;" title="logo da loja">
                 <p class="text-white mt-2"><?= $nomeUsuario ?></p>
             </div>
 
             <ul class="navbar-nav w-100">
                 <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/index.php">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/view/produtos.php">Produtos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/view/ProdutoView/produtos.php">Produtos</a></li>
                     <li class="nav-item"><a class="nav-link" href="../estoque.php">Estoque</a></li>
                     <li class="nav-item"><a class="nav-link" href="../vendas.php">Vendas</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/view/usuarios.php">Usuarios</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/view/UsuarioView/usuarios.php">Usuarios</a></li>
                     <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/controller/logout.php">Logout</a></li>
             </ul>
         <?php else: ?>
             <ul class="navbar-nav">
-                <li class="nav-item"><a class="nav-link <?= ($pagina == 'formLogin') ? 'active' : '' ?>" href="/Projeto_Extensao/view/formLogin.php?pagina=formLogin">Login</a></li>
+                <li class="nav-item"><a class="nav-link <?= ($pagina == 'formLogin') ? 'active' : '' ?>" href="/Projeto_Extensao/view/UsuarioView/formLogin.php?pagina=formLogin">Login</a></li>
             </ul>
         <?php endif; ?>
     </div>
