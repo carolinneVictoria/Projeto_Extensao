@@ -6,7 +6,7 @@ $categoriaModel = new Categoria($conn);
 
 function listarCategorias($categoriaModel) {
     $categorias = $categoriaModel->listarCategoria();
-    include('../view/categorias.php');
+    include('../view/CategoriaView/categorias.php');
 }
 
 function cadastrarCategoria($categoriaModel) {
@@ -14,7 +14,7 @@ function cadastrarCategoria($categoriaModel) {
         $descricaoCategoria = $_POST['descricao'];
 
         if ($categoriaModel->cadastrarCategoria($descricaoCategoria)) {
-            header("Location: ../view/categorias.php");
+            header("Location: ../view/CategoriaView/categorias.php");
             exit();
         } else {
             echo "Erro ao cadastrar categoria!";
@@ -28,7 +28,7 @@ function atualizarCategoria($categoriaModel) {
         $descricaoCategoria = $_POST['descricao'];
 
         if ($categoriaModel->atualizarCategoria($idCategoria, $descricaoCategoria)) {
-            header("Location: ../view/categorias.php");
+            header("Location: ../view/CategoriaView/categorias.php");
             exit();
         } else {
             echo "Erro ao atualizar o produto!" . mysqli_error($categoriaModel->getConnection());
@@ -41,7 +41,7 @@ function excluirCategoria($categoriaModel) {
     $resultado = $categoriaModel->excluirCategoria($idCategoria);
     if ($resultado) {
     echo "Categoria excluída com sucesso!";
-    header('Location: ../view/categorias.php');
+    header('Location: ../view/CategoriaView/categorias.php');
     exit();
     } else {
     echo "Erro ao excluir a Categoria.";
@@ -53,7 +53,7 @@ function buscarCategoria($categoriaModel) {
             $termo = $_GET['busca'];
             $categorias = $categoriaModel->buscarPorNome($termo);
 
-            include('../view/verBuscaCategoria.php'); // Mostra os resultados da busca
+            include('../view/CategoriaView/verBuscaCategoria.php'); // Mostra os resultados da busca
         } else {
             echo "Nenhum termo de busca informado.";
         }
