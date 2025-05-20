@@ -1,6 +1,8 @@
 <?php include("app/header.php"); ?>
 
-<h4 style="color: black;">Seja Bem-Vindo!</h4>
+<div style="position: relative; top: 10px;">
+    <h4 style="color: black;">Seja Bem-Vindo!</h4>
+</div>
 
 <div class="d-flex gap-3" style="margin-top: 20px;">
     <div class="card bg-success" style="width: 350px; color: white">
