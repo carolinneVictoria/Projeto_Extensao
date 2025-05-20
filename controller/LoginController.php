@@ -36,18 +36,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $_SESSION['nomeUsuario']  = $nomeUsuario;
             $_SESSION['logado']       = true;
     
-            header('Location: ../view/dashboard.php'); // Redireciona para a Página Inicial
+            header('Location: ../index.php'); // Redireciona para a Página Inicial
             exit(); // Encerra o script para garantir que o redirecionamento ocorra
         }
         else {
             // Se não encontrou registro ou se campos estão vazios, redireciona com erro
-            header('Location: ../view/formLogin.php?erroLogin=dadosInvalidos');
+            header('Location: ../view/UsuarioView/formLogin.php?erroLogin=dadosInvalidos');
             exit(); // Encerra o script para garantir que o redirecionamento ocorra
         }
     }
     else {
         // Se o formulário não foi submetido, redireciona para o formulário de login
-        header('Location: ../view/formLogin.php');
+        header('Location: ../view/UsuarioView/formLogin.php');
         exit(); // Encerra o script para garantir que o redirecionamento ocorra
     }
 
