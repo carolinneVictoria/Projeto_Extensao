@@ -1,4 +1,4 @@
-<?php include ("../../app/header.php"); ?>
+<?php include (__DIR__."/../../app/header.php"); ?>
 
 
 <!-- Navbar e Barra de Busca -->
@@ -10,7 +10,7 @@
           <a class="nav-link" href="/Projeto_Extensao/view/ProdutoView/produtos.php">Produtos</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="formCategoria.php">Cadastrar Nova Categoria</a>
+          <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#modalCategoria">Cadastrar Categoria</a>
         </li>
       </ul>
         <form method="GET" action="/Projeto_Extensao/controller/ProdutoController.php" class="d-flex" role="search">
@@ -26,8 +26,8 @@
 <?php
 
 // Inclui a conexão ao banco e o modelo de Categoria
-include_once "../../config/conexaoBD.php"; 
-include_once "../../model/Categoria.php";
+include_once (__DIR__."/../../config/conexaoBD.php"); 
+include_once (__DIR__."/../../model/Categoria.php");
 
 // Instanciando o Model
 $categoriaModel = new Categoria($conn);
@@ -57,8 +57,35 @@ while ($registro = mysqli_fetch_assoc($categorias)) {
                 <td>{$registro['idCategoria']}</td>
                 <td>{$registro['descricao']}</td>
                 <td>
-                <a href='formAtualizarCategoria.php?id=$idCategoria' class='btn btn-primary btn-sm'>Atualizar</a>
-                <a href='../controller/CategoriaController.php?acao=excluir&id=$idCategoria' class='btn btn-danger btn-sm' onclick='return confirm(\"Tem certeza que deseja excluir?\")'>Excluir</a>
+                <a class='btn btn-primary btn-sm' href='#' data-bs-toggle='modal' data-bs-target='#modalAtualizarCategoria{$idCategoria}'>Atualizar</a>
+
+                  <!-- Modal Atualizar Categoria -->
+                  <div class='modal fade' id='modalAtualizarCategoria{$idCategoria}' tabindex='-1' aria-labelledby='modalAtualizarCategoriaLabel{$idCategoria}' aria-hidden='true'>
+                    <div class='modal-dialog'>
+                      <div class='modal-content'>
+                        <form action='/Projeto_Extensao/controller/CategoriaController.php?acao=atualizar' method='POST'>
+                          <div class='modal-header'>
+                            <h5 class='modal-title' id='modalAtualizarCategoriaLabel{$idCategoria}'>Atualizar Categoria</h5>
+                            <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Fechar'></button>
+                          </div>
+                          <div class='modal-body'>
+                            <input type='hidden' name='acao' value='atualizar'>
+                            <input type='hidden' name='idCategoria' value='{$registro['idCategoria']}'>
+                            <div class='mb-3'>
+                              <label for='descricaoCategoria{$idCategoria}' class='form-label'>Nome da Categoria:</label>
+                              <input type='text' class='form-control' id='descricaoCategoria{$idCategoria}' name='descricao' value='{$registro['descricao']}' required>
+                            </div>
+                          </div>
+                          <div class='modal-footer'>
+                            <button type='submit' class='btn btn-success'>Salvar Alterações</button>
+                            <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Cancelar</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+
+                <a href='/Projeto_Extensao/controller/CategoriaController.php?acao=excluir&id=$idCategoria' class='btn btn-danger btn-sm' onclick='return confirm(\"Tem certeza que deseja excluir?\")'>Excluir</a>
                 </td>
             </tr>
         </tbody>
@@ -66,5 +93,31 @@ while ($registro = mysqli_fetch_assoc($categorias)) {
 }
 echo "</table>";
 ?>
+
+<!-- Janela flutuante para cadastro de categoria -->
+<div class="modal fade" id="modalCategoria" tabindex="-1" aria-labelledby="modalCategoriaLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form action="/Projeto_Extensao/controller/CategoriaController.php?acao=cadastrar" method="POST">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalCategoriaLabel">Nova Categoria</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="acao" value="cadastrar">
+          <div class="mb-3">
+            <label for="descricaoCategoria" class="form-label">Nome da Categoria:</label>
+            <input type="text" class="form-control" id="descricaoCategoria" name="descricao" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Cadastrar</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 
 <?php include "../../app/footer.php"; ?>
