@@ -17,7 +17,7 @@ function cadastrarProduto($produtoModel) {
         $idCategoria = $_POST['idCategoria'];
 
         if ($produtoModel->cadastrarProduto($nomeProduto, $descricaoProduto, $quantidadeProduto, $valorProduto, $idCategoria)) {
-            header("Location: ../view/produtos.php");
+            header("Location: ../view/ProdutoView/produtos.php");
             exit();
         } else {
             echo "Erro ao cadastrar produto!";
@@ -27,8 +27,8 @@ function cadastrarProduto($produtoModel) {
 // Função para listar os produtos
 function listarProdutos($produtoModel, $categoriaModel) {
     $produtos = $produtoModel->listarProdutos();
-    $categorias = $categoriaModel->listarCategorias();
-    include('../view/produtos.php');
+    $categorias = $categoriaModel->listarCategoria();
+    include('../view/ProdutoView/produtos.php');
 }
 
 // Função para processar a atualização do produto
@@ -42,7 +42,7 @@ function atualizarProduto($produtoModel) {
         $idCategoria = $_POST['categoriaProduto']; //uso o mesmo name que o do formulario
 
         if ($produtoModel->atualizarProduto($idProduto, $nomeProduto, $descricaoProduto, $quantidadeProduto, $valorProduto, $idCategoria)) {
-            header("Location: ../view/produtos.php");
+            header("Location: ../view/ProdutoView/produtos.php");
             exit();
         } else {
             echo "Erro ao atualizar o produto!" . mysqli_error($produtoModel->getConnection());
@@ -55,7 +55,7 @@ function excluirProduto($produtoModel){
     $resultado = $produtoModel->excluirProduto($idProduto);
     if ($resultado) {
     echo "Produto excluído com sucesso!";
-    header('Location: ../view/produtos.php');
+    header('Location: ../view/ProdutoView/produtos.php');
     exit();
     } else {
     echo "Erro ao excluir o Produto.";
@@ -66,9 +66,9 @@ function buscarProdutos($produtoModel, $categoriaModel) {
     if (isset($_GET['busca'])) {
         $termo = $_GET['busca'];
         $produtos = $produtoModel->buscarPorNome($termo);
-        $categorias = $categoriaModel->listarCategorias();
+        $categorias = $categoriaModel->listarCategoria();
 
-        include('../view/verBuscaProduto.php'); // Mostra os resultados da busca
+        include('../view/ProdutoView/verBuscaProduto.php'); // Mostra os resultados da busca
     } else {
         echo "Nenhum termo de busca informado.";
     }
