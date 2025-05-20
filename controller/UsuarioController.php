@@ -84,16 +84,16 @@ function cadastrarUsuario($usuarioModel) {
             );
 
             if ($resultado) {
-                header('Location: ../view/usuarios.php');
+                header('Location: ../view/UsuarioView/usuarios.php');
                 exit();
             } else {
                 $_SESSION['erroCadastro'] = "Erro ao cadastrar usuário!";
-                header('Location: ../view/formUsuario.php');
+                header('Location: ../view/UsuarioView/formUsuario.php');
                 exit();
             }
         } else {
             $_SESSION['erroUpload'] = "Nenhuma foto foi enviada!";
-            header('Location: ../view/formUsuario.php');
+            header('Location: ../view/UsuarioView/formUsuario.php');
             exit();
         }
     }
@@ -103,7 +103,7 @@ function cadastrarUsuario($usuarioModel) {
 function listarUsuarios($usuarioModel) {
     $usuarios = $usuarioModel->listarUsuarios();
 
-    include('../view/usuarios.php');
+    include('../view/UsuarioView/usuarios.php');
 }
 
 function atualizarUsuario($usuarioModel) {
@@ -126,7 +126,7 @@ function atualizarUsuario($usuarioModel) {
             $emailUsuario,
             $senhaUsuario
         )) {
-            header("Location: ../view/usuarios.php");
+            header("Location: ../view/UsuarioView/usuarios.php");
             exit();
         } else {
             echo "Erro ao atualizar o usuário!";
@@ -139,7 +139,7 @@ function excluirUsuario($usuarioModel){
     $resultado = $usuarioModel->excluirUsuario($idUsuario);
     if ($resultado) {
     echo "Usuário excluído com sucesso!";
-    header('Location: usuarios.php');
+    header('Location: ../view/UsuarioView/usuarios.php');
     exit();
     } else {
     echo "Erro ao excluir o usuário.";
@@ -151,7 +151,7 @@ function buscarUsuarios($usuarioModel) {
         $termo = $_GET['busca'];
         $usuarios = $usuarioModel->buscarPorNome($termo);
 
-        include('../view/verBuscaUsuario.php'); // Mostra os resultados da busca
+        include('../view/UsuarioView/verBuscaUsuario.php'); // Mostra os resultados da busca
     } else {
         echo "Nenhum termo de busca informado.";
     }
