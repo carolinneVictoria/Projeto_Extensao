@@ -4,7 +4,7 @@
     session_unset();
     session_destroy();
 
-    header('location:formLogin.php');
+    header('location:../view/UsuarioView/formLogin.php');
     exit();
 
 ?>
