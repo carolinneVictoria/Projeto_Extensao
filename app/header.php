@@ -70,11 +70,11 @@ $primeiroNome = $nomeUsuario ? explode(' ', $nomeUsuario)[0] : '';
             <ul class="navbar-nav w-100">
                 <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/index.php">Dashboard</a></li>
                     <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/view/ProdutoView/produtos.php">Produtos</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../estoque.php">Estoque</a></li>
-                    <li class="nav-item"><a class="nav-link" href="../vendas.php">Vendas</a></li>
                     <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/view/ServicoView/servicos.php">Serviços</a></li>
                     <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/view/ClienteView/clientes.php">Clientes</a></li>
                     <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/view/FornecedorView/fornecedores.php">Fornecedores</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../estoque.php">Estoque</a></li>
+                    <li class="nav-item"><a class="nav-link" href="../vendas.php">Vendas</a></li>
                     <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/view/UsuarioView/usuarios.php">Usuarios</a></li>
                     <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/controller/logout.php">Logout</a></li>
             </ul>
