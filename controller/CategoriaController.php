@@ -31,7 +31,7 @@ function atualizarCategoria($categoriaModel) {
             header("Location: ../view/CategoriaView/categorias.php");
             exit();
         } else {
-            echo "Erro ao atualizar o produto!" . mysqli_error($categoriaModel->getConnection());
+            echo "Erro ao atualizar a categoria!" . mysqli_error($categoriaModel->getConnection());
         }
     }
 }
