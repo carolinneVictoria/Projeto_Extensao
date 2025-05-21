@@ -27,21 +27,6 @@ class Produto {
         return $res;
     }
 
-    // Método para buscar os detalhes de um produto específico
-    public function buscarProdutoporId($idProduto) {
-    $stmt = $this->conn->prepare("SELECT Produto.*, Categoria.descricao FROM Produto INNER JOIN Categoria ON Produto.idCategoria = Categoria.idCategoria WHERE Produto.idProduto = ?");
-    $stmt->bind_param("i", $idProduto);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($row = $result->fetch_assoc()) {
-        return $row; // Retorna os dados do produto
-    } else {
-        return null; // Caso o produto não seja encontrado
-    }
-}
-
-
     //Metódo para atualizar os detalhes de um produto./
     public function atualizarProduto($idProduto, $nomeProduto, $descricaoProduto, $quantidadeProduto, $valorProduto, $idCategoria){
         $atualizarProduto = "UPDATE Produto 
@@ -81,5 +66,20 @@ class Produto {
     $res = $stmt->get_result();
     return $res;
 }
+
+// Método para buscar os detalhes de um produto específico
+    public function buscarProdutoporId($idProduto) {
+    $stmt = $this->conn->prepare("SELECT Produto.*, Categoria.descricao FROM Produto INNER JOIN Categoria ON Produto.idCategoria = Categoria.idCategoria WHERE Produto.idProduto = ?");
+    $stmt->bind_param("i", $idProduto);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($row = $result->fetch_assoc()) {
+        return $row; // Retorna os dados do produto
+    } else {
+        return null; // Caso o produto não seja encontrado
+    }
+}
+
 }
 ?>
