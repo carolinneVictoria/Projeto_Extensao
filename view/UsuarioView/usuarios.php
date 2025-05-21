@@ -27,7 +27,7 @@ require_once ('../../model/Usuario.php');
 // Instanciando o Model
 $usuarioModel = new Usuario($conn);
 
-// Listando os produtos
+// Listando os usuarios
 $usuarios = $usuarioModel->listarUsuarios();
 
 echo "<h5>Usuarios cadastrados:</h5>";
