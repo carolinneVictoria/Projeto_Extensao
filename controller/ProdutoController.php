@@ -74,6 +74,7 @@ function buscarProdutos($produtoModel, $categoriaModel) {
     }
 }
 
+
 // Determina qual ação chamar com base na URL ou método
 if (isset($_GET['acao'])) {
     $acao = $_GET['acao'];
