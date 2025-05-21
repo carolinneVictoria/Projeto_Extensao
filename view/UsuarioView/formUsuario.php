@@ -18,7 +18,7 @@ if (isset($_SESSION['erroCadastro'])) {
 ?>
 
 <div class="container-fluid">
-    <h3>Cadastro de Usuário:</h3>
+    <h4>Cadastro de Usuário:</h4>
 
     <div class="col-sm-12">
 
