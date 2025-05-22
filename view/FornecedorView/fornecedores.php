@@ -30,7 +30,7 @@ echo "<h5>Fornecedores cadastrados:</h5>";
 
 // Exibindo a tabela de fornecedores
 echo "
-    <table class='table table-hover table-bordered'>
+    <table class='table table-hover table-bordered table-sm'>
         <thead class='thead-light'>
             <tr>
                 <th>ID</th>
