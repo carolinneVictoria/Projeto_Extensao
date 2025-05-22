@@ -34,7 +34,7 @@ echo "<h5>Usuarios cadastrados:</h5>";
 
 // Exibindo a tabela de usuarios
 echo "
-    <table class='table table-hover table-bordered'>
+    <table class='table table-hover table-bordered table-sm'>
         <thead class='thead-light'>
             <tr>
                 <th>ID</th>
