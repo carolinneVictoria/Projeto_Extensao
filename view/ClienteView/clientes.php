@@ -19,6 +19,7 @@
 </nav>
 
 <?php
+
 include ('../../config/conexaoBD.php');
 require_once ('../../model/Cliente.php');
 // Instanciando o Model
@@ -30,7 +31,8 @@ echo "<h5>Clientes cadastrados:</h5>";
 
 // Exibindo a tabela de clientes
 echo "
-    <table class='table table-hover table-bordered'>
+
+    <table class='table table-hover table-bordered table-sm'>
         <thead class='thead-light'>
             <tr>
                 <th>ID</th>
@@ -65,6 +67,7 @@ while ($registro = mysqli_fetch_assoc($clientes)) {
     ";
 }
 echo "</table>";
+
 
 if (isset($_GET['id'])) {
     $idCliente = $_GET['id'];
