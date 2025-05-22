@@ -33,7 +33,7 @@
 </table>
 
 <div class="col-md-12">
-    <a href="../../view/produtos.php" class="btn btn-secondary mt-3" style="width: 100px; margin-left: 515px; position: fixed;">Voltar</a>
+    <a href="/Projeto_Extensao/view/ProdutoView/produtos.php" class="btn btn-secondary mt-3" style="width: 100px; margin-left: 515px; position: fixed;">Voltar</a>
 </div>
 
 <?php include(__DIR__ . "../../app/footer.php"); ?>
