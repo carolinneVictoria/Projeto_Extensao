@@ -67,7 +67,8 @@ function excluirServico($servicoModel){
     header('Location: ../view/ServicoView/servicos.php');
     exit();
     } else {
-    echo "Erro ao excluir o Servico.";
+    echo "Erro ao excluir o serviço: " . mysqli_error($servicoModel->getConnection());
+    exit();
     }
 }
 
