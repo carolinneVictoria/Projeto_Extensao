@@ -64,8 +64,8 @@ $usuarios = $usuarioModel->listarUsuarios();
                 <div class="col-md-6 mb-3">
                     <div class="form-floating">
                         <select class="form-select" id="entrega" name="entrega" required>
-                            <option value="0">Não</option>
-                            <option value="1">Sim</option>
+                            <option value="1">Não</option>
+                            <option value="0">Sim</option>
                         </select>
                         <label for="entrega">Entregue:</label>
                     </div>
