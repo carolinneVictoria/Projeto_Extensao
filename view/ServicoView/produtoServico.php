@@ -114,8 +114,8 @@ if (isset($_GET['id'])) {
                 <tr>
                     <td>{$registro['nomeProduto']}</td>
                     <td>{$registro['quantidade']}</td>
-                    <td>{$registro['valorUnitario']}</td>
-                    <td>" . ($registro['quantidade'] * $registro['valorUnitario']) . "</td>
+                    <td>R$ " . number_format($registro['valorUnitario'], 2, ',', '.') . "</td>
+                    <td>R$ " . number_format($registro['quantidade'] * $registro['valorUnitario'], 2, ',', '.') . "</td>
                     <td>
                         <a href='formAtualizarProdutoServico.php?idProduto={$registro['idProduto']}&idServico={$registro['idServico']}' class='btn btn-primary btn-sm'>Atualizar</a>
                         <a href='../../controller/ServicoController.php?acao=excluir&id=$idServico' class='btn btn-danger btn-sm' onclick='return confirm(\"Tem certeza que deseja excluir?\")'>Excluir</a>
