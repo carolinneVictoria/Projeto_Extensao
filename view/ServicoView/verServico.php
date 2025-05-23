@@ -28,6 +28,10 @@ if ($produtosAssociados) {
     while ($registro = mysqli_fetch_assoc($produtosAssociados)) {
         $valorTotal += $registro['quantidade'] * $registro['valorUnitario'];
     }
+    if (!$servicoModel->atualizarValorTotalServico($idServico, $valorTotal)) {
+        echo "Erro ao atualizar o valor total no banco de dados!";
+        exit();
+    }
 } else {
     $produtosAssociados = []; 
 }
@@ -38,28 +42,28 @@ if ($produtosAssociados) {
     <div class="col-sm-12">
 
         <div class="row">
-            <div class="col-md-6 mb-3">
+            <div class="col-md-3 mb-3">
                 <div class="form-floating">
                     <input type="text" class="form-control" id="cliente" readonly value="<?= $cliente['nome']; ?>">
                     <label for="cliente">Cliente:</label>
                 </div>
             </div>
 
-            <div class="col-md-6 mb-3">
+            <div class="col-md-3 mb-3">
                 <div class="form-floating">
                     <input type="text" class="form-control" id="usuario" readonly value="<?= $usuario['nomeUsuario']; ?>">
                     <label for="usuario">Usuário Responsável:</label>
                 </div>
             </div>
 
-            <div class="col-md-6 mb-3">
+            <div class="col-md-3 mb-3">
                 <div class="form-floating">
                     <input type="date" class="form-control" id="dataEntrada" readonly value="<?= $servico['dataEntrada']; ?>">
                     <label for="dataEntrada">Data de Entrada:</label>
                 </div>
             </div>
 
-            <div class="col-md-6 mb-3">
+            <div class="col-md-3 mb-3">
                 <div class="form-floating">
                     <input type="text" class="form-control" id="valorTotal" readonly value="R$ <?= number_format($valorTotal, 2, ',', '.'); ?>">
                     <label for="valorTotal">Valor Total:</label>
@@ -73,6 +77,8 @@ if ($produtosAssociados) {
                 </div>
             </div>
 
+            <div class="col-md-12 mb-3">
+            <h5>Produtos Usados</h5>
             <?php
             if (!empty($produtosAssociados)) {
                 echo "
@@ -110,8 +116,13 @@ if ($produtosAssociados) {
                 echo "<p>Nenhum produto associado ao serviço ainda.</p>";
             }
             ?>
+            </div>
 
-            <a href="produtoServico.php?id=<?= $idServico ?>" class="btn btn-primary btn-sm">Adicionar Produtos</a>
+            <div class="d-flex justify-content-end mt-3">
+                <a href="servicos.php" class="btn btn-secondary btn me-2">Voltar</a>
+                <a href="produtoServico.php?id=<?= $idServico ?>" class="btn btn-primary btn">Adicionar Produtos</a>
+            </div>
+
 
         </div>
     </div>
