@@ -75,11 +75,12 @@ class Produto {
     $result = $stmt->get_result();
 
     if ($row = $result->fetch_assoc()) {
-        return $row; // Retorna os dados do produto
+        return $row; 
     } else {
-        return null; // Caso o produto não seja encontrado
+        return null;
     }
 }
+
 
 }
 ?>
