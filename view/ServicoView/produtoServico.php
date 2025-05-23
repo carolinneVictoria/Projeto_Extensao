@@ -42,10 +42,10 @@ if (isset($_GET['id'])) {
 
     <h4 class="mb-4">Adicionar Produto ao Serviço</h4>
 
-    <!-- Formulário para adicionar produto -->
+    
     <form id="formProduto" action="/Projeto_Extensao/controller/ServicoController.php?acao=adicionarProduto" method="POST" class="was-validated">
         <div class="row">
-            <!-- Id do Serviço -->
+            
             <div class="col-md-2 mb-3">
                 <div class="form-floating">
                     <input type="text" class="form-control" id="idServico" name="idServico" value="<?= ($servico['idServico']); ?>" required readonly>
@@ -53,12 +53,12 @@ if (isset($_GET['id'])) {
                 </div>
             </div>
 
-            <!-- Seleção de Produto -->
+            
             <div class="col-md-4 mb-3">
                 <div class="form-floating">
                     <select class="form-control" id="idProduto" name="idProduto" required>
                         <?php foreach ($produtos as $produto): ?>
-                            <option value="<?= $produto['idProduto']; ?>" data-valor="<?= $produto['valorUnitario']; ?>">
+                            <option value="<?= $produto['idProduto']; ?>" data-valor="<?= $produto['valorProduto']; ?>">
                                 <?= $produto['nomeProduto']; ?>
                             </option>
                         <?php endforeach; ?>
@@ -67,7 +67,7 @@ if (isset($_GET['id'])) {
                 </div>
             </div>
 
-            <!-- Quantidade -->
+            
             <div class="col-md-3 mb-3">
                 <div class="form-floating">
                     <input type="number" class="form-control" id="quantidade" name="quantidade" required min="1">
@@ -75,23 +75,22 @@ if (isset($_GET['id'])) {
                 </div>
             </div>
 
-            <!-- Valor Unitário -->
+            
             <div class="col-md-3 mb-3">
                 <div class="form-floating">
-                    <input type="text" class="form-control" id="valorUnitario" name="valorUnitario" required>
+                    <input type="text" class="form-control" id="valorUnitario" name="valorUnitario" required readonly>
                     <label for="valorUnitario">Valor Unitário</label>
                 </div>
             </div>
 
-            <!-- Botão para adicionar -->
-            <div class="col-md-4 mb-3 d-flex align-items-end">
+            <div class="col-md-12 mb-3 d-flex align-items-end">
                 <button type="submit" class="btn btn-success w-100">Adicionar Produto</button>
             </div>
         </div>
     </form>
 
     <?php
-    // Verifica se os produtos associados ao serviço foram encontrados
+    
     $produtosAssociados = $servicoProdutoModel->listarProdutosServico($idServico);
     if ($produtosAssociados) {
         echo "
@@ -130,20 +129,22 @@ if (isset($_GET['id'])) {
     }
     ?>
 
-</div>
+            <div class="d-flex justify-content-end mt-3">
+                <a href="verServico.php?id=<?= $idServico ?>" class="btn btn-secondary btn me-2">Voltar</a>
+            </div>
 
 <script>
-// Script para preencher o campo "valorUnitario" automaticamente
 document.getElementById("idProduto").addEventListener("change", function() {
     let selectedOption = this.options[this.selectedIndex];
     let valor = selectedOption.getAttribute("data-valor");
     document.getElementById("valorUnitario").value = valor;
 });
 
-// Dispara o evento de "change" logo após o carregamento da página, para preencher o valor corretamente
 window.addEventListener("load", function() {
     document.getElementById("idProduto").dispatchEvent(new Event("change"));
 });
+</script>
 
+</div>
 
 <?php include("../../app/footer.php"); ?>
