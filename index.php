@@ -25,9 +25,9 @@
 
     <div class="card bg-primary" style="width: 350px; color: white">
     <div class="card-body">
-        <h4 class="card-title">Faturamento</h4>
-        <p class="card-text">Some example text. Some example text.</p>
-        <a href="#" class="card-link">Card link</a>
+        <h4 class="card-title">Serviços</h4>
+        <p class="card-text">Vamos ver se tem algum serviço esperando!! :)</p>
+        <a href="/Projeto_Extensao/view/ServicoView/servicos.php" class="card-link" style="color: white">Ver Serviços</a>
         <a href="#" class="card-link"></a>
     </div>
     </div>
