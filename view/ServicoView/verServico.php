@@ -43,35 +43,35 @@ if ($produtosAssociados) {
 
         <div class="row">
             <div class="col-md-3 mb-3">
-                <div class="form-floating">
+                <div class="form-floating border border-info rounded">
                     <input type="text" class="form-control" id="cliente" readonly value="<?= $cliente['nome']; ?>">
                     <label for="cliente">Cliente:</label>
                 </div>
             </div>
 
             <div class="col-md-3 mb-3">
-                <div class="form-floating">
+                <div class="form-floating border border-info rounded">
                     <input type="text" class="form-control" id="usuario" readonly value="<?= $usuario['nomeUsuario']; ?>">
                     <label for="usuario">Usuário Responsável:</label>
                 </div>
             </div>
 
             <div class="col-md-3 mb-3">
-                <div class="form-floating">
+                <div class="form-floating border border-info rounded">
                     <input type="date" class="form-control" id="dataEntrada" readonly value="<?= $servico['dataEntrada']; ?>">
                     <label for="dataEntrada">Data de Entrada:</label>
                 </div>
             </div>
 
             <div class="col-md-3 mb-3">
-                <div class="form-floating">
+                <div class="form-floating border border-info rounded">
                     <input type="text" class="form-control" id="valorTotal" readonly value="R$ <?= number_format($valorTotal, 2, ',', '.'); ?>">
                     <label for="valorTotal">Valor Total:</label>
                 </div>
             </div>
 
             <div class="col-md-12 mb-3">
-                <div class="form-floating">
+                <div class="form-floating border border-info rounded">
                     <textarea style="height: 100px" class="form-control" id="descricao" readonly><?= $servico['descricao']; ?></textarea>
                     <label for="descricao">Descrição:</label>
                 </div>
