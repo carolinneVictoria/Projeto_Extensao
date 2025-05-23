@@ -123,7 +123,12 @@ class Servico {
     }
 }
 
-    
+    public function atualizarValorTotalServico($idServico, $valorTotal) {
+        $query = "UPDATE Servico SET valorTotal = ? WHERE idServico = ?";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bind_param("di", $valorTotal, $idServico); 
+        return $stmt->execute();
+    }
 
 }
 
