@@ -103,6 +103,32 @@ function adicionarProduto($servicoProdutoModel) {
     }
 }
 
+function atualizarProduto($model) {
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        echo "Método inválido";
+        exit;
+    }
+
+    $idServico  = (int) $_POST['idServico'];
+    $idProduto  = (int) $_POST['idProduto'];
+    $quantidade = (int) $_POST['quantidade'];
+
+    // limpa o "R$" e formata pra ponto decimal
+    $raw = str_replace(['R$', '.', ' '], ['', '', ''], $_POST['valorUnitario']);
+    $raw = str_replace(',', '.', $raw);
+    $valorUnitario = (float) $raw;
+
+    $ok = $model->atualizarProdutoServico($idServico, $idProduto, $quantidade, $valorUnitario);
+    if ($ok) {
+        header("Location: ../view/ServicoView/formAtualizarServico.php?id=$idServico");
+        exit;
+    } else {
+        echo "Erro ao atualizar o produto no serviço: "
+           . mysqli_error($model->getConnection());
+        exit;
+    }
+}
+
 
 // Determina qual ação chamar com base na URL ou método
 if (isset($_GET['acao'])) {
@@ -114,13 +140,15 @@ if (isset($_GET['acao'])) {
     } elseif ($acao == 'listar') {
         listarServicos($servicoModel, $clienteModel, $usuarioModel);
     } elseif ($acao == 'atualizar') {
-        atualizarServico($produtoModel); // Se o formulário for enviado, processa a atualização
+        atualizarServico($servicoModel); // Se o formulário for enviado, processa a atualização
     } elseif ($acao == 'excluir') {
         excluirServico($servicoModel);
     } elseif($acao == 'buscar') {
         buscarServico($servicoModel, $clienteModel, $usuarioModel);
     } elseif($acao == 'adicionarProduto'){
         adicionarProduto($servicoProdutoModel);
+    } elseif($acao == 'atualizarProduto'){
+        atualizarProduto($servicoProdutoModel);
     }
 } else {
     // Caso nenhuma ação seja especificada, exibe a listagem
