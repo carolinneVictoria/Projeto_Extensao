@@ -124,7 +124,7 @@ if ($produtosAssociados) {
                             <td>R$ " . number_format($totalProduto, 2, ',', '.') . "</td>
                             <td>
                                 <a href='atualizarProdutoServico.php?idProduto={$registro['idProduto']}&idServico={$registro['idServico']}' class='btn btn-primary btn-sm'>Atualizar</a>
-                                <a href='../../controller/ServicoController.php?acao=excluir&id={$registro['idProduto']}&idServico={$idServico}' class='btn btn-danger btn-sm' onclick='return confirm(\"Tem certeza que deseja excluir?\")'>Excluir</a>
+                                <a href='../../controller/ServicoController.php?acao=excluirProduto&id={$registro['idProduto']}&idServico={$idServico}' class='btn btn-danger btn-sm' onclick='return confirm(\"Tem certeza que deseja excluir?\")'>Excluir</a>
                             </td>
                         </tr>
                     ";
