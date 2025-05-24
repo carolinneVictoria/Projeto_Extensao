@@ -103,29 +103,40 @@ function adicionarProduto($servicoProdutoModel) {
     }
 }
 
-function atualizarProduto($model) {
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        echo "Método inválido";
-        exit;
-    }
-
-    $idServico  = (int) $_POST['idServico'];
-    $idProduto  = (int) $_POST['idProduto'];
-    $quantidade = (int) $_POST['quantidade'];
+function atualizarProduto($servicoProdutoModel) {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        
+    $idServico  = $_POST['idServico'];
+    $idProduto  = $_POST['idProduto'];
+    $quantidade = $_POST['quantidade'];
 
     // limpa o "R$" e formata pra ponto decimal
-    $raw = str_replace(['R$', '.', ' '], ['', '', ''], $_POST['valorUnitario']);
-    $raw = str_replace(',', '.', $raw);
-    $valorUnitario = (float) $raw;
+    $novoValor = str_replace(['R$', '.', ' '], ['', '', ''], $_POST['valorUnitario']);
+    $novoValor = str_replace(',', '.', $novoValor);
+    $valorUnitario = $novoValor;
 
-    $ok = $model->atualizarProdutoServico($idServico, $idProduto, $quantidade, $valorUnitario);
-    if ($ok) {
+    $resultado = $servicoProdutoModel->atualizarProdutoServico($idServico, $idProduto, $quantidade, $valorUnitario);
+    if ($resultado) {
         header("Location: ../view/ServicoView/formAtualizarServico.php?id=$idServico");
         exit;
     } else {
         echo "Erro ao atualizar o produto no serviço: "
-           . mysqli_error($model->getConnection());
+           . mysqli_error($servicoProdutoModel->getConnection());
         exit;
+    }
+}
+}
+function excluirProduto($servicoProdutoModel){
+    $idServico = $_GET['idServico'];
+    $idProduto = $_GET['id'];
+    $resultado = $servicoProdutoModel->excluirProdutoServico($idServico, $idProduto);
+    if ($resultado) {
+    echo "Produto excluído com sucesso!";
+    header("Location: ../view/ServicoView/formAtualizarServico.php?id=$idServico");
+    exit();
+    } else {
+    echo "Erro ao excluir o produto: " . mysqli_error($servicoProdutoModel->getConnection());
+    exit();
     }
 }
 
@@ -149,6 +160,8 @@ if (isset($_GET['acao'])) {
         adicionarProduto($servicoProdutoModel);
     } elseif($acao == 'atualizarProduto'){
         atualizarProduto($servicoProdutoModel);
+    } elseif($acao == 'excluirProduto'){
+        excluirProduto($servicoProdutoModel);
     }
 } else {
     // Caso nenhuma ação seja especificada, exibe a listagem
