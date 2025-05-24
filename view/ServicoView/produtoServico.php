@@ -117,8 +117,8 @@ if (isset($_GET['id'])) {
                     <td>R$ " . number_format($registro['valorUnitario'], 2, ',', '.') . "</td>
                     <td>R$ " . number_format($registro['quantidade'] * $registro['valorUnitario'], 2, ',', '.') . "</td>
                     <td>
-                        <a href='formAtualizarProdutoServico.php?idProduto={$registro['idProduto']}&idServico={$registro['idServico']}' class='btn btn-primary btn-sm'>Atualizar</a>
-                        <a href='../../controller/ServicoController.php?acao=excluir&id=$idServico' class='btn btn-danger btn-sm' onclick='return confirm(\"Tem certeza que deseja excluir?\")'>Excluir</a>
+                        <a href='atualizarProdutoServico.php?idProduto={$registro['idProduto']}&idServico={$registro['idServico']}' class='btn btn-primary btn-sm'>Atualizar</a>
+                        <a href='../../controller/ServicoController.php?acao=excluirProduto&id=$idServico' class='btn btn-danger btn-sm' onclick='return confirm(\"Tem certeza que deseja excluir?\")'>Excluir</a>
                     </td>
                 </tr>
             ";
@@ -130,7 +130,7 @@ if (isset($_GET['id'])) {
     ?>
 
             <div class="d-flex justify-content-end mt-3">
-                <a href="verServico.php?id=<?= $idServico ?>" class="btn btn-secondary btn me-2">Voltar</a>
+                <a href="formAtualizarServico.php?id=<?= $idServico ?>" class="btn btn-secondary btn me-2">Voltar</a>
             </div>
 
 <script>
