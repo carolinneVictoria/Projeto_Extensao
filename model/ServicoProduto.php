@@ -35,6 +35,17 @@ public function atualizarProdutoServico($idServico, $idProduto, $quantidade, $va
     return $stmt->execute();
 }
 
+public function excluirProdutoServico($idServico, $idProduto){
+        $query = "DELETE FROM servicoProduto WHERE idServico=? AND idProduto=?";
+        $stmt = $this->conn->prepare($query);
+        if ($stmt === false) {
+            echo "Erro na preparação da consulta.";
+        return false;
+    }
+    $stmt->bind_param("ii", $idServico, $idProduto);
+    return ($stmt->execute());
+    }
+
 
 
     public function listarProdutosServico($idServico) {
