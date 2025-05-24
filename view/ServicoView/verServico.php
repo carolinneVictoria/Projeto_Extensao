@@ -89,7 +89,6 @@ if ($produtosAssociados) {
                                 <th>QUANTIDADE</th>
                                 <th>VALOR UNITÁRIO</th>
                                 <th>TOTAL</th>
-                                <th>AÇÕES</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -104,10 +103,6 @@ if ($produtosAssociados) {
                             <td>{$registro['quantidade']}</td>
                             <td>R$ " . number_format($registro['valorUnitario'], 2, ',', '.') . "</td>
                             <td>R$ " . number_format($totalProduto, 2, ',', '.') . "</td>
-                            <td>
-                                <a href='formAtualizarProdutoServico.php?idProduto={$registro['idProduto']}&idServico={$registro['idServico']}' class='btn btn-primary btn-sm'>Atualizar</a>
-                                <a href='../../controller/ServicoController.php?acao=excluir&id={$registro['idProduto']}&idServico={$idServico}' class='btn btn-danger btn-sm' onclick='return confirm(\"Tem certeza que deseja excluir?\")'>Excluir</a>
-                            </td>
                         </tr>
                     ";
                 }
@@ -120,7 +115,6 @@ if ($produtosAssociados) {
 
             <div class="d-flex justify-content-end mt-3">
                 <a href="servicos.php" class="btn btn-secondary btn me-2">Voltar</a>
-                <a href="produtoServico.php?id=<?= $idServico ?>" class="btn btn-primary btn">Adicionar Produtos</a>
             </div>
 
 
