@@ -20,9 +20,21 @@ public function adicionarProdutoServico($idProduto, $idServico, $quantidade, $va
     if (!$res) {
         echo "Erro SQL: " . mysqli_error($this->conn);
     }
-
     return $res;
 }
+
+public function atualizarProdutoServico($idServico, $idProduto, $quantidade, $valorUnitario) {
+    $sql = "UPDATE servicoProduto
+               SET quantidade    = ?,
+                   valorUnitario = ?
+             WHERE idServico     = ?
+               AND idProduto     = ?";
+    $stmt = $this->conn->prepare($sql);
+    // d = double, i = integer
+    $stmt->bind_param("diii", $quantidade, $valorUnitario, $idServico, $idProduto);
+    return $stmt->execute();
+}
+
 
 
     public function listarProdutosServico($idServico) {
@@ -36,6 +48,18 @@ public function adicionarProdutoServico($idProduto, $idServico, $quantidade, $va
     $stmt->execute();
     return $stmt->get_result();
 }
+
+public function buscarProdutoServico($idServico, $idProduto) {
+    $sql = "SELECT servicoProduto.quantidade, servicoProduto.valorUnitario, Produto.nomeProduto
+            FROM servicoProduto
+            JOIN Produto ON servicoProduto.idProduto = Produto.idProduto
+            WHERE servicoProduto.idServico = ? AND servicoProduto.idProduto = ?";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bind_param("ii", $idServico, $idProduto);
+    $stmt->execute();
+    return $stmt->get_result()->fetch_assoc();
+}
+
 
 }
 ?>
