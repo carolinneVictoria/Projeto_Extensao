@@ -21,7 +21,7 @@
       </ul>
         <form method="GET" action="/Projeto_Extensao/controller/ServicoController.php?acao=buscar" class="d-flex" role="search">
           <input type="hidden" name="acao" value="buscar">
-          <input type="text" name="busca" class="form-control me-2" placeholder="Buscar por Nome de Cliente" value="<?= $_GET['busca'] ?? '' ?>">
+          <input type="text" name="busca" class="form-control me-2" placeholder="Buscar por Descricao" value="<?= $_GET['busca'] ?? '' ?>">
           <button class="btn btn-outline-light" type="submit">Buscar</button>
         </form>
 
