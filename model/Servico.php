@@ -96,10 +96,10 @@ class Servico {
                             FROM Servico 
                             INNER JOIN Cliente ON Servico.idCliente = Cliente.idCliente 
                             INNER JOIN Usuario ON Servico.idUsuario = Usuario.idUsuario 
-                            WHERE descricao LIKE ?";
+                            WHERE Servico.descricao LIKE ? OR Cliente.nome LIKE ? OR Usuario.nomeUsuario LIKE ?";
     $stmt = $this->conn->prepare($buscarPorNome);
     $like = "%" . $termo . "%";
-    $stmt->bind_param("s", $like);
+    $stmt->bind_param("sss", $like, $like, $like);
     $stmt->execute();
     $res = $stmt->get_result();
     return $res;
