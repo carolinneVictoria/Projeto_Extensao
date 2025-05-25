@@ -3,13 +3,16 @@
 
 include_once "../config/conexaoBD.php";
 include_once "../model/Servico.php";
+include_once "../model/Cliente.php";
+include_once "../model/Usuario.php";
 include_once "../model/Produto.php";
 include_once "../model/ServicoProduto.php";
 
 $servicoModel = new Servico($conn);
 $produtoModel = new Produto($conn);
 $servicoProdutoModel = new ServicoProduto($conn);
-
+$clienteModel = new Cliente($conn);
+$usuarioModel = new Usuario($conn);
 
 function cadastrarServico($servicoModel) {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -79,7 +82,7 @@ function buscarServico($servicoModel, $clienteModel, $usuarioModel) {
         $clientes = $clienteModel->listarClientes();
         $usuarios = $usuarioModel->listarUsuarios();
 
-        include('../view/ProdutoView/verBuscaProduto.php'); 
+        include('../view/ServicoView/verBuscaServico.php'); 
     } else {
         echo "Nenhum termo de busca informado.";
     }
