@@ -134,15 +134,13 @@ function atualizarUsuario($usuarioModel) {
     }
 }
 
-function excluirUsuario($usuarioModel){
+function excluirUsuario($usuarioModel) {
     $idUsuario = $_GET['id'];
     $resultado = $usuarioModel->excluirUsuario($idUsuario);
-    if ($resultado) {
-    echo "Usuário excluído com sucesso!";
-    header('Location: ../view/UsuarioView/usuarios.php');
-    exit();
+    if($resultado) {
+        header('Location: ../view/UsuarioView/usuarios.php');
     } else {
-    echo "Erro ao excluir o usuário.";
+        echo "ERRO AO EXCLUIR!";
     }
 }
 
