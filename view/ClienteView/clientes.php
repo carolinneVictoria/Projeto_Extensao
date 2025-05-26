@@ -71,9 +71,8 @@ echo "</table>";
 
 if (isset($_GET['id'])) {
     $idCliente = $_GET['id'];
-    
     $cliente = $clienteModel->excluirCliente($idCliente);
-} 
+}
 
 ?>
 
