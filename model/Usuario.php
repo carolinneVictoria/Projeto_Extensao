@@ -6,6 +6,10 @@ class Usuario {
         $this->conn = $dbConnection;
     }
 
+    public function getConnection() {
+        return $this->conn;
+    }
+
     public function verificarLogin($emailUsuario, $senhaUsuario) {
         $query = "SELECT * FROM Usuario WHERE emailUsuario = ?";
         $stmt = $this->conn->prepare($query);
@@ -29,7 +33,7 @@ class Usuario {
         
 
         $query = "INSERT INTO Usuario (fotoUsuario, nomeUsuario, telefoneUsuario, emailUsuario, senhaUsuario, tipoUsuario, statusUsuario)
-                    VALUES ('$fotoUsuario', '$nomeUsuario', '$telefoneUsuario', '$emailUsuario', '$senhaUsuario', 'admin', 'ativo')";
+                    VALUES ('$fotoUsuario', '$nomeUsuario', '$telefoneUsuario', '$emailUsuario', '$senhaUsuario', 'padrao', 'ativo')";
 
         $res = mysqli_query($this->conn, $query);
         if (!$res) {
@@ -63,15 +67,15 @@ class Usuario {
         return $stmt->execute();
     }
 
-    public function excluirUsuario($idUsuario){
-        $query = "DELETE FROM Usuario WHERE idUsuario=?";
-        $stmt = $this->conn->prepare($query);
+    public function excluirUsuario($idUsuario) {
+        $excluir = "DELETE FROM Usuario WHERE idUsuario=?";
+        $stmt = $this->conn->prepare($excluir);
         if ($stmt === false) {
-            echo "Erro na preparação da consulta.";
-        return false;
-    }
-    $stmt->bind_param("i", $idUsuario);
-    return ($stmt->execute());
+            echo "Erro na preparação de consulta.";
+            return false;
+        }
+        $stmt->bind_param("i", $idUsuario);
+        return ($stmt->execute());
     }
 
     public function buscarPorNome($termo) {
