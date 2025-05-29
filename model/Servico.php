@@ -54,14 +54,6 @@ class Servico {
         return $res;
     }
 
-    public function cadastrarProduto($idServico, $idProduto, $quantidade, $valorUnitario) {
-        $cadastrarProduto = "INSERT INTO produtoServico (idServico, idProduto, quantidade, valorUnitario)
-                            VALUES ('$idServico', '$idProduto', '$quantidade', '$valorUnitario')";
-
-        $res = mysqli_query($this->conn, $cadastrarProduto);
-        return $res;
-    }
-
 
     //Metódo para atualizar 
     public function atualizarServico($idServico, $idCliente, $idUsuario, $descricao, $dataEntrada, $entrega, $valorTotal){
