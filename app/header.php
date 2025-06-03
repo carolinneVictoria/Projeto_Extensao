@@ -1,5 +1,4 @@
 <?php
-error_reporting(0);
 session_start();
 
 include_once 'C:/xampp/htdocs/Projeto_Extensao/controller/HeaderController.php';
