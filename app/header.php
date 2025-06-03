@@ -1,6 +1,5 @@
 <?php
-session_start();
-
+error_reporting(0);
 include_once 'C:/xampp/htdocs/Projeto_Extensao/controller/HeaderController.php';
 $headerController = new HeaderController();
 $dadosUsuario = $headerController->carregarHeader();
