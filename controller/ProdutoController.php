@@ -58,7 +58,7 @@ function excluirProduto($produtoModel){
     header('Location: ../view/ProdutoView/produtos.php');
     exit();
     } else {
-    echo "Erro ao excluir o Produto.";
+    echo "Erro ao excluir o Produto. Possivelmente tem associações.";
     }
 }
 
