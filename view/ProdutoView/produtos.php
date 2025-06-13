@@ -1,30 +1,28 @@
 <?php include ("../../app/header.php"); ?>
-
-
 <!-- Navbar e Barra de Busca -->
-<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
-  <div class="container w-100">
-    <div class="collapse navbar-collapse" id="mynavbar">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
-          <a class="nav-link" href="formProdutos.php">Cadastrar novo Produto</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="../CategoriaView/categorias.php">Categorias</a>
-        </li>
-      </ul>
-        <form method="GET" action="/Projeto_Extensao/controller/ProdutoController.php?acao=buscar" class="d-flex" role="search">
-        <input type="hidden" name="acao" value="buscar">
-        <input type="text" name="busca" class="form-control me-2" placeholder="Buscar por Nome" value="<?= $_GET['busca'] ?? '' ?>">
-        <button class="btn btn-outline-light" type="submit">Buscar</button>
+<div class="container-fluid bg-dark d-flex position-fixed" style="top: 50px; left: 160px; width: calc(100% - 160px); height: 50px; z-index: 1030;">
+  <nav class="navbar navbar-expand-sm navbar-dark bg-dark w-100">
+    <div class="container-fluid">
+      <div class="collapse navbar-collapse d-flex justify-content-between" id="mynavbar">
+          <ul class="navbar-nav mb-4 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="formProdutos.php">Cadastrar novo Produto</a></li>
+          <li class="nav-item"><a class="nav-link" href="../CategoriaView/categorias.php">Categorias</a></li>
+        </ul>
+        <!-- Campo de busca -->
+        <form method="GET" action="/Projeto_Extensao/controller/ProdutoController.php?acao=buscar" class="d-flex me-2" role="search">
+          <input type="hidden" name="acao" value="buscar">
+          <input type="text" name="busca" class="form-control me-2" placeholder="Buscar por Nome"value="<?= $_GET['busca'] ?? '' ?>">
+          <button class="btn btn-outline-light" type="submit">Buscar</button>
         </form>
-
+      </div>
     </div>
-  </div>
-</nav>
-<div class="col-md-12 mb-3">
-<?php
+  </nav>
+</div>
 
+<!-- Conteúdo principal -->
+<div class="container" style="margin-left: -10px; padding-top: 50px;">
+
+<?php
 // Inclui a conexão ao banco e o modelo de Produto
 include_once "../../config/conexaoBD.php"; 
 include_once "../../model/Produto.php";
@@ -48,7 +46,7 @@ echo "
                 <th>QUANTIDADE</th>
                 <th>VALOR</th>
                 <th>CATEGORIA</th>
-                <th style='width: 20%;'>AÇÕES</th>
+                <th>AÇÕES</th>
             </tr>
         </thead>";
 
@@ -71,6 +69,5 @@ while ($registro = mysqli_fetch_assoc($produtos)) {
 }
 echo "</table>";
 ?>
-</div>
-
 <?php include "../../app/footer.php"; ?>
+</div>
