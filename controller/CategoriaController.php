@@ -44,7 +44,7 @@ function excluirCategoria($categoriaModel) {
     header('Location: ../view/CategoriaView/categorias.php');
     exit();
     } else {
-    echo "Erro ao excluir a Categoria.";
+    echo "Erro ao excluir a Categoria. Possivelmente tem associações.";
     }
 }
 
