@@ -28,7 +28,7 @@ if (isset($_GET['id'])) {
         <input type="hidden" name="idProduto" value="<?= $produto['idProduto']; ?> ">
 
         <div class="row">
-        <div class="col-md-6 mb-3 border" >
+        <div class="col-md-6 mb-3" >
             <div class="form-floating">
                 <input type="text" class="form-control border border-info rounded" id="nomeProduto" name="nomeProduto" value="<?= $produto['nomeProduto']; ?>" required readonly>
                 <label for="nomeProduto">Nome do Produto:</label>
@@ -70,8 +70,14 @@ if (isset($_GET['id'])) {
             </div>
         </div>
 
-        <div class="d-flex justify-content-end mt-3">
-            <a href="produtos.php" class="btn btn-secondary btn me-2">Voltar</a>
+        <div class="col-md-12 mb-3">
+            <div class="d-flex justify-content-end gap-2">
+                <a href='formAtualizarProdutos.php?id=<?= $idProduto ?>' class='btn btn-primary btn-sm'>Atualizar</a>
+                <a href='../../controller/ProdutoController.php?acao=excluir&id=<?= $idProduto ?>' class='btn btn-danger btn-sm' onclick='return confirm("Tem certeza que deseja excluir?")'>Excluir</a>
+                <a href="produtos.php" class="btn btn-secondary btn-sm">Voltar</a>
+            </div>
+        </div>
+
         </div>
 
         </div>
