@@ -88,4 +88,4 @@ $primeiroNome = $nomeUsuario ? explode(' ', $nomeUsuario)[0] : '';
 <!-- Container PRINCIPAL do Sistema-->
 <div class="container" style="margin-left: 170px; padding-top: 50px;">
         <div class="row">
-            <div class="col-12"></div>
+            <div class="col-12">
