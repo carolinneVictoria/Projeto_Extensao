@@ -59,8 +59,7 @@ while ($registro = mysqli_fetch_assoc($clientes)) {
                 <td>{$registro['endereco']}</td>
                 <td>{$registro['bicicleta']}</td>
                 <td>
-                <a href='formAtualizarCliente.php?id=$idCliente' class='btn btn-primary btn-sm'>Atualizar</a>
-                <a href='../../controller/ClienteController.php?acao=excluir&id=$idCliente' class='btn btn-danger btn-sm' onclick='return confirm(\"Tem certeza que deseja excluir?\")'>Excluir</a>
+                <a href='verCliente.php?id=$idCliente' class='btn btn-primary brn-sm'>Ver</a>
                 </td>
             </tr>
         </tbody>
