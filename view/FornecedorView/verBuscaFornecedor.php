@@ -22,8 +22,7 @@
             <td><?= $registro['endereco'] ?></td>
             <td><?= $registro['telefone'] ?></td>
             <td>
-                <a href="/Projeto_Extensao/view/FornecedorView/formAtualizarFornecedor.php?id=<?= $registro['idFornecedor'] ?>" class="btn btn-primary btn-sm">Atualizar</a>
-                <a href="/Projeto_Extensao/controller/FornecedorController.php?acao=excluir&id=<?= $registro['idFornecedor'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</a>
+                <a href='../view/FornecedorView/verFornecedor.php?id=<?= $registro['idFornecedor'] ?>' class='btn btn-primary brn-sm'>Ver</a>
             </td>
         </tr>
     <?php endwhile; ?>
