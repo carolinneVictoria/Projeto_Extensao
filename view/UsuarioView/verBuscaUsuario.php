@@ -24,8 +24,7 @@
             <td><?= $registro['tipoUsuario'] ?></td>
             <td><?= $registro['statusUsuario'] ?></td>
             <td>
-                <a href="/Projeto_Extensao/view/UsuarioView/formAtualizarUsuario.php?id=<?= $registro['idUsuario'] ?>" class="btn btn-primary btn-sm">Atualizar</a>
-                <a href="/Projeto_Extensao/controller/UsuarioController.php?acao=excluir&id=<?= $registro['idUsuario'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</a>
+                <a href='../view/UsuarioView/verUsuario.php?id=<?= $registro['idUsuario'] ?>' class='btn btn-primary btn-sm'>Ver Detalhes</a>
             </td>
         </tr>
     <?php endwhile; ?>
