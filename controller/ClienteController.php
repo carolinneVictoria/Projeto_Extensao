@@ -51,8 +51,9 @@ function excluirCliente($clienteModel) {
     $resultado = $clienteModel->excluirCliente($idCliente);
     if($resultado) {
         header('Location: ../view/ClienteView/clientes.php');
+        exit();
     } else {
-        echo "ERRO AO EXCLUIR!";
+        echo "Erro ao excluir. Possivelmente tem associações " ;
     }
 }
 
