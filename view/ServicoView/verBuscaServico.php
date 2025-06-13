@@ -26,9 +26,7 @@
             <td><?= ($registro['entrega'] == 0 ? 'Sim' : 'Não') ?></td>
             <td>R$ <?= number_format($registro['valorTotal'], 2, ',', '.') ?></td>
             <td>
-                <a href='formAtualizarServico.php?id=$idServico' class='btn btn-primary btn-sm'>Atualizar</a>
-                <a href='../../controller/ServicoController.php?acao=excluir&id=$idServico' class='btn btn-danger btn-sm' onclick='return confirm(\"Tem certeza que deseja excluir?\")'>Excluir</a>
-                <a href='verServico.php?id=$idServico' class='btn btn-primary brn-sm'>Ver</a>
+                <a href='../view/ServicoView/verServico.php?id=<?= $registro['idServico'] ?>' class='btn btn-primary btn-sm'>Ver Detalhes</a>
             </td>
         </tr>
     <?php endwhile; ?>
