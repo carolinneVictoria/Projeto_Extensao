@@ -63,9 +63,7 @@ while ($registro = mysqli_fetch_assoc($produtos)) {
                 <td>R$ " . number_format($registro['valorProduto'], 2, ',', '.') . "</td>
                 <td>{$registro['descricao']}</td>
                 <td>
-                <a href='formAtualizarProdutos.php?id=$idProduto' class='btn btn-primary btn-sm'>Atualizar</a>
-                <a href='../../controller/ProdutoController.php?acao=excluir&id=$idProduto' class='btn btn-danger btn-sm' onclick='return confirm(\"Tem certeza que deseja excluir?\")'>Excluir</a>
-                <a href='verProduto.php?id=$idProduto' class='btn btn-primary btn-sm'>Ver</a>
+                <a href='verProduto.php?id=$idProduto' class='btn btn-primary btn-sm'>Ver Detalhes</a>
                 </td>
             </tr>
         </tbody>
