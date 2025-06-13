@@ -26,8 +26,7 @@
             <td><?= $registro['endereco'] ?></td>
             <td><?= $registro['bicicleta'] ?></td>
             <td>
-                <a href="/Projeto_Extensao/view/ClienteView/formAtualizarCliente.php?id=<?= $registro['idCliente'] ?>" class="btn btn-primary btn-sm">Atualizar</a>
-                <a href="/Projeto_Extensao/controller/ClienteController.php?acao=excluir&id=<?= $registro['idCliente'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</a>
+                <a href='../view/ClienteView/verCliente.php?id=<?= $registro['idCliente'] ?>' class='btn btn-primary btn-sm'>Ver Detalhes</a>
             </td>
         </tr>
     <?php endwhile; ?>
