@@ -59,8 +59,7 @@ while ($registro = mysqli_fetch_assoc($usuarios)) {
                 <td>{$registro['tipoUsuario']}</td>
                 <td>{$registro['statusUsuario']}</td>
                 <td>
-                <a href='formAtualizarUsuario.php?id=$idUsuario' class='btn btn-primary btn-sm'>Atualizar</a>
-                <a href='../../controller/UsuarioController.php?acao=excluir&id=$idUsuario' class='btn btn-danger btn-sm' onclick='return confirm(\"Tem certeza que deseja excluir?\")'>Excluir</a>
+                <a href='verUsuario.php?id=$idUsuario' class='btn btn-primary btn-sm'>Ver Detalhes</a>
                 </td>
             </tr>
         </tbody>
