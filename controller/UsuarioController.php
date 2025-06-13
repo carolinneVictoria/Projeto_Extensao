@@ -140,7 +140,7 @@ function excluirUsuario($usuarioModel) {
     if($resultado) {
         header('Location: ../view/UsuarioView/usuarios.php');
     } else {
-        echo "ERRO AO EXCLUIR!";
+        echo "ERRO AO EXCLUIR! Possivelmente tem associações.";
     }
 }
 
