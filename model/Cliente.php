@@ -6,6 +6,10 @@ private $conn;
     public function __construct($dbConnection) {
         $this->conn = $dbConnection;
     }
+    public function getConnection() {
+    return $this->conn;
+}
+
 
     public function cadastrarCliente($nome, $telefone, $cpf, $dataNascimento, $endereco, $bicicleta){
         $cadastrar = "INSERT INTO Cliente (nome, telefone, cpf, dataNascimento, endereco, bicicleta)
@@ -48,6 +52,7 @@ private $conn;
         $stmt->bind_param("i", $idCliente);
         return ($stmt->execute());
     }
+
 
     public function buscarPorNome($termo) {
         $buscar = "SELECT * FROM Cliente WHERE nome LIKE ?";
