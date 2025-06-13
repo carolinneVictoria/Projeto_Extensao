@@ -24,8 +24,7 @@
             <td><?= $registro['valorProduto'] ?></td>
             <td><?= $registro['descricao'] ?></td>
             <td>
-                <a href="../view/ProdutoView/formAtualizarProdutos.php?id=<?= $registro['idProduto'] ?>" class="btn btn-primary btn-sm">Atualizar</a>
-                <a href="/Projeto_Extensao/controller/ProdutoController.php?acao=excluir&id=<?= $registro['idProduto'] ?>" class="btn btn-danger btn-sm" onclick="return confirm('Tem certeza que deseja excluir?')">Excluir</a>
+                <a href='../view/ProdutoView/verProduto.php?id=<?= $registro['idProduto'] ?>' class='btn btn-primary btn-sm'>Ver Detalhes</a>
             </td>
         </tr>
     <?php endwhile; ?>
