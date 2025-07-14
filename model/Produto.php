@@ -13,7 +13,7 @@ class Produto {
 
     // Método para listar todos os produtos
     public function listarProdutos() {
-        $listarProdutos = "SELECT Produto.*, Categoria.descricao FROM Produto INNER JOIN Categoria ON Produto.idCategoria = Categoria.idCategoria ORDER BY idProduto";
+        $listarProdutos = "SELECT Produto.*, Categoria.descricao FROM Produto INNER JOIN Categoria ON Produto.idCategoria = Categoria.idCategoria ORDER BY Produto.nomeProduto ASC";
         $res = mysqli_query($this->conn, $listarProdutos);
         return $res;
     }
