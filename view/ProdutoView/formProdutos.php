@@ -29,14 +29,18 @@ include_once ('../../model/Categoria.php');
 
         <div class="col-md-6 mb-3">
             <div class="form-floating">
-                <input type="text" class="form-control" id="valorProduto" name="valorProduto" required>
+                <!-- Campo visível com máscara -->
+                <input type="text" class="form-control" id="valorProdutoMascara" required>
+
+                <!-- Campo oculto que será enviado -->
+                <input type="hidden" name="valorProduto" id="valorProduto">
                 <label for="valorProduto">Valor do Produto:</label>
             </div>
         </div>
 
         <div class="col-md-12 mb-3">
             <div class="form-floating">
-                <textarea class="form-control" id="descricaoProduto" name="descricaoProduto" required style="height: 100px"></textarea>
+                <textarea class="form-control" id="descricaoProduto" name="descricaoProduto" style="height: 100px"></textarea>
                 <label for="descricaoProduto">Descrição do Produto:</label>
             </div>
         </div>
@@ -71,8 +75,19 @@ include_once ('../../model/Categoria.php');
 
     </form>
     </div>
-    
-
 </div>
+<script>
+document.getElementById('valorProdutoMascara').addEventListener('input', function (e) {
+    let input = e.target.value.replace(/\D/g, ''); // remove tudo que não for número
+    input = (parseInt(input) / 100).toFixed(2);
+
+    // Atualiza o campo visível com formato R$ X.XX
+    e.target.value = 'R$ ' + input.replace('.', ',');
+
+    // Atualiza o campo escondido com valor numérico limpo (usado no PHP)
+    document.getElementById('valorProduto').value = input;
+});
+</script>
+
 
 <?php include("../../app/footer.php") ?>
