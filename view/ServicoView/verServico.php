@@ -116,7 +116,7 @@ if ($produtosAssociados) {
             <div class="col-md-12 mb-3">
                 <div class="d-flex justify-content-end gap-2">
                     <a href='formAtualizarServico.php?id=<?= $idServico ?>' class='btn btn-primary btn-sm'>Atualizar</a>
-                    <a href='../../controller/ServicoController.php?acao=excluir&id=<?= $idServico ?>' class='btn btn-danger btn-sm' onclick='return confirm(\"Tem certeza que deseja excluir?\")'>Excluir</a>
+                    <a href='../../controller/ServicoController.php?acao=excluir&id=<?= $idServico ?>' class='btn btn-danger btn-sm' onclick='return confirm("Tem certeza que deseja excluir?")'>Excluir</a>
                     <a href="servicos.php" class="btn btn-secondary btn me-2">Voltar</a>
                 </div>
             </div>
