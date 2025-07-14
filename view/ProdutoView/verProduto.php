@@ -73,7 +73,7 @@ if (isset($_GET['id'])) {
         <div class="col-md-12 mb-3">
             <div class="d-flex justify-content-end gap-2">
                 <a href='formAtualizarProdutos.php?id=<?= $idProduto ?>' class='btn btn-primary btn-sm'>Atualizar</a>
-                <a href='../../controller/ProdutoController.php?acao=excluir&id=<?= $idProduto ?>' class='btn btn-danger btn-sm' onclick='return confirm("Tem certeza que deseja excluir?")'>Excluir</a>
+                <a href='../../controller/ProdutoController.php?acao=excluir&id=<?= $idProduto ?>' class='btn btn-danger btn-sm' onclick='return confirm("Tem certeza que deseja excluir? Produto tem associação com serviços, sendo assim ele também sera excluido desse registro!")'>Excluir</a>
                 <a href="produtos.php" class="btn btn-secondary btn-sm">Voltar</a>
             </div>
         </div>
