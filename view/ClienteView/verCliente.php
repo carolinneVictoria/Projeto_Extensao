@@ -71,7 +71,7 @@ if (isset($_GET['id'])) {
             <div class="col-md-12 mb-3">
                 <div class="d-flex justify-content-end gap-2">
                     <a href='formAtualizarCliente.php?id=<?= $idCliente ?>' class='btn btn-primary btn-sm'>Atualizar</a>
-                    <a href='../../controller/ClienteController.php?acao=excluir&id=<?= $idCliente?>' class='btn btn-danger btn-sm' onclick='return confirm(\"Tem certeza que deseja excluir?\")'>Excluir</a>
+                    <a href='../../controller/ClienteController.php?acao=excluir&id=<?= $idCliente?>' class='btn btn-danger btn-sm' onclick="return confirm('Tem certeza que deseja excluir? Esse cliente pode ter um serviço, e ele será excluido junto!')">Excluir</a>
                     <a href="clientes.php" class="btn btn-secondary btn me-2">Voltar</a>
                 </div>
             </div>
