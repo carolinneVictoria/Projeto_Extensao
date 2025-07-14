@@ -34,14 +34,13 @@ $produtoModel = new Produto($conn);
 $produtos = $produtoModel->listarProdutos();
 $totalProdutos = mysqli_num_rows($produtos); 
 
-echo "<h5>Produtos cadastrados: $totalProdutos</h5>";
+echo "<p></p><h5>$totalProdutos produtos cadastrados.</h5><p></p>";
 
 // Exibindo a tabela de produtos
 echo "
     <table class='table table-hover table-bordered table-sm'>
         <thead class='thead-light'>
             <tr>
-                <th>ID</th>
                 <th>NOME</th>
                 <th>QUANTIDADE</th>
                 <th>VALOR</th>
@@ -55,7 +54,6 @@ while ($registro = mysqli_fetch_assoc($produtos)) {
     echo "
         <tbody>
             <tr>
-                <td>{$registro['idProduto']}</td>
                 <td>{$registro['nomeProduto']}</td>
                 <td>{$registro['quantidadeProduto']}</td>
                 <td>R$ " . number_format($registro['valorProduto'], 2, ',', '.') . "</td>
