@@ -20,7 +20,7 @@
 </div>
 
 <!-- Conteúdo principal -->
-<div class="container" style="margin-left: -10px; padding-top: 50px;">
+<div class="container" style="margin-left: -10px; padding-top: 50px;"></div>
 
 <?php
 // Inclui a conexão ao banco e o modelo de Produto
