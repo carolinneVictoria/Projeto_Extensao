@@ -58,10 +58,10 @@ class Produto {
     $buscarProduto = "SELECT Produto.*, Categoria.descricao 
                       FROM Produto 
                       INNER JOIN Categoria ON Produto.idCategoria = Categoria.idCategoria
-                      WHERE nomeProduto LIKE ?";
+                      WHERE nomeProduto LIKE ? OR Categoria.descricao Like ?";
     $stmt = $this->conn->prepare($buscarProduto);
     $like = "%" . $termo . "%";
-    $stmt->bind_param("s", $like);
+    $stmt->bind_param("ss", $like, $like);
     $stmt->execute();
     $res = $stmt->get_result();
     return $res;
