@@ -56,7 +56,7 @@ $primeiroNome = $nomeUsuario ? explode(' ', $nomeUsuario)[0] : '';
 </div>
 
 <!-- Sidebar Navbar Lateral -->
-<nav class="navbar bg-dark navbar-dark flex-column vh-100 position-fixed p-2" style="width: 170px;">
+<nav class="navbar bg-dark navbar-dark flex-column vh-100 position-fixed p-2" style="width: 182px;">
     <div class="container-fluid">
 
         <?php if(isset($_SESSION['logado']) && $_SESSION['logado'] === true): ?>
