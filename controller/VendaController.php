@@ -62,15 +62,15 @@ function atualizarVenda($vendaModel) {
 }
 }
 
-function excluirServico($servicoModel){
-    $idServico = $_GET['id'];
-    $resultado = $servicoModel->excluirServico($idServico);
+function excluirVenda($vendaModel){
+    $idVenda = $_GET['id'];
+    $resultado = $vendaModel->excluirVenda($idVenda);
     if ($resultado) {
-    echo "Serviço excluído com sucesso!";
-    header('Location: ../view/ServicoView/servicos.php');
+    echo "Venda excluído com sucesso!";
+    header('Location: ../view/VendaView/vendas.php');
     exit();
     } else {
-    echo "Erro ao excluir o serviço: " . mysqli_error($servicoModel->getConnection());
+    echo "Erro ao excluir a venda: " . mysqli_error($vendaModel->getConnection());
     exit();
     }
 }
@@ -156,7 +156,7 @@ if (isset($_GET['acao'])) {
     } elseif ($acao == 'atualizar') {
         atualizarVenda($vendaModel); // Se o formulário for enviado, processa a atualização
     } elseif ($acao == 'excluir') {
-        excluirServico($servicoModel);
+        excluirVenda($vendaModel);
     } elseif($acao == 'buscar') {
         buscarServico($servicoModel, $clienteModel, $usuarioModel);
     } elseif($acao == 'adicionarProduto'){
