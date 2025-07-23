@@ -47,7 +47,7 @@ public function listarVendas() {
                                     valorTotal      = '$valorTotal',
                                     formaPagamento  = '$formaPagamento'
 
-                                WHERE idVenda     = '$idVenda'
+                                WHERE idVenda       = '$idVenda'
                                 ";
         
         $res = mysqli_query($this->conn, $atualizarVenda);
