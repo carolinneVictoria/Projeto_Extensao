@@ -18,11 +18,11 @@ function cadastrarVenda($vendaModel) {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $idUsuario      = $_POST['idUsuario'];
         $data           = $_POST['data'];
-        $desconto       = $_POST['descontoVenda'];
+        $descontoVenda  = $_POST['descontoVenda'];
         $valorTotal     = $_POST['valorTotal'];
         $formaPagamento = $_POST['formaPagamento'];
 
-        $idVenda = $vendaModel->cadastrarVenda($idUsuario, $data, $desconto, $valorTotal, $formaPagamento);
+        $idVenda = $vendaModel->cadastrarVenda($idUsuario, $data, $descontoVenda, $valorTotal, $formaPagamento);
 
         if ($idVenda) {
             header("Location: ../view/VendaView/formAtualizarVenda.php?id=$idVenda");
@@ -32,7 +32,6 @@ function cadastrarVenda($vendaModel) {
         }
     }
 }
-
 
 // Função para listar
 function listarVendas($vendaModel, $usuarioModel) {
@@ -45,7 +44,7 @@ function listarVendas($vendaModel, $usuarioModel) {
 function atualizarVenda($vendaModel) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['idVenda'])) {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $idVenda      = $_POST['idServico'];
+        $idVenda      = $_POST['idVenda'];
         $idUsuario      = $_POST['idUsuario'];
         $data           = $_POST['data'];
         $descontoVenda  = $_POST['descontoVenda'];
