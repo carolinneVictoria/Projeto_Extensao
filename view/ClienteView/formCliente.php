@@ -28,14 +28,14 @@ session_start();
 
             <div class="col-md-6 mb-3">
                 <div class="form-floating">
-                    <input type="text" class="form-control" id="cpf" name="cpf" required>
+                    <input type="text" class="form-control" id="cpf" name="cpf">
                     <label for="cpf">CPF:</label>
                 </div>
             </div>
 
             <div class="col-md-6 mb-3">
                 <div class="form-floating">
-                    <input type="date" class="form-control" id="dataNascimento" name="dataNascimento" required>
+                    <input type="date" class="form-control" id="dataNascimento" name="dataNascimento">
                     <label for="dataNascimento">Data de Nascimento:</label>
                 </div>
             </div>
@@ -47,7 +47,7 @@ session_start();
                 </div>
             </div>
 
-             <div class="col-md-6 mb-3">
+            <div class="col-md-6 mb-3">
                 <div class="form-floating">
                     <input type="text" class="form-control" id="bicicleta" name="bicicleta">
                     <label for="bicicleta">Bicicleta</label>
