@@ -63,6 +63,7 @@ $usuarios = $usuarioModel->listarUsuarios();
                         <select class="form-control" id="formaPagamento" name="formaPagamento" required>
                             <option value="">-- Selecione uma forma de Pagamento --</option>
                             <option value="Pix">Pix</option>
+                            <option value="Dinheiro">Dinheiro</option>
                             <option value="Cartão de Débito">Cartão de Débito</option>
                             <option value="Cartão de Crédito">Cartão de Crédito</option>
                         </select>
