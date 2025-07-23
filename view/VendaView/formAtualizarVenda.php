@@ -23,7 +23,7 @@ $produtosAssociados = $vendaProdutoModel->listarProdutosVenda($idVenda);
 
 if ($produtosAssociados) {
     while ($registro = mysqli_fetch_assoc($produtosAssociados)) {
-        $valorTotal += $registro['quantidade'] * $registro['valorUnitario'] - $registro['descontoVenda'];
+        $valorTotal += ($registro['quantidade'] * $registro['valorUnitario']);
     }
     if (!$vendaModel->atualizarValorTotalVenda($idVenda, $valorTotal)) {
         echo "Erro ao atualizar o valor total no banco de dados!";
@@ -59,6 +59,13 @@ if ($produtosAssociados) {
             </div>
 
             <div class="col-md-4 mb-3">
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="descontoVenda" name="descontoVenda">
+                    <label for="descontoVenda">Desconto:</label>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
                 <div class="form-floating border border-success rounded">
                     <input type="hidden" name="valorTotal" value="<?= $valorTotal ?>">
                     <input type="text" class="form-control" id="valorTotal" readonly value="R$ <?= number_format($valorTotal, 2, ',', '.'); ?>">
@@ -68,15 +75,9 @@ if ($produtosAssociados) {
 
             <div class="col-md-4 mb-3">
                 <div class="form-floating">
-                    <input type="text" class="form-control" id="descontoVenda" name="descontoVenda" value="<?= $venda['descontoVenda']; ?>">
-                    <label for="descontoVenda">Desconto:</label>
-                </div>
-            </div>
-
-            <div class="col-md-4 mb-3">
-                <div class="form-floating">
                     <select class="form-select" id="formaPagamento" name="formaPagamento" required>
                         <option value="Pix" <?= ($venda['formaPagamento'] == 'Pix') ? 'selected' : '' ?>>Pix</option>
+                        <option value="Dinheiro" <?= ($venda['formaPagamento'] == 'Dinheiro') ? 'selected' : '' ?>>Dinheiro</option>
                         <option value="Cartão de Débito" <?= ($venda['formaPagamento'] == 'Cartão de Débito') ? 'selected' : '' ?>>Cartão de Débito</option>
                         <option value="Cartão de Crédito" <?= ($venda['formaPagamento'] == 'Cartão de Crédito') ? 'selected' : '' ?>>Cartão de Crédito</option>
                     </select>
@@ -137,12 +138,6 @@ if ($produtosAssociados) {
     </div>
 </div>
 
-<script>
-document.getElementById('descontoVenda').addEventListener('input', function (e) {
-    let value = e.target.value.replace(/\D/g, '');
-    value = (parseInt(value) / 100).toFixed(2);
-    e.target.value = 'R$ ' + value.replace('.', ',');
-});
-</script>
+
 
 <?php include("../../app/footer.php") ?>
