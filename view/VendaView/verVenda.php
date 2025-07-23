@@ -77,6 +77,7 @@ if ($produtosAssociados) {
                 <div class="form-floating">
                     <select class="form-select" id="formaPagamento" name="formaPagamento" required>
                         <option value="Pix" <?= ($venda['formaPagamento'] == 'Pix') ? 'selected' : '' ?>>Pix</option>
+                        <option value="Dinheiro" <?= ($venda['formaPagamento'] == 'Dinheiro') ? 'selected' : '' ?>>Dinheiro</option>
                         <option value="Cartão de Débito" <?= ($venda['formaPagamento'] == 'Cartão de Débito') ? 'selected' : '' ?>>Cartão de Débito</option>
                         <option value="Cartão de Crédito" <?= ($venda['formaPagamento'] == 'Cartão de Crédito') ? 'selected' : '' ?>>Cartão de Crédito</option>
                     </select>
