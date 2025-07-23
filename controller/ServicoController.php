@@ -82,7 +82,7 @@ function buscarServico($servicoModel, $clienteModel, $usuarioModel) {
         $clientes = $clienteModel->listarClientes();
         $usuarios = $usuarioModel->listarUsuarios();
 
-        include('../view/ServicoView/verBuscaServico.php'); 
+        include('../view/ServicoView/verBuscaServico.php');
     } else {
         echo "Nenhum termo de busca informado.";
     }
