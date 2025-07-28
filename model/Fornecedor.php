@@ -66,7 +66,7 @@ private $conn;
     if ($row = $result->fetch_assoc()) {
         return $row;
     } else {
-        return null; 
+        return null;
     }
 }
 
