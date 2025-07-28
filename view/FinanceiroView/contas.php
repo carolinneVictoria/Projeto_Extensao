@@ -77,18 +77,16 @@ echo "
 
 while ($registro = mysqli_fetch_assoc($contas)) {
   $idConta = $registro['idConta'];
-  $status = $registro['status'] == 0 ? 'Pago' : 'A pagar';
+  $status = $registro['status'] == 0 ? 'A pagar' : 'Pago';
   $valor = number_format($registro['valorTotal'], 2, ',', '.');
 
   echo "
     <tr>
       <td>{$registro['idConta']}</td>
       <td>{$registro['descricao']}</td>
-      <td>{$registro['valorTotal']}</td>
-      <td>{$registro['dataVencimento']}</td>
-      <td>{$registro['status']}</td>
-      <td>$entrega</td>
       <td>R$ $valor</td>
+      <td>{$registro['dataVencimento']}</td>
+      <td>$status</td>
       <td>
         <a href='verConta.php?id=$idConta' class='btn btn-primary btn-sm'>Ver Detalhes</a>
       </td>
