@@ -74,6 +74,23 @@ private $conn;
         }
     }
 
+    public function listarContasPorMesEAno($mes = null, $ano = null) {
+    $sql = "SELECT * FROM financeiro WHERE 1=1";
+
+    if ($mes) {
+        $sql .= " AND MONTH(dataVencimento) = " . intval($mes);
+    }
+
+    if ($ano) {
+        $sql .= " AND YEAR(dataVencimento) = " . intval($ano);
+    }
+
+    $sql .= " ORDER BY dataVencimento ASC";
+
+    return mysqli_query($this->conn, $sql);
+}
+
+
 }
 
 ?>
