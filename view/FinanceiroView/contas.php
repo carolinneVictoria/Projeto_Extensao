@@ -77,7 +77,7 @@ echo "
 
 while ($registro = mysqli_fetch_assoc($contas)) {
   $idConta = $registro['idConta'];
-  $status = $registro['status'] == 0 ? 'A pagar' : 'Pago';
+  $status = $registro['status'] == 0 ? 'A pagar' : 'A pagar';
   $valor = number_format($registro['valorTotal'], 2, ',', '.');
 
   echo "
