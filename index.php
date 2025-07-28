@@ -1,4 +1,24 @@
-<?php include("app/header.php"); ?>
+<?php include("app/header.php");
+include_once "config/conexaoBD.php";
+
+$mesAtual = date('m');
+$anoAtual = date('Y');
+
+// Vendas do mês
+$sqlVendas = "SELECT SUM(valorTotal) as totalVendas FROM venda
+              WHERE MONTH(data) = $mesAtual AND YEAR(data) = $anoAtual";
+$resultVendas = mysqli_query($conn, $sqlVendas);
+$vendasMes = mysqli_fetch_assoc($resultVendas)['totalVendas'] ?? 0;
+$vendasMes = number_format($vendasMes, 2, ',', '.');
+
+// Despesas do mês
+$sqlDespesas = "SELECT SUM(valorTotal) as totalDespesas FROM financeiro
+                WHERE status = 'a pagar' AND MONTH(dataVencimento) = $mesAtual AND YEAR(dataVencimento) = $anoAtual";
+$resultDespesas = mysqli_query($conn, $sqlDespesas);
+$despesasMes = mysqli_fetch_assoc($resultDespesas)['totalDespesas'] ?? 0;
+$despesasMes = number_format($despesasMes, 2, ',', '.');
+?>
+
 
 <style>
     body {
@@ -49,15 +69,16 @@
         <div class="card bg-success" style="width: 350px; color: white">
             <div class="card-body">
                 <h4 class="card-title">Vendas</h4>
-                <p class="card-text">Total de Vendas!</p>
-                <a href="/Projeto_Extensao/view/VendaView/formVenda.php" class="card-link" style="color: white">Fazer uma venda</a>
+                <p class="card-text">R$ <?= $vendasMes ?> em vendas este mês</p>
+                <a href="/Projeto_Extensao/view/VendaView/vendas.php" class="card-link" style="color: white">Ver detalhes</a>
             </div>
         </div>
 
         <div class="card bg-danger" style="width: 350px; color: white">
             <div class="card-body">
                 <h4 class="card-title">Despesas</h4>
-                <p class="card-text">Some example text. Some example text.</p>
+                <p class="card-text">R$ <?= $despesasMes ?> em despesas este mês</p>
+                <a href="/Projeto_Extensao/view/FinanceiroView/contas.php" class="card-link" style="color: white">Ver detalhes</a>
             </div>
         </div>
 
