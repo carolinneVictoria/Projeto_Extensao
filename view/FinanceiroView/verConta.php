@@ -1,24 +1,9 @@
-<?php include("../../app/header.php");
-include ('./../config/conexaoBD.php');
-include ('../../model/Financeiro.php');
-
-$financeiroModel = new Financeiro($conn);
-if (isset($_GET['id'])) {
-    $idConta = $_GET['id'];
-    
-    $conta = $financeiroModel->buscarContaPorId($idConta);
-} else {
-    echo "ID da Conta não informado!";
-    exit();
-}
-?>
-
 <div class="container-fluid">
     <h4>Detalhes da Conta:</h4>
 
     <div class="col-sm-12">
 
-        <form action="/Projeto_Extensao/controller/FinanceiroController.php?acao=atualizar" method="POST" enctype="multipart/form-data" class="was-validated">
+        <form action="/Projeto_Extensao/controller/FinanceiroController.php" method="POST" enctype="multipart/form-data" class="was-validated">
         
         <input type="hidden" name="idConta" value="<?= $conta['idConta']; ?> ">
         
@@ -55,11 +40,11 @@ if (isset($_GET['id'])) {
                 </div>
             </div>
 
-           <div class="col-md-12 mb-3">
+            <div class="col-md-12 mb-3">
                 <div class="d-flex justify-content-end gap-2">
-                    <a href='formAtualizarConta.php?id=<?= $idConta ?>' class='btn btn-primary btn-sm'>Atualizar</a>
-                    <a href='../../controller/FinanceiroController.php?acao=excluir&id=<?= $idConta ?>' class='btn btn-danger btn-sm' onclick='return confirm("Tem certeza que deseja excluir?")'>Excluir</a>
-                    <a href="contas.php" class="btn btn-secondary btn me-2">Voltar</a>
+                    <a href='../controller/FinanceiroController.php?acao=atualizar&id=<?= $idConta ?>' class='btn btn-primary btn-sm'>Atualizar</a>
+                    <a href='../controller/FinanceiroController.php?acao=excluir&id=<?= $idConta ?>' class='btn btn-danger btn-sm' onclick='return confirm("Tem certeza que deseja excluir?")'>Excluir</a>
+                    <a href="../controller/FinanceiroController.php" class="btn btn-secondary btn me-2">Voltar</a>
                 </div>
             </div>
 
