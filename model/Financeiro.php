@@ -61,50 +61,25 @@ private $conn;
         return $res;
     }
 
-    public function buscarContaPorId($idConta) {
-    $stmt = $this->conn->prepare("SELECT * FROM Financeiro WHERE idConta = ?");
-    $stmt->bind_param("i", $idConta);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-        if ($row = $result->fetch_assoc()) {
-            return $row;
-        } else {
-            return null;
-        }
-    }
-
     public function listarContasPorMesEAno($mes, $ano) {
         $sql = "SELECT * FROM Financeiro WHERE 1=1";
+
         if (!empty($mes)) {
-            $sql .= " AND MONTH(dataVencimento) = ?";
+            $sql .= " AND MONTH(dataVencimento) = $mes";
         }
         if (!empty($ano)) {
-            $sql .= " AND YEAR(dataVencimento) = ?";
+            $sql .= " AND YEAR(dataVencimento) = $ano";
         }
-        $stmt = $this->conn->prepare($sql);
-        $paramIndex = 1;
-        if (!empty($mes)) {
-            $stmt->bind_param("i", $mes);
-            $paramIndex++;
-        }
-        if (!empty($ano)) {
-            if (!empty($mes)) {
-                $stmt->bind_param("ii", $mes, $ano);
-            } else {
-                $stmt->bind_param("i", $ano);
-            }
-        }
-        $stmt->execute();
-        $result = $stmt->get_result();
+
+        $result = $this->conn->query($sql);
         $contas = [];
+
         while ($row = $result->fetch_assoc()) {
             $contas[] = $row;
         }
+
         return $contas;
     }
-
-
 
 }
 
