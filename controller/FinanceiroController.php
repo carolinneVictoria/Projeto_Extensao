@@ -7,9 +7,11 @@ $financeiroModel = new Financeiro($conn);
 function listarContas($financeiroModel) {
     $contas = $financeiroModel->listarContas();
     include('../view/FinanceiroView/contas.php');
+    include ('../../app/footer.php');
 }
 
 function filtrarContas($financeiroModel) {
+    include('../app/header.php');
     $mes = $_GET['mes'] ?? null;
     $ano = $_GET['ano'] ?? null;
 
@@ -17,7 +19,9 @@ function filtrarContas($financeiroModel) {
     include('../view/FinanceiroView/contas.php');
 }
 
+
 function cadastrarConta($financeiroModel) {
+    include('../app/header.php');
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $descricao      = $_POST['descricao'];
         $valorTotal     = $_POST['valorTotal'];
@@ -25,8 +29,8 @@ function cadastrarConta($financeiroModel) {
         $status         = $_POST['status'];
 
         if ($financeiroModel->cadastrarConta($descricao, $valorTotal, $dataVencimento, $status)){
-            header("Location: ../view/FinanceiroView/contas.php");
-            exit();
+            listarContas($financeiroModel);
+            return;
         } else {
             echo "ERRO AO CADASTRAR CONTA.";
         }
@@ -34,7 +38,16 @@ function cadastrarConta($financeiroModel) {
 }
 
 function atualizarConta($financeiroModel) {
-    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['idConta'])) {
+    include('../app/header.php');
+    if (isset($_GET['id'])) {
+        $idConta = $_GET['id'];
+        $conta = $financeiroModel->buscarContaPorId($idConta);
+        include('../view/FinanceiroView/formAtualizarConta.php');
+    } else {
+        echo "ID não informado.";
+    }
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['idConta'])) {
         $idConta           = $_POST['idConta'];
         $descricao         = $_POST['descricao'];
         $valorTotal        = $_POST['valorTotal'];
@@ -42,12 +55,26 @@ function atualizarConta($financeiroModel) {
         $status            = $_POST['status'];
 
         if ($financeiroModel->atualizarConta($idConta, $descricao, $valorTotal, $dataVencimento, $status)) {
-            header("Location: ../view/FinanceiroView/contas.php");
+            listarContas($financeiroModel);
             exit();
         } else {
             global $conn;
             echo "Erro ao atualizar a conta! " . mysqli_error($conn);
         }
+    }
+
+    include ('../../app/footer.php');
+}
+
+
+function verConta($financeiroModel) {
+    include('../app/header.php');
+    if (isset($_GET['id'])) {
+        $idConta = $_GET['id'];
+        $conta = $financeiroModel->buscarContaPorId($idConta);
+        include('../view/FinanceiroView/verConta.php');
+    } else {
+        echo "ID não informado.";
     }
 }
 
@@ -55,7 +82,8 @@ function excluirConta($financeiroModel) {
     $idConta = $_GET['id'];
     $resultado = $financeiroModel->excluirConta($idConta);
     if($resultado) {
-        header('Location: ../view/FinanceiroView/contas.php');
+        include('../app/header.php');
+        listarContas($financeiroModel);
     } else {
         echo "ERRO AO EXCLUIR!";
     }
@@ -87,8 +115,12 @@ if (isset($_GET['acao'])) {
         buscarConta($financeiroModel);
     } elseif ($acao == 'filtrar') {
         filtrarContas($financeiroModel);
-    }
+    } elseif ($acao == 'verConta') {
+    verConta($financeiroModel);
+}
+
 } else {
+    include('../app/header.php');
     listarContas($financeiroModel);
 }
 ?>
