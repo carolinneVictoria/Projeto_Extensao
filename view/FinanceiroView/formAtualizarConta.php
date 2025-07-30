@@ -1,18 +1,3 @@
-<?php include("../../app/header.php");
-include ('./../config/conexaoBD.php');
-include ('../../model/Financeiro.php');
-
-$financeiroModel = new Financeiro($conn);
-if (isset($_GET['id'])) {
-    $idConta = $_GET['id'];
-    
-    $conta = $financeiroModel->buscarContaPorId($idConta);
-} else {
-    echo "ID da Conta não informado!";
-    exit();
-}
-?>
-
 <div class="container-fluid">
     <h4>Atualizar Conta:</h4>
 
@@ -63,5 +48,3 @@ if (isset($_GET['id'])) {
         </form>
     </div>
 </div>
-
-<?php include("../../app/footer.php"); ?>
