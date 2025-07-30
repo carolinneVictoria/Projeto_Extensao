@@ -74,21 +74,36 @@ private $conn;
         }
     }
 
-    public function listarContasPorMesEAno($mes = null, $ano = null) {
-    $sql = "SELECT * FROM financeiro WHERE 1=1";
-
-    if ($mes) {
-        $sql .= " AND MONTH(dataVencimento) = " . intval($mes);
+    public function listarContasPorMesEAno($mes, $ano) {
+        $sql = "SELECT * FROM Financeiro WHERE 1=1";
+        if (!empty($mes)) {
+            $sql .= " AND MONTH(dataVencimento) = ?";
+        }
+        if (!empty($ano)) {
+            $sql .= " AND YEAR(dataVencimento) = ?";
+        }
+        $stmt = $this->conn->prepare($sql);
+        $paramIndex = 1;
+        if (!empty($mes)) {
+            $stmt->bind_param("i", $mes);
+            $paramIndex++;
+        }
+        if (!empty($ano)) {
+            if (!empty($mes)) {
+                $stmt->bind_param("ii", $mes, $ano);
+            } else {
+                $stmt->bind_param("i", $ano);
+            }
+        }
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $contas = [];
+        while ($row = $result->fetch_assoc()) {
+            $contas[] = $row;
+        }
+        return $contas;
     }
 
-    if ($ano) {
-        $sql .= " AND YEAR(dataVencimento) = " . intval($ano);
-    }
-
-    $sql .= " ORDER BY dataVencimento ASC";
-
-    return mysqli_query($this->conn, $sql);
-}
 
 
 }
