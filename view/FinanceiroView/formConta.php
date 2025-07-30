@@ -1,7 +1,4 @@
-<?php include("../../app/header.php"); 
-session_start();
-
-?>
+<?php include("../../app/header.php"); ?>
 
 <div class="container-fluid">
     <h4>Cadastro de Conta:</h4>
