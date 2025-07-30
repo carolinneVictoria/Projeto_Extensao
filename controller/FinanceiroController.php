@@ -12,8 +12,8 @@ function listarContas($financeiroModel) {
 
 function filtrarContas($financeiroModel) {
     include('../app/header.php');
-    $mes = $_GET['mes'] ?? null;
-    $ano = $_GET['ano'] ?? null;
+    $mes = isset($_GET['mes']) && $_GET['mes'] !== '' ? (int)$_GET['mes'] : null;
+    $ano = isset($_GET['ano']) && $_GET['ano'] !== '' ? (int)$_GET['ano'] : null;
 
     $contas = $financeiroModel->listarContasPorMesEAno($mes, $ano);
     include('../view/FinanceiroView/contas.php');
@@ -65,7 +65,6 @@ function atualizarConta($financeiroModel) {
 
     include ('../../app/footer.php');
 }
-
 
 function verConta($financeiroModel) {
     include('../app/header.php');
