@@ -3,13 +3,11 @@ include_once "../config/conexaoBD.php";
 include_once "../model/Financeiro.php";
 
 $financeiroModel = new Financeiro($conn);
-
 function listarContas($financeiroModel) {
     $contas = $financeiroModel->listarContas();
     include('../view/FinanceiroView/contas.php');
     include ('../../app/footer.php');
 }
-
 function filtrarContas($financeiroModel) {
     include('../app/header.php');
     $mes = isset($_GET['mes']) && $_GET['mes'] !== '' ? (int)$_GET['mes'] : null;
@@ -18,8 +16,6 @@ function filtrarContas($financeiroModel) {
     $contas = $financeiroModel->listarContasPorMesEAno($mes, $ano);
     include('../view/FinanceiroView/contas.php');
 }
-
-
 function cadastrarConta($financeiroModel) {
     include('../app/header.php');
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -36,7 +32,6 @@ function cadastrarConta($financeiroModel) {
         }
     }
 }
-
 function atualizarConta($financeiroModel) {
     include('../app/header.php');
     if (isset($_GET['id'])) {
@@ -65,7 +60,6 @@ function atualizarConta($financeiroModel) {
 
     include ('../../app/footer.php');
 }
-
 function verConta($financeiroModel) {
     include('../app/header.php');
     if (isset($_GET['id'])) {
@@ -76,7 +70,6 @@ function verConta($financeiroModel) {
         echo "ID não informado.";
     }
 }
-
 function excluirConta($financeiroModel) {
     $idConta = $_GET['id'];
     $resultado = $financeiroModel->excluirConta($idConta);
@@ -87,7 +80,6 @@ function excluirConta($financeiroModel) {
         echo "ERRO AO EXCLUIR!";
     }
 }
-
 function buscarConta($financeiroModel) {
     if (isset($_GET['busca'])) {
         $termo = $_GET['busca'];
@@ -97,7 +89,6 @@ function buscarConta($financeiroModel) {
         echo "NENHUM TERMO DE BUSCA INFORMADO.";
     }
 }
-
 // Controle das rotas (ações)
 if (isset($_GET['acao'])) {
     $acao = $_GET['acao'];
@@ -117,7 +108,6 @@ if (isset($_GET['acao'])) {
     } elseif ($acao == 'verConta') {
     verConta($financeiroModel);
 }
-
 } else {
     include('../app/header.php');
     listarContas($financeiroModel);
