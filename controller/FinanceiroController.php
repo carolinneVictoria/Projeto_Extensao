@@ -14,7 +14,7 @@ function filtrarContas($financeiroModel) {
     $ano = isset($_GET['ano']) && $_GET['ano'] !== '' ? (int)$_GET['ano'] : null;
 
     $contas = $financeiroModel->listarContasPorMesEAno($mes, $ano);
-    include('../view/FinanceiroView/contas.php');
+    include('../view/FinanceiroView/verFiltroContas.php');
 }
 function cadastrarConta($financeiroModel) {
     include('../app/header.php');
