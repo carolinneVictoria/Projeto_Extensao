@@ -143,42 +143,6 @@ $despesasMes = number_format($despesasMes, 2, ',', '.');
         </div>
     </div>
 </div>
-
-<div class="container mt-5">
-  <h4>Vendas vs Despesas - Mês Atual</h4>
-  <canvas id="graficoFinanceiro" height="100"></canvas>
-</div>
-
-<script>
-const ctx = document.getElementById('graficoFinanceiro');
-
-new Chart(ctx, {
-  type: 'bar',
-  data: {
-    labels: ['Vendas', 'Despesas'],
-    datasets: [{
-      label: 'Valor (R$)',
-      data: [<?= str_replace(',', '.', $vendasMes) ?>, <?= str_replace(',', '.', $despesasMes) ?>],
-      backgroundColor: ['#198754', '#dc3545'],
-      borderWidth: 1
-    }]
-  },
-  options: {
-    scales: {
-      y: {
-        beginAtZero: true,
-        ticks: {
-          callback: function(value) {
-            return 'R$ ' + value.toLocaleString('pt-BR', {minimumFractionDigits: 2});
-          }
-        }
-      }
-    }
-  }
-});
-</script>
-
-
 <!-- Inclui o Bootstrap JS para que o carrossel funcione -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
