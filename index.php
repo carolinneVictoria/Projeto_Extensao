@@ -18,6 +18,29 @@ $resultDespesas = mysqli_query($conn, $sqlDespesas);
 $despesasMes = mysqli_fetch_assoc($resultDespesas)['totalDespesas'] ?? 0;
 $despesasMes = number_format($despesasMes, 2, ',', '.');
 
+// Serviços do mês (considerando pagos)
+$sqlServicos = "SELECT SUM(valorTotal) as totalServicos FROM servico
+                WHERE entrega = '1' AND MONTH(dataEntrada) = $mesAtual AND YEAR(dataEntrada) = $anoAtual";
+$resultServicos = mysqli_query($conn, $sqlServicos);
+$servicosMes = mysqli_fetch_assoc($resultServicos)['totalServicos'] ?? 0;
+$servicosMes = floatval($servicosMes); // garantir que seja número
+
+// Convertendo vendas e despesas para número puro
+$vendasRaw = floatval(str_replace(['.', ','], ['', '.'], $vendasMes));
+$despesasRaw = floatval(str_replace(['.', ','], ['', '.'], $despesasMes));
+
+$lucroMes = $vendasRaw + $servicosMes - $despesasRaw;
+$lucroFormatado = number_format($lucroMes, 2, ',', '.');
+
+// Convertendo de string formatada para número
+$vendasNumerico = floatval(str_replace(',', '.', str_replace('.', '', $vendasMes)));
+$despesasNumerico = floatval(str_replace(',', '.', str_replace('.', '', $despesasMes)));
+$servicosNumerico = floatval(str_replace(',', '.', str_replace('.', '', $servicosMes)));
+
+// Cálculo do lucro
+$lucroMes = $vendasNumerico + $servicosMes - $despesasNumerico;
+$lucroFormatado = number_format($lucroMes, 2, ',', '.');
+
 ?>
 
 <style>
@@ -26,7 +49,9 @@ $despesasMes = number_format($despesasMes, 2, ',', '.');
         padding: 0;
         background-color: #f8f9fa;
     }
-
+    #graficoResumo {
+    /* height: 300px !important; */
+    }
     .bottom-section-layout {
         display: flex;
         gap: 20px;
@@ -84,9 +109,9 @@ $despesasMes = number_format($despesasMes, 2, ',', '.');
 
         <div class="card bg-primary" style="width: 350px; color: white">
             <div class="card-body">
-                <h4 class="card-title">Serviços</h4>
-                <p class="card-text">Vamos ver se tem algum serviço esperando!! :)</p>
-                
+                <h4 class="card-title">Total do Mês - Lucro</h4>
+                <p class="card-text">R$ <?= $lucroFormatado ?> de lucro este mês</p>
+
             </div>
         </div>
     </div>
@@ -123,29 +148,76 @@ $despesasMes = number_format($despesasMes, 2, ',', '.');
             </div>
         </div>
 
-        <!-- Card com Informações da Loja (40% da largura) -->
+       <!-- Card com Gráfico -->
         <div class="info-card-wrapper">
             <div class="card h-100">
-                <div class="card-body"> <!-- adicionar cor aqui -->
-                    <h5 class="card-title">Informações da Loja</h5>
-                    <p class="card-text">
+                <div class="card-body">
+                    <h5 class="card-title">Resumo Financeiro do Mês</h5>
+                    <canvas id="graficoResumo"></canvas>
+                    <p></p>
+                    <p class="card-text" style="text-align: justify">
                         Bem-vindo à Gestão Samuka Bikes!
                         Aqui você pode encontrar tudo o que precisa para gerenciar sua loja de bicicletas de forma eficiente.
-                        Acompanhe suas vendas, gerencie despesas, visualize serviços, controle seus clientes e fornecedores,
-                        mantenha seu estoque atualizado e gerencie os usuários do sistema.
+                        Dúvidas? Fale conosco! (42) 99145-7945
                     </p>
-                    <p class="card-text">
-                        Qualquer dúvida ou sugestão, entre em contato conosco!
-                    </p>
-                    <a href="#" class="btn btn-primary">Entre em Contato</a>
+                    <p class="card-text"></p>
                 </div>
             </div>
         </div>
+
+
     </div>
 </div>
 
 
 <!-- Inclui o Bootstrap JS para que o carrossel funcione -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('graficoResumo');
+
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Vendas', 'Despesas', 'Lucro'],
+            datasets: [{
+                label: 'R$',
+                data: [
+                    <?= $vendasNumerico ?>,
+                    <?= $despesasNumerico ?>,
+                    <?= $lucroMes ?>
+                ],
+                backgroundColor: [
+                    'rgba(40, 167, 69, 0.7)',   // verde - vendas
+                    'rgba(220, 53, 69, 0.7)',   // vermelho - despesas
+                    'rgba(0, 123, 255, 0.7)'    // azul - lucro
+                ],
+                borderColor: [
+                    'rgba(40, 167, 69, 1)',
+                    'rgba(220, 53, 69, 1)',
+                    'rgba(0, 123, 255, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return 'R$ ' + value.toLocaleString('pt-BR', {
+                                minimumFractionDigits: 2
+                            });
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+
 
 <?php include("app/footer.php"); ?>
