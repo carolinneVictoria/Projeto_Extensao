@@ -18,23 +18,23 @@ if (isset($_GET['id'])) {
     $usuario = $usuarioModel->buscarUsuarioPorId($servico['idUsuario']);
 } else {
     echo "ID do serviço não informado!";
-    exit(); 
+    exit();
 }
 
-$valorTotal = 0;
+$valorProdutos = 0;
 $produtosAssociados = $servicoProdutoModel->listarProdutosServico($idServico);
+$maoDeObraTotal = $servico['maodeObra'];
 
 if ($produtosAssociados) {
     while ($registro = mysqli_fetch_assoc($produtosAssociados)) {
-        $valorTotal += $registro['quantidade'] * $registro['valorUnitario'];
+        $valorProdutos += ($registro['quantidade'] * $registro['valorUnitario']);
     }
-    if (!$servicoModel->atualizarValorTotalServico($idServico, $valorTotal)) {
-        echo "Erro ao atualizar o valor total no banco de dados!";
-        exit();
-    }
-} else {
-    $produtosAssociados = []; 
 }
+else {
+    $produtosAssociados = [];
+}
+$valorTotal = $valorProdutos + $maoDeObraTotal;
+
 ?>
 
 <div class="container-fluid">
@@ -46,7 +46,7 @@ if ($produtosAssociados) {
 
         <div class="row">
 
-            <div class="col-md-3 mb-3">
+            <div class="col-md-4 mb-3">
                 <div class="form-floating ">
                     <input type="hidden" name="idCliente" value="<?= $servico['idCliente'] ?>">
                     <input type="text" class="form-control" id="idCliente" value="<?= $cliente['nome']; ?>">
@@ -54,7 +54,7 @@ if ($produtosAssociados) {
                 </div>
             </div>
 
-            <div class="col-md-3 mb-3">
+            <div class="col-md-4 mb-3">
                 <div class="form-floating ">
                     <input type="hidden" name="idUsuario" value="<?= $servico['idUsuario'] ?>">
                     <input type="text" class="form-control" id="idUsuario" value="<?= $usuario['nomeUsuario']; ?>">
@@ -62,30 +62,36 @@ if ($produtosAssociados) {
                 </div>
             </div>
 
-            <div class="col-md-6 mb-3">
-                <div class="form-floating">
-                    <textarea style="height: 100px" class="form-control" id="descricao" name="descricao" ><?= $servico['descricao']; ?></textarea>
-                    <label for="descricao">Descrição:</label>
-                </div>
-            </div>
-
-            <div class="col-md-3 mb-3">
+            <div class="col-md-4 mb-3">
                 <div class="form-floating ">
                     <input type="date" class="form-control" id="dataEntrada" name="dataEntrada" value="<?= $servico['dataEntrada']; ?>">
                     <label for="dataEntrada">Data de Entrada:</label>
                 </div>
             </div>
 
-            <div class="col-md-3 mb-3">
+            <div class="col-md-12 mb-3">
+                <div class="form-floating">
+                    <textarea style="height: 100px" class="form-control" id="descricao" name="descricao" ><?= $servico['descricao']; ?></textarea>
+                    <label for="descricao">Descrição:</label>
+                </div>
+            </div>
+
+            <div class="col-md-4 mb-3">
                 <div class="form-floating border border-success rounded">
-                    <input type="hidden" name="valorTotal" value="<?= $valorTotal ?>">
+                    <input type="hidden" name="valorTotal" id="valorTotalHidden" value="<?= $valorTotal ?>">
                     <input type="text" class="form-control" id="valorTotal" readonly value="R$ <?= number_format($valorTotal, 2, ',', '.'); ?>">
                     <label for="valorTotal">Valor Total:</label>
                 </div>
             </div>
 
+            <div class="col-md-4 mb-3">
+                <div class="form-floating">
+                    <input type="text" class="form-control" id="maoDeObra" name="maodeObra" value="<?= number_format($servico['maodeObra'], 2, ',', '.') ?>" required>
+                    <label for="maoDeObra">Mão de Obra:</label>
+                </div>
+            </div>
 
-            <div class="col-md-6 mb-3">
+            <div class="col-md-4 mb-3">
                 <div class="form-floating">
                     <select class="form-select" id="entrega" name="entrega" required>
                         <option value="1" <?= $servico['entrega']==1?'selected':'' ?>>Não</option>
