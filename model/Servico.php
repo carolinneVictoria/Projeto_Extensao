@@ -11,10 +11,10 @@ class Servico {
         return $this->conn;
     }
 
-    // Método para listar 
+    // Método para listar
     public function listarServicos() {
         $listarServicos = "SELECT Servico.*, Cliente.nome, Usuario.nomeUsuario
-                            FROM Servico 
+                            FROM Servico
                             INNER JOIN Cliente ON Servico.idCliente = Cliente.idCliente
                             INNER JOIN Usuario ON Servico.idUsuario = Usuario.idUsuario
                             ORDER BY idServico";
