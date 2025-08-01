@@ -26,6 +26,22 @@ private $conn;
         $res = mysqli_query($this->conn, $listar);
         return $res;
     }
+    public function listarPagos() {
+        $listarContas = "SELECT *
+                            FROM Financeiro
+                            WHERE status = 1
+                            ORDER BY dataVencimento";
+        $res = mysqli_query($this->conn, $listarContas);
+        return $res;
+    }
+    public function listarPendentes() {
+        $listarContas = "SELECT *
+                            FROM Financeiro
+                            WHERE status = 0
+                            ORDER BY dataVencimento";
+        $res = mysqli_query($this->conn, $listarContas);
+        return $res;
+    }
 
     public function atualizarConta($idConta, $descricao, $valorTotal, $dataVencimento, $status){
         $atualizar = "UPDATE Financeiro
