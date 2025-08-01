@@ -40,26 +40,34 @@ function listarVendas($vendaModel, $usuarioModel) {
     include('../view/VendaView/vendas.php');
 }
 
-// Função para processar a atualização
-function atualizarVenda($vendaModel) {
+/// Função para processar a atualização
+function atualizarVenda($vendaModel, $vendaProdutoModel) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['idVenda'])) {
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        $idVenda      = $_POST['idVenda'];
+        $idVenda        = $_POST['idVenda'];
         $idUsuario      = $_POST['idUsuario'];
         $data           = $_POST['data'];
-        $descontoVenda  = $_POST['descontoVenda'];
-        $valorTotal     = $_POST['valorTotal'];
         $formaPagamento = $_POST['formaPagamento'];
+        $descontoVenda  = floatval(str_replace(',', '.', str_replace('.', '', $_POST['descontoVenda'])));
 
-        if ($vendaModel->atualizarVenda($idVenda, $idUsuario, $data, $descontoVenda, $valorTotal, $formaPagamento)) {
+        if ($vendaModel->atualizarVenda($idVenda, $idUsuario, $data, $descontoVenda, 0, $formaPagamento)) {
+            $produtos = $vendaProdutoModel->listarProdutosVenda($idVenda);
+            $valorProdutos = 0;
+            if ($produtos) {
+                while ($produto = mysqli_fetch_assoc($produtos)) {
+                    $valorProdutos += $produto['quantidade'] * $produto['valorUnitario'];
+                }
+            }
+            $valorTotal = $valorProdutos - $descontoVenda;
+            $vendaModel->atualizarValorTotalVenda($idVenda, $valorTotal);
             header("Location: ../view/VendaView/vendas.php");
             exit();
+
         } else {
-            echo "Erro ao atualizar a venda!" . mysqli_error($vendaModel->getConnection());
+            echo "Erro ao atualizar a venda: " . mysqli_error($vendaModel->getConnection());
         }
     }
 }
-}
+
 
 function excluirVenda($vendaModel){
     $idVenda = $_GET['id'];
@@ -128,16 +136,16 @@ function atualizarProduto($vendaProdutoModel) {
     }
 }
 }
-function excluirProduto($servicoProdutoModel){
-    $idServico = $_GET['idServico'];
+function excluirProduto($vendaProdutoModel){
+    $idVenda = $_GET['idVenda'];
     $idProduto = $_GET['id'];
-    $resultado = $servicoProdutoModel->excluirProdutoServico($idServico, $idProduto);
+    $resultado = $vendaProdutoModel->excluirProdutoVenda($idVenda, $idProduto);
     if ($resultado) {
     echo "Produto excluído com sucesso!";
-    header("Location: ../view/ServicoView/formAtualizarServico.php?id=$idServico");
+    header("Location: ../view/VendaView/formAtualizarVenda.php?id=$idVenda");
     exit();
     } else {
-    echo "Erro ao excluir o produto: " . mysqli_error($servicoProdutoModel->getConnection());
+    echo "Erro ao excluir o produto: " . mysqli_error($vendaProdutoModel->getConnection());
     exit();
     }
 }
@@ -153,17 +161,17 @@ if (isset($_GET['acao'])) {
     } elseif ($acao == 'listar') {
         listarVendas($vendaModel,  $usuarioModel);
     } elseif ($acao == 'atualizar') {
-        atualizarVenda($vendaModel); // Se o formulário for enviado, processa a atualização
+        atualizarVenda($vendaModel, $vendaProdutoModel); // Se o formulário for enviado, processa a atualização
     } elseif ($acao == 'excluir') {
         excluirVenda($vendaModel);
     } elseif($acao == 'buscar') {
-        buscarServico($servicoModel, $clienteModel, $usuarioModel);
+        buscarVenda($vendaModel, $vendaProdutoModel, $usuarioModel);
     } elseif($acao == 'adicionarProduto'){
         adicionarProduto($vendaProdutoModel);
     } elseif($acao == 'atualizarProduto'){
-        atualizarProduto($servicoProdutoModel);
+        atualizarProduto($vendaProdutoModel);
     } elseif($acao == 'excluirProduto'){
-        excluirProduto($servicoProdutoModel);
+        excluirProduto($vendaProdutoModel);
     }
 } else {
     // Caso nenhuma ação seja especificada, exibe a listagem
