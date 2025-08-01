@@ -18,8 +18,9 @@ if (isset($_GET['id'])) {
     exit();
 }
 
-$valorTotal = 0;
+$$valorProdutos = 0;
 $produtosAssociados = $vendaProdutoModel->listarProdutosVenda($idVenda);
+$descontoTotal = $venda['descontoVenda'];
 
 if ($produtosAssociados) {
     while ($registro = mysqli_fetch_assoc($produtosAssociados)) {
@@ -60,7 +61,7 @@ if ($produtosAssociados) {
 
             <div class="col-md-4 mb-3">
                 <div class="form-floating">
-                    <input type="text" class="form-control" id="descontoVenda" name="descontoVenda">
+                    <input type="text" class="form-control" id="descontoVenda" name="descontoVenda" value="<?= $venda['descontoVenda']; ?>">
                     <label for="descontoVenda">Desconto:</label>
                 </div>
             </div>
