@@ -6,9 +6,9 @@
     <div class="container-fluid">
       <div class="collapse navbar-collapse d-flex justify-content-between" id="mynavbar">
         <ul class="navbar-nav mb-4 mb-lg-0">
-          <li class="nav-item"><a class="nav-link" href="contas.php">Todos</a></li>
-          <li class="nav-item"><a class="nav-link" href="contasPendentes.php">Contas Pagas</a></li>
-          <li class="nav-item"><a class="nav-link" href="contasPagas.php">Contas Pendentes</a></li>
+          <li class="nav-item"><a class="nav-link" href="../controller/FinanceiroController.php">Todos</a></li>
+          <li class="nav-item"><a class="nav-link" href="../view/FinanceiroView/contasPagas.php">Contas Pagas</a></li>
+          <li class="nav-item"><a class="nav-link" href="../view/FinanceiroView/contasPendentes.php">Contas Pendentes</a></li>
           <li class="nav-item"><a class="nav-link" href="../view/FinanceiroView/formConta.php">Cadastrar nova Conta</a></li>
         </ul>
 
