@@ -95,7 +95,6 @@ public function listarVendas() {
         return null;
     }
 }
-
     public function atualizarValorTotalVenda($idVenda, $valorTotal) {
         $query = "UPDATE Venda SET valorTotal = ? WHERE idVenda = ?";
         $stmt = $this->conn->prepare($query);
