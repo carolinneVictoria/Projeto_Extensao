@@ -18,12 +18,13 @@ if (isset($_GET['id'])) {
     exit();
 }
 
-$valorTotal = 0;
+$$valorProdutos = 0;
 $produtosAssociados = $vendaProdutoModel->listarProdutosVenda($idVenda);
+$descontoTotal = $venda['descontoVenda'];
 
 if ($produtosAssociados) {
     while ($registro = mysqli_fetch_assoc($produtosAssociados)) {
-        $valorTotal += $registro['quantidade'] * $registro['valorUnitario'] - $registro['descontoVenda'];
+        $valorTotal += ($registro['quantidade'] * $registro['valorUnitario']);
     }
     if (!$vendaModel->atualizarValorTotalVenda($idVenda, $valorTotal)) {
         echo "Erro ao atualizar o valor total no banco de dados!";
@@ -38,7 +39,7 @@ if ($produtosAssociados) {
     <h3>Detalhes da Venda:</h3>
     <div class="col-sm-12">
 
-    <form id="formVenda" action="/Projeto_Extensao/controller/VendaController.php?acao=atualizar" method="POST" class="was-validated">
+    <form id="formVenda" action="/Projeto_Extensao/controller/VendaController.php" method="POST" class="was-validated">
         <input type="hidden" name="idVenda" value="<?= $idVenda ?>">
 
         <div class="row">
@@ -61,14 +62,14 @@ if ($produtosAssociados) {
             <div class="col-md-4 mb-3">
                 <div class="form-floating border border-success rounded">
                     <input type="hidden" name="valorTotal" value="<?= $valorTotal ?>">
-                    <input type="text" class="form-control" id="valorTotal" readonly value="R$ <?= number_format($valorTotal, 2, ',', '.'); ?>">
+                    <input type="text" class="form-control" id="valorTotal" readonly value="R$ <?= number_format($venda['valorTotal'], 2, ',', '.'); ?>">
                     <label for="valorTotal">Valor Total:</label>
                 </div>
             </div>
 
             <div class="col-md-4 mb-3">
-                <div class="form-floating">
-                    <input type="text" class="form-control" id="descontoVenda" name="descontoVenda" value="<?= $venda['descontoVenda']; ?>">
+                <div class="form-floating border border-success rounded">
+                    <input type="text" class="form-control" id="descontoVenda" name="descontoVenda" value="R$ <?= number_format($venda['descontoVenda'], 2, ',', '.'); ?>" readonly>
                     <label for="descontoVenda">Desconto:</label>
                 </div>
             </div>
