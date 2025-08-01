@@ -21,7 +21,7 @@ $usuarios = $usuarioModel->listarUsuarios();
 
         <form id="formServico" action="/Projeto_Extensao/controller/ServicoController.php?acao=cadastrar" method="POST" class="was-validated">
             <div class="row mt-4">
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <div class="form-floating">
                         <select class="form-control" id="cliente" name="idCliente" required>
                             <?php foreach ($clientes as $cliente): ?>
@@ -33,7 +33,7 @@ $usuarios = $usuarioModel->listarUsuarios();
                 </div>
 
                 <!-- Usuário -->
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <div class="form-floating">
                         <select class="form-control" id="usuario" name="idUsuario" required>
                             <?php foreach ($usuarios as $usuario): ?>
@@ -44,24 +44,24 @@ $usuarios = $usuarioModel->listarUsuarios();
                     </div>
                 </div>
 
-                <!-- Descrição -->
-                <div class="col-md-6 mb-3">
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="descricao" name="descricao">
-                        <label for="descricao">Descrição:</label>
-                    </div>
-                </div>
-
                 <!-- Data de Entrada -->
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <div class="form-floating">
                         <input type="date" class="form-control" id="dataEntrada" name="dataEntrada" required>
                         <label for="dataEntrada">Data de Entrada:</label>
                     </div>
                 </div>
 
+                <!-- Descrição -->
+                <div class="col-md-12 mb-3">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="descricao" name="descricao">
+                        <label for="descricao">Descrição:</label>
+                    </div>
+                </div>
+
                 <!-- Entregue -->
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <div class="form-floating">
                         <select class="form-select" id="entrega" name="entrega" required>
                             <option value="1">Não</option>
@@ -72,10 +72,17 @@ $usuarios = $usuarioModel->listarUsuarios();
                 </div>
 
                 <!-- Valor Total -->
-                <div class="col-md-6 mb-3">
+                <div class="col-md-4 mb-3">
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="valorTotal" name="valorTotal" required>
+                        <input type="text" class="form-control" id="valorTotal" name="valorTotal">
                         <label for="valorTotal">Valor Total:</label>
+                    </div>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <div class="form-floating">
+                        <input type="text" class="form-control" id="maodeObra" name="maodeObra" >
+                        <label for="maodeObra">Mão de Obra:</label>
                     </div>
                 </div>
 
