@@ -22,8 +22,9 @@ function cadastrarServico($servicoModel) {
         $dataEntrada    = $_POST['dataEntrada'];
         $entrega        = $_POST['entrega'];
         $valorTotal     = $_POST['valorTotal'];
+        $maodeObra      = $_POST['maodeObra'];
 
-        if ($servicoModel->cadastrarServico($idCliente, $idUsuario, $descricao, $dataEntrada, $entrega, $valorTotal)) {
+        if ($servicoModel->cadastrarServico($idCliente, $idUsuario, $descricao, $dataEntrada, $entrega, $valorTotal, $maodeObra)) {
             header("Location: ../view/ServicoView/servicos.php");
             exit();
         } else {
@@ -40,7 +41,7 @@ function listarServicos($servicoModel, $clienteModel, $usuarioModel) {
     include('../view/ServicoView/servicos.php');
 }
 
-// Função para processar a atualização 
+// Função para processar a atualização
 function atualizarServico($servicoModel) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['idServico'])) {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -51,8 +52,9 @@ function atualizarServico($servicoModel) {
         $dataEntrada    = $_POST['dataEntrada'];
         $entrega        = $_POST['entrega'];
         $valorTotal     = $_POST['valorTotal'];
+        $maodeObra      = $_POST['maodeObra'];
 
-        if ($servicoModel->atualizarServico($idServico, $idCliente, $idUsuario, $descricao, $dataEntrada, $entrega, $valorTotal)) {
+        if ($servicoModel->atualizarServico($idServico, $idCliente, $idUsuario, $descricao, $dataEntrada, $entrega, $valorTotal, $maodeObra)) {
             header("Location: ../view/ServicoView/servicos.php");
             exit();
         } else {
