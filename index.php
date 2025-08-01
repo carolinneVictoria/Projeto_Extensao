@@ -1,30 +1,30 @@
 <?php include("app/header.php");
-include_once "config/conexaoBD.php";
+include_once ("config/conexaoBD.php");
 
 $mesAtual = date('m');
 $anoAtual = date('Y');
 
 // Vendas do mês
 $sqlVendas = "SELECT SUM(valorTotal) as totalVendas FROM venda
-              WHERE MONTH(data) = $mesAtual AND YEAR(data) = $anoAtual";
+                WHERE MONTH(data) = $mesAtual AND YEAR(data) = $anoAtual";
 $resultVendas = mysqli_query($conn, $sqlVendas);
 $vendasMes = mysqli_fetch_assoc($resultVendas)['totalVendas'] ?? 0;
 $vendasMes = number_format($vendasMes, 2, ',', '.');
 
 // Despesas do mês
 $sqlDespesas = "SELECT SUM(valorTotal) as totalDespesas FROM financeiro
-                WHERE status = 'a pagar' AND MONTH(dataVencimento) = $mesAtual AND YEAR(dataVencimento) = $anoAtual";
+                WHERE status = '0' AND MONTH(dataVencimento) = $mesAtual AND YEAR(dataVencimento) = $anoAtual";
 $resultDespesas = mysqli_query($conn, $sqlDespesas);
 $despesasMes = mysqli_fetch_assoc($resultDespesas)['totalDespesas'] ?? 0;
 $despesasMes = number_format($despesasMes, 2, ',', '.');
-?>
 
+?>
 
 <style>
     body {
-        margin: 0; 
-        padding: 0; 
-        background-color: #f8f9fa; 
+        margin: 0;
+        padding: 0;
+        background-color: #f8f9fa;
     }
 
     .bottom-section-layout {
@@ -70,7 +70,7 @@ $despesasMes = number_format($despesasMes, 2, ',', '.');
             <div class="card-body">
                 <h4 class="card-title">Vendas</h4>
                 <p class="card-text">R$ <?= $vendasMes ?> em vendas este mês</p>
-                <a href="/Projeto_Extensao/view/VendaView/vendas.php" class="card-link" style="color: white">Ver detalhes</a>
+                
             </div>
         </div>
 
@@ -78,7 +78,7 @@ $despesasMes = number_format($despesasMes, 2, ',', '.');
             <div class="card-body">
                 <h4 class="card-title">Despesas</h4>
                 <p class="card-text">R$ <?= $despesasMes ?> em despesas este mês</p>
-                <a href="/Projeto_Extensao/view/FinanceiroView/contas.php" class="card-link" style="color: white">Ver detalhes</a>
+                
             </div>
         </div>
 
@@ -86,7 +86,7 @@ $despesasMes = number_format($despesasMes, 2, ',', '.');
             <div class="card-body">
                 <h4 class="card-title">Serviços</h4>
                 <p class="card-text">Vamos ver se tem algum serviço esperando!! :)</p>
-                <a href="/Projeto_Extensao/view/ServicoView/servicos.php" class="card-link" style="color: white">Ver Serviços</a>
+                
             </div>
         </div>
     </div>
@@ -143,6 +143,8 @@ $despesasMes = number_format($despesasMes, 2, ',', '.');
         </div>
     </div>
 </div>
+
+
 <!-- Inclui o Bootstrap JS para que o carrossel funcione -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
