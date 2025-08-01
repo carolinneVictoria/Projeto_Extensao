@@ -4,9 +4,10 @@ include_once "../model/Financeiro.php";
 
 $financeiroModel = new Financeiro($conn);
 function listarContas($financeiroModel) {
+    
     $contas = $financeiroModel->listarContas();
     include('../view/FinanceiroView/contas.php');
-    include ('../../app/footer.php');
+    
 }
 function filtrarContas($financeiroModel) {
     include('../app/header.php');
