@@ -74,7 +74,7 @@ $primeiroNome = $nomeUsuario ? explode(' ', $nomeUsuario)[0] : '';
                     <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/view/ServicoView/servicos.php">Serviços</a></li>
                     <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/view/ClienteView/clientes.php">Clientes</a></li>
                     <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/view/FornecedorView/fornecedores.php">Fornecedores</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/view/CompraView/estoque.php">Estoque</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/controller/CompraController.php">Estoque</a></li>
                     <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/controller/FinanceiroController.php">Financeiro</a></li>
                     <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/view/UsuarioView/usuarios.php">Usuarios</a></li>
                     <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/controller/logout.php">Logout</a></li>
