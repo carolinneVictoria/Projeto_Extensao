@@ -98,10 +98,10 @@ class Servico {
     return $res;
 }
 
-// Método para buscar os detalhes 
+// Método para buscar os detalhes
     public function buscarServicoPorId($idServico) {
     $stmt = $this->conn->prepare("SELECT Servico.*, Cliente.nome, Usuario.nomeUsuario
-                                    FROM Servico 
+                                    FROM Servico
                                     INNER JOIN Cliente ON Servico.idCliente = Cliente.idCliente
                                     INNER JOIN Usuario ON Servico.idUsuario = Usuario.idUsuario
                                     WHERE Servico.idServico = ?");
