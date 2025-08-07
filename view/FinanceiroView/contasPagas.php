@@ -83,7 +83,7 @@ $contas = $financeiroModel->listarPagos();
 
   while ($registro = mysqli_fetch_assoc($contas)) {
     $idConta = $registro['idConta'];
-    $status = $registro['status'] == 0 ? 'A pagar' : 'A pagar';
+    $status = $registro['status'] == 1 ? 'Pago!' : 'Pago!';
     $valor = number_format($registro['valorTotal'], 2, ',', '.');
 
     echo "
