@@ -20,16 +20,31 @@ class Produto {
 
     // Método para cadastrar um novo produto
     public function cadastrarProduto($nomeProduto, $descricaoProduto, $quantidadeProduto, $valorProduto, $idCategoria) {
-        $inserirProduto = "INSERT INTO Produto (nomeProduto, descricaoProduto, quantidadeProduto, valorProduto, idCategoria)
-                            VALUES ('$nomeProduto', '$descricaoProduto', '$quantidadeProduto', $valorProduto, '$idCategoria')";
-
-        $res = mysqli_query($this->conn, $inserirProduto);
-        return $res;
+    $sql = "INSERT INTO Produto (nomeProduto, descricaoProduto, quantidadeProduto, valorProduto, idCategoria)
+            VALUES (?, ?, ?, ?, ?)";
+    
+    $stmt = $this->conn->prepare($sql);
+    
+    if (!$stmt) {
+        die("Erro ao preparar statement: " . $this->conn->error);
     }
+
+    $stmt->bind_param("ssids", $nomeProduto, $descricaoProduto, $quantidadeProduto, $valorProduto, $idCategoria);
+    
+    $resultado = $stmt->execute();
+    
+    if (!$resultado) {
+        die("Erro ao executar: " . $stmt->error);
+    }
+
+    $stmt->close();
+    return $this->conn->insert_id; // retorna o ID do novo produto inserido
+}
+
 
     //Metódo para atualizar os detalhes de um produto./
     public function atualizarProduto($idProduto, $nomeProduto, $descricaoProduto, $quantidadeProduto, $valorProduto, $idCategoria){
-        $atualizarProduto = "UPDATE Produto 
+        $atualizarProduto = "UPDATE Produto
                                 SET nomeProduto       = '$nomeProduto',
                                     descricaoProduto  = '$descricaoProduto',
                                     quantidadeProduto = '$quantidadeProduto',
@@ -55,8 +70,8 @@ class Produto {
     }
 
     public function buscarPorNome($termo) {
-    $buscarProduto = "SELECT Produto.*, Categoria.descricao 
-                      FROM Produto 
+    $buscarProduto = "SELECT Produto.*, Categoria.descricao
+                      FROM Produto
                       INNER JOIN Categoria ON Produto.idCategoria = Categoria.idCategoria
                       WHERE nomeProduto LIKE ? OR Categoria.descricao Like ?";
     $stmt = $this->conn->prepare($buscarProduto);
