@@ -97,6 +97,19 @@ private $conn;
         return $contas;
     }
 
+    public function buscarContaPorId($idConta) {
+    $stmt = $this->conn->prepare("SELECT * FROM Financeiro WHERE idConta = ?");
+    $stmt->bind_param("i", $idConta);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($row = $result->fetch_assoc()) {
+        return $row;
+    } else {
+        return null;
+    }
+}
+
 }
 
 ?>
