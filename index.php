@@ -20,7 +20,7 @@ $despesasMes = number_format($despesasMes, 2, ',', '.');
 
 // Serviços do mês (considerando pagos)
 $sqlServicos = "SELECT SUM(valorTotal) as totalServicos FROM servico
-                WHERE entrega = '1' AND MONTH(dataEntrada) = $mesAtual AND YEAR(dataEntrada) = $anoAtual";
+                WHERE entrega = '0' AND MONTH(dataEntrada) = $mesAtual AND YEAR(dataEntrada) = $anoAtual";
 $resultServicos = mysqli_query($conn, $sqlServicos);
 $servicosMes = mysqli_fetch_assoc($resultServicos)['totalServicos'] ?? 0;
 $servicosMes = floatval($servicosMes); // garantir que seja número
