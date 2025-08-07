@@ -42,7 +42,7 @@ function listarServicos($servicoModel, $clienteModel, $usuarioModel) {
 }
 
 // Função para processar a atualização
-function atualizarServico($servicoModel) {
+function atualizarServico($servicoModel, $servicoProdutoModel) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['idServico'])) {
         if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $idServico      = $_POST['idServico'];
@@ -55,6 +55,15 @@ function atualizarServico($servicoModel) {
         $maodeObra      = $_POST['maodeObra'];
 
         if ($servicoModel->atualizarServico($idServico, $idCliente, $idUsuario, $descricao, $dataEntrada, $entrega, $valorTotal, $maodeObra)) {
+            $produtos = $servicoProdutoModel->listarProdutosServico($idServico);
+            $valorProdutos = 0;
+            if ($produtos) {
+                while ($produto = mysqli_fetch_assoc($produtos)) {
+                    $valorProdutos += $produto['quantidade'] * $produto['valorUnitario'];
+                }
+            }
+            $valorTotal = $valorProdutos + $maodeObra;
+            $servicoModel->atualizarValorTotalServico($idServico, $valorTotal);
             header("Location: ../view/ServicoView/servicos.php");
             exit();
         } else {
@@ -156,7 +165,7 @@ if (isset($_GET['acao'])) {
     } elseif ($acao == 'listar') {
         listarServicos($servicoModel, $clienteModel, $usuarioModel);
     } elseif ($acao == 'atualizar') {
-        atualizarServico($servicoModel); // Se o formulário for enviado, processa a atualização
+        atualizarServico($servicoModel, $servicoProdutoModel); // Se o formulário for enviado, processa a atualização
     } elseif ($acao == 'excluir') {
         excluirServico($servicoModel);
     } elseif($acao == 'buscar') {
