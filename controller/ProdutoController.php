@@ -2,8 +2,10 @@
 include_once "../model/Produto.php";
 include_once "../config/conexaoBD.php";
 include_once '../model/Categoria.php';
+include_once '../model/CompraProduto.php';
 
 // Instanciando o Model
+$compraProdutoModel =new CompraProduto($conn);
 $produtoModel = new Produto($conn);
 $categoriaModel = new Categoria($conn);
 
@@ -18,6 +20,29 @@ function cadastrarProduto($produtoModel) {
 
         if ($produtoModel->cadastrarProduto($nomeProduto, $descricaoProduto, $quantidadeProduto, $valorProduto, $idCategoria)) {
             header("Location: ../view/ProdutoView/produtos.php");
+            exit();
+        } else {
+            echo "Erro ao cadastrar produto!";
+        }
+    }
+}
+function cadastrarProdutoCompra($produtoModel, $compraProdutoModel) {
+    if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_GET['id'])) {
+        $idCompra = $_GET['id'];
+
+        $nomeProduto      = $_POST['nomeProduto'];
+        $descricaoProduto = $_POST['descricaoProduto'];
+        $quantidadeProduto= $_POST['quantidadeProduto'];
+        $valorProduto     = $_POST['valorProduto'];
+        $idCategoria      = $_POST['idCategoria'];
+
+        // Cadastra o produto e recebe o ID dele
+        $idProduto = $produtoModel->cadastrarProduto($nomeProduto,$descricaoProduto,$quantidadeProduto,$valorProduto,$idCategoria);
+
+        if ($idProduto) {
+            $compraProdutoModel->adicionarProdutoCompra($idProduto,$idCompra,$quantidadeProduto,$valorProduto
+            );
+            header("Location: ../view/CompraView/produtoCompra.php?id=" . $idCompra);
             exit();
         } else {
             echo "Erro ao cadastrar produto!";
@@ -90,6 +115,8 @@ if (isset($_GET['acao'])) {
         excluirProduto($produtoModel);
     } elseif($acao == 'buscar') {
         buscarProdutos($produtoModel, $categoriaModel);
+    } elseif($acao == 'cadastrarCompra'){
+        cadastrarProdutoCompra($produtoModel, $compraProdutoModel);
     }
 } else {
     // Caso nenhuma ação seja especificada, exibe a listagem
