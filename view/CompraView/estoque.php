@@ -1,4 +1,3 @@
-<?php include ("../../app/header.php"); ?>
 <!-- Navbar e Barra de Busca -->
 <div class="container-fluid bg-dark d-flex position-fixed" style="top: 50px; left: 160px; width: calc(100% - 160px); height: 50px; z-index: 1030;">
   <nav class="navbar navbar-expand-sm navbar-dark bg-dark w-100">
@@ -8,7 +7,7 @@
             <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/view/CompraView/formCompra.php?acao=cadastrar">Cadastrar Compra de Produtos</a></li>
           </ul>
         <!-- Campo de busca -->
-        <form method="GET" action="/Projeto_Extensao/controller/VendaController.php?acao=buscar" class="d-flex me-2" role="search">
+        <form method="GET" action="/Projeto_Extensao/controller/CompraController.php?acao=buscar" class="d-flex me-2" role="search">
           <input type="hidden" name="acao" value="buscar">
           <input type="text" name="busca" class="form-control me-2" placeholder="Buscar por Nome"value="<?= $_GET['busca'] ?? '' ?>">
           <button class="btn btn-outline-light" type="submit">Buscar</button>
@@ -22,15 +21,7 @@
 <div class="container" style="margin-left: -10px; padding-top: 50px;">
 
 <?php
-include ('../../config/conexaoBD.php');
-require_once ('../../model/Estoque.php');
-
-// Instanciando o Model
-$compraModel = new Estoque($conn);
-// Listando as vendas
-$compras = $compraModel->listarCompras();
-
-echo "<p></p><h5>Histórico de Compras:</h5>";
+echo "<h5>Histórico de Compras:</h5>";
 
 echo "
     <table class='table table-hover table-bordered table-sm'>
@@ -56,7 +47,7 @@ while ($registro = mysqli_fetch_assoc($compras)) {
                 <td>R$ " . number_format($registro['valorTotal'], 2, ',', '.') . "</td>
                 <td>{$registro['data']}</td>
                 <td>
-                <a href='verCompra.php?id=$idCompra' class='btn btn-primary brn-sm'>Ver</a>
+                <a href='/Projeto_Extensao/controller/CompraController.php?acao=verCompra&id=$idCompra' class='btn btn-primary btn-sm'>Ver Detalhes</a>
                 </td>
             </tr>
         </tbody>
