@@ -13,7 +13,7 @@ $vendasMes = number_format($vendasMes, 2, ',', '.');
 
 // Despesas do mês
 $sqlDespesas = "SELECT SUM(valorTotal) as totalDespesas FROM financeiro
-                WHERE status = '0' AND MONTH(dataVencimento) = $mesAtual AND YEAR(dataVencimento) = $anoAtual";
+                WHERE MONTH(dataVencimento) = $mesAtual AND YEAR(dataVencimento) = $anoAtual";
 $resultDespesas = mysqli_query($conn, $sqlDespesas);
 $despesasMes = mysqli_fetch_assoc($resultDespesas)['totalDespesas'] ?? 0;
 $despesasMes = number_format($despesasMes, 2, ',', '.');
