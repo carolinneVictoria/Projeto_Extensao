@@ -17,7 +17,7 @@ class Servico {
                             FROM Servico
                             INNER JOIN Cliente ON Servico.idCliente = Cliente.idCliente
                             INNER JOIN Usuario ON Servico.idUsuario = Usuario.idUsuario
-                            ORDER BY idServico";
+                            ORDER BY idServico DESC";
         $res = mysqli_query($this->conn, $listarServicos);
         return $res;
     }
