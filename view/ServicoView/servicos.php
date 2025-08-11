@@ -44,8 +44,7 @@ echo "
     <tr>
       <th>ID</th>
       <th>CLIENTE</th>
-      <th>USUÁRIO</th>
-      <th>DESCRIÇÃO</th>
+      <th class='col-descricao'>DESCRIÇÃO</th>
       <th>DATA DE ENTRADA</th>
       <th>ENTREGA</th>
       <th>VALOR</th>
@@ -63,7 +62,6 @@ while ($registro = mysqli_fetch_assoc($servicos)) {
     <tr>
       <td>{$registro['idServico']}</td>
       <td>{$registro['nome']}</td>
-      <td>{$registro['nomeUsuario']}</td>
       <td>{$registro['descricao']}</td>
       <td>{$registro['dataEntrada']}</td>
       <td>$entrega</td>
