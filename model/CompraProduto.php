@@ -23,7 +23,7 @@ public function adicionarProdutoCompra($idProduto, $idCompra, $quantidade, $valo
     return $res;
 }
 
-public function atualizarProdutoCompra($idProduto, $idCompra, $quantidade, $valorUnitario) {
+public function atualizarProdutoCompra($idCompra, $idProduto, $quantidade, $valorUnitario) {
     $sql = "UPDATE compraProduto
                SET quantidade    = ?,
                    valorUnitario = ?
