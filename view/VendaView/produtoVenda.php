@@ -130,7 +130,7 @@ if (isset($_GET['id'])) {
     ?>
 
             <div class="d-flex justify-content-end mt-3">
-                <a href="formAtualizarVenda.php?id=<?= $idVenda ?>" class="btn btn-secondary btn me-2">Voltar</a>
+                <button onclick="history.back()" class="btn btn-secondary btn me-2">Voltar</button>
             </div>
 
 <script>
