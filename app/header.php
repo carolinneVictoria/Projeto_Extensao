@@ -16,6 +16,7 @@ $primeiroNome = $nomeUsuario ? explode(' ', $nomeUsuario)[0] : '';
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+    
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -48,6 +49,14 @@ $primeiroNome = $nomeUsuario ? explode(' ', $nomeUsuario)[0] : '';
             $("#telefoneUsuario").mask("(00) 00000-0000");
         });
     </script>
+    <style>
+    .table td, .table th {
+    max-width: 150px;   /* largura máxima da célula */
+    white-space: nowrap; /* evita quebrar linha */
+    overflow: hidden;    /* esconde o que passar */
+    text-overflow: ellipsis; /* coloca "..." */
+    }
+    </style>
 </head>
 <body>
 
