@@ -57,7 +57,7 @@ else {
                 <div class="col-md-3 mb-3">
                     <div class="form-floating ">
                         <input type="hidden" name="idFornecedor" value="<?= $compra['idFornecedor'] ?>">
-                        <input type="text" class="form-control" id="idFornecedor" value="<?= $usuario['razaoSocial']; ?>">
+                        <input type="text" class="form-control" id="idFornecedor" value="<?= $fornecedor['razaoSocial']; ?>">
                         <label for="idFornecedor">Fornecedor:</label>
                     </div>
                 </div>
@@ -111,8 +111,8 @@ else {
                             <td>{$registro['quantidade']}</td>
                             <td>R$ " . number_format($registro['valorUnitario'], 2, ',', '.') . "</td>
                             <td>
-                                <a href='atualizarProdutoVenda.php?idProduto={$registro['idProduto']}&idVenda={$registro['idVenda']}' class='btn btn-primary btn-sm'>Atualizar</a>
-                                <a href='../../controller/VendaController.php?acao=excluirProduto&id={$registro['idProduto']}&idVenda={$idVenda}' class='btn btn-danger btn-sm' onclick='return confirm(\"Tem certeza que deseja excluir?\")'>Excluir</a>
+                                <a href='atualizarProdutoCompra.php?idProduto={$registro['idProduto']}&idCompra={$registro['idCompra']}' class='btn btn-primary btn-sm'>Atualizar</a>
+                                <a href='../../controller/CompraController.php?acao=excluirProduto&id={$registro['idProduto']}&idCompra={$idCompra}' class='btn btn-danger btn-sm' onclick='return confirm(\"Tem certeza que deseja excluir?\")'>Excluir</a>
                             </td>
                         </tr>
                     ";
