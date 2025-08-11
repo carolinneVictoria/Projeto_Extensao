@@ -1,3 +1,40 @@
+<?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+include("../../app/header.php");
+include('../../config/conexaoBD.php');
+include('../../model/Estoque.php');
+include('../../model/Usuario.php');
+include('../../model/Fornecedor.php');
+include('../../model/CompraProduto.php');
+
+$compraModel = new Estoque($conn);
+$usuarioModel = new Usuario($conn);
+$fornecedorModel = new Fornecedor($conn);
+$compraProdutoModel = new CompraProduto($conn);
+
+if (isset($_GET['id'])) {
+    $idCompra = $_GET['id'];
+    $compra = $compraModel->buscarCompraPorId($idCompra);
+    $usuario = $usuarioModel->buscarUsuarioPorId($compra['idUsuario']);
+    $fornecedor = $fornecedorModel->buscarFornecedorPorId($compra['idFornecedor']);
+} else {
+    echo "ID do serviço não informado!";
+    exit();
+}
+$produtosAssociados = $compraProdutoModel->listarProdutosCompra($idCompra);
+
+if ($produtosAssociados) {
+    while ($registro = mysqli_fetch_assoc($produtosAssociados)) {
+        $valorProdutos += ($registro['quantidade'] * $registro['valorUnitario']);
+    }
+}
+else {
+    $produtosAssociados = [];
+}
+?>
+
 <div class="container-fluid"><p></p>
     <h4>Atualizar Compra:</h4>
     <div class="col-sm-12">
@@ -9,34 +46,21 @@
 
                 <!-- Usuário -->
                 <div class="col-md-3 mb-3">
-                    <div class="form-floating border rounded">
-                        <select class="form-select" id="idUsuario" name="idUsuario" required>
-                            <option value="">Selecione</option>
-                            <?php foreach ($usuarios as $usuario): ?>
-                                <option value="<?= $usuario['idUsuario'] ?>" <?= ($usuario['idUsuario'] == $compra['idUsuario']) ? 'selected' : '' ?>>
-                                    <?= htmlspecialchars($usuario['nomeUsuario']) ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                        <label for="idUsuario">Usuário:</label>
+                    <div class="form-floating ">
+                        <input type="hidden" name="idUsuario" value="<?= $compra['idUsuario'] ?>">
+                        <input type="text" class="form-control" id="idUsuario" value="<?= $usuario['nomeUsuario']; ?>">
+                        <label for="idUsuario">Usuario:</label>
                     </div>
                 </div>
 
                 <!-- Fornecedor -->
                 <div class="col-md-3 mb-3">
-                    <div class="form-floating border rounded">
-                        <select class="form-select" id="idFornecedor" name="idFornecedor" required>
-                            <option value="">Selecione</option>
-                            <?php foreach ($fornecedores as $fornecedor): ?>
-                                <option value="<?= $fornecedor['idFornecedor'] ?>" <?= ($fornecedor['idFornecedor'] == $compra['idFornecedor']) ? 'selected' : '' ?>>
-                                    <?= htmlspecialchars($fornecedor['razaoSocial']) ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
+                    <div class="form-floating ">
+                        <input type="hidden" name="idFornecedor" value="<?= $compra['idFornecedor'] ?>">
+                        <input type="text" class="form-control" id="idFornecedor" value="<?= $usuario['razaoSocial']; ?>">
                         <label for="idFornecedor">Fornecedor:</label>
                     </div>
                 </div>
-
 
                 <!-- Data de Entrada -->
                 <div class="col-md-3 mb-3">
@@ -73,7 +97,6 @@
                                 <th>PRODUTO</th>
                                 <th>QUANTIDADE</th>
                                 <th>VALOR UNITÁRIO</th>
-                                <th>TOTAL</th>
                                 <th>AÇÕES</th>
                             </tr>
                         </thead>
@@ -82,16 +105,14 @@
 
                 // Exibir os produtos associados ao serviço
                 foreach ($produtosAssociados as $registro) {
-                    $totalProduto = $registro['quantidade'] * $registro['valorUnitario'];
                     echo "
                         <tr>
                             <td>{$registro['nomeProduto']}</td>
                             <td>{$registro['quantidade']}</td>
                             <td>R$ " . number_format($registro['valorUnitario'], 2, ',', '.') . "</td>
-                            <td>R$ " . number_format($totalProduto, 2, ',', '.') . "</td>
                             <td>
-                                <a href='atualizarProdutoCompra.php?idProduto={$registro['idProduto']}&idCompra={$registro['idCompra']}' class='btn btn-primary btn-sm'>Atualizar</a>
-                                <a href='../../controller/CompraController.php?acao=excluirProduto&id={$registro['idProduto']}&idCompra={$idCompra}' class='btn btn-danger btn-sm' onclick='return confirm(\"Tem certeza que deseja excluir?\")'>Excluir</a>
+                                <a href='atualizarProdutoVenda.php?idProduto={$registro['idProduto']}&idVenda={$registro['idVenda']}' class='btn btn-primary btn-sm'>Atualizar</a>
+                                <a href='../../controller/VendaController.php?acao=excluirProduto&id={$registro['idProduto']}&idVenda={$idVenda}' class='btn btn-danger btn-sm' onclick='return confirm(\"Tem certeza que deseja excluir?\")'>Excluir</a>
                             </td>
                         </tr>
                     ";
@@ -104,7 +125,7 @@
             </div>
 
                 <div class="d-flex justify-content-end mt-3">
-                    <a href="../view/CompraView/produtoCompra.php?id=<?= $idCompra ?>" class="btn btn-primary btn me-2">Adicionar Produtos</a>
+                    <a href="produtoCompra.php?id=<?= $idCompra ?>" class="btn btn-primary btn me-2">Adicionar Produtos</a>
                     <button type="submit" class="btn btn-primary">Atualizar</button>
                 </div>
                 <p></p>
