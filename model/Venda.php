@@ -18,7 +18,7 @@ public function listarVendas() {
                         INNER JOIN VendaProduto ON Venda.idVenda = VendaProduto.idVenda
                         INNER JOIN Produto ON VendaProduto.idProduto = Produto.idProduto
                         GROUP BY Venda.idVenda
-                        ORDER BY Venda.idVenda; ";
+                        ORDER BY Venda.idVenda DESC; ";
     $res = mysqli_query($this->conn, $listarVendas);
     return $res;
 }
