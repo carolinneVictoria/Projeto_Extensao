@@ -108,7 +108,7 @@ if (isset($_GET['id'])) {
 
         // Exibindo os produtos associados ao serviço
         while ($registro = mysqli_fetch_assoc($produtosAssociados)) {
-            $idCompra = $registro['idCompra'];
+            $idCompraP = $registro['idCompra'];
             echo "
                 <tr>
                     <td>{$registro['nomeProduto']}</td>
@@ -128,7 +128,7 @@ if (isset($_GET['id'])) {
     ?>
 
             <div class="d-flex justify-content-end mt-3">
-                <a href="formAtualizarCompra.php?id=<?= $idCompra ?>" class="btn btn-secondary btn me-2">Voltar</a>
+                <button onclick="history.back()" class="btn btn-secondary btn me-2">Voltar</button>
             </div>
 
 <script>
