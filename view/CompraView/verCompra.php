@@ -49,7 +49,7 @@
 
                 <div class="col-md-12 mb-3">
                 <div class="d-flex justify-content-end gap-2">
-                    <a href='../controller/CompraController.php?acao=atualizar&id=<?= $idCompra ?>' class='btn btn-primary btn-sm'>Atualizar</a>
+                    <a href='../view/CompraView/formAtualizarCompra.php?id=<?= $idCompra ?>' class='btn btn-primary btn-sm'>Atualizar</a>
                     <a href='../controller/CompraController.php?acao=excluir&id=<?= $idCompra ?>' class='btn btn-danger btn-sm' onclick='return confirm("Tem certeza que deseja excluir?")'>Excluir</a>
                     <a href="../controller/CompraController.php" class="btn btn-secondary btn me-2">Voltar</a>
                 </div>
