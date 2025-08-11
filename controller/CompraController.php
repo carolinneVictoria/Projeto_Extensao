@@ -4,15 +4,15 @@ include_once "../model/Estoque.php";
 include_once "../model/Fornecedor.php";
 include_once "../model/Usuario.php";
 include_once "../model/Produto.php";
-//include_once "../model/CompraProduto.php";
+include_once "../model/CompraProduto.php";
 
 $compraModel = new Estoque($conn);
 $produtoModel = new Produto($conn);
-//$compraProdutoModel = new CompraProduto($conn);
+$compraProdutoModel = new CompraProduto($conn);
 $fornecedorModel = new Fornecedor($conn);
 $usuarioModel = new Usuario($conn);
 
-function cadastrarCompra($compraModel) {
+function cadastrarCompra($compraModel, $usuarioModel, $fornecedorModel) {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $idFornecedor   = $_POST['idFornecedor'];
         $idUsuario      = $_POST['idUsuario'];
@@ -23,7 +23,8 @@ function cadastrarCompra($compraModel) {
         $idCompra = $compraModel->cadastrarCompra($idFornecedor, $idUsuario, $data, $valorTotal, $descricao);
 
         if ($idCompra) {
-            header("Location: ../view/CompraView/estoque.php");
+            include('../app/header.php');
+            listarCompras($compraModel, $usuarioModel, $fornecedorModel);
             exit();
         } else {
             echo "Erro ao cadastrar compra!";
@@ -39,82 +40,81 @@ function listarCompras($compraModel, $usuarioModel, $fornecedorModel) {
 }
 
 /// Função para processar a atualização
-function atualizarVenda($vendaModel, $vendaProdutoModel) {
-    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['idVenda'])) {
-        $idVenda        = $_POST['idVenda'];
+function atualizarCompra($compraModel, $usuarioModel, $fornecedorModel) {
+    include('../app/header.php');
+    if (isset($_GET['id'])) {
+        $idCompra = $_GET['id'];
+        $compra = $compraModel->buscarCompraPorId($idCompra);
+        $fornecedores = $fornecedorModel->listarFornecedores();
+        $usuarios = $usuarioModel->listarUsuarios();
+
+        include('../view/CompraView/formAtualizarCompra.php');
+    } else {
+        echo "ID não informado.";
+    }
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['idCompra'])) {
+        $idCompra       = $_POST['idCompra'];
+        $idFornecedor   = $_POST['idFornecedor'];
         $idUsuario      = $_POST['idUsuario'];
         $data           = $_POST['data'];
-        $formaPagamento = $_POST['formaPagamento'];
-        $descontoVenda  = floatval(str_replace(',', '.', str_replace('.', '', $_POST['descontoVenda'])));
+        $valorTotal     = $_POST['valorTotal'];
+        $descricao      = $_POST['descricao'];
 
-        if ($vendaModel->atualizarVenda($idVenda, $idUsuario, $data, $descontoVenda, 0, $formaPagamento)) {
-            $produtos = $vendaProdutoModel->listarProdutosVenda($idVenda);
-            $valorProdutos = 0;
-            if ($produtos) {
-                while ($produto = mysqli_fetch_assoc($produtos)) {
-                    $valorProdutos += $produto['quantidade'] * $produto['valorUnitario'];
-                }
-            }
-            $valorTotal = $valorProdutos - $descontoVenda;
-            $vendaModel->atualizarValorTotalVenda($idVenda, $valorTotal);
-            header("Location: ../view/VendaView/vendas.php");
-            exit();
-
+        if ($compraModel->atualizarCompra($idCompra, $idFornecedor, $idUsuario, $data, $valorTotal, $descricao)) {
+            listarCompras($compraModel, $usuarioModel, $fornecedorModel);
         } else {
-            echo "Erro ao atualizar a venda: " . mysqli_error($vendaModel->getConnection());
+            global $conn;
+            echo "Erro ao atualizar a Compra! " . mysqli_error($conn);
+
         }
     }
 }
-
-
-function excluirVenda($vendaModel){
-    $idVenda = $_GET['id'];
-    $resultado = $vendaModel->excluirVenda($idVenda);
-    if ($resultado) {
-    echo "Venda excluído com sucesso!";
-    header('Location: ../view/VendaView/vendas.php');
-    exit();
+function excluirCompra($compraModel, $usuarioModel, $fornecedorModel){
+    $idCompra = $_GET['id'];
+    $resultado = $compraModel->excluirCompra($idCompra);
+    if($resultado) {
+        include('../app/header.php');
+        listarCompras($compraModel, $usuarioModel, $fornecedorModel);
     } else {
-    echo "Erro ao excluir a venda: " . mysqli_error($vendaModel->getConnection());
-    exit();
+        echo "ERRO AO EXCLUIR!";
     }
 }
 
-function buscarServico($servicoModel, $clienteModel, $usuarioModel) {
+function buscarCompra($compraModel, $compraProdutoModel, $usuarioModel) {
     if (isset($_GET['busca'])) {
         $termo = $_GET['busca'];
-        $servicos = $servicoModel->buscarPorNome($termo);
-        $clientes = $clienteModel->listarClientes();
+        $compras  = $compraModel->buscarPorNome($termo);
+        $produtos = $compraProdutoModel->listarProdutosCompra();
         $usuarios = $usuarioModel->listarUsuarios();
 
-        include('../view/ServicoView/verBuscaServico.php'); 
+        include('../view/CompraController/verBuscaCompra.php');
     } else {
         echo "Nenhum termo de busca informado.";
     }
 }
 
-function adicionarProduto($vendaProdutoModel) {
+function adicionarProduto($compraProdutoModel) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $idProduto = $_POST['idProduto'];
-            $idVenda = $_POST['idVenda'];
+            $idCompra  = $_POST['idCompra'];
             $quantidade = $_POST['quantidade'];
             $valorUnitario = $_POST['valorUnitario'];
 
-            $resultado = $vendaProdutoModel->adicionarProdutoVenda($idProduto, $idVenda, $quantidade, $valorUnitario);
+            $resultado = $compraProdutoModel->adicionarProdutoCompra($idProduto, $idCompra, $quantidade, $valorUnitario);
 
             if ($resultado) {
-                header("Location: ../view/VendaView/produtoVenda.php?id=$idVenda");
+                header("Location: ../view/CompraView/produtoCompra.php?id=$idCompra");
                 exit();
             } else {
-                echo "Erro ao adicionar o produto a venda! " . mysqli_error($vendaProdutoModel->getConnection());
+                echo "Erro ao adicionar o produto a compra! " . mysqli_error($compraProdutoModel->getConnection());
             }
     }
 }
 
-function atualizarProduto($vendaProdutoModel) {
+function atualizarProduto($compraProdutoModel) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
-    $idVenda  = $_POST['idVenda'];
+    $idCompra   = $_POST['idCompra'];
     $idProduto  = $_POST['idProduto'];
     $quantidade = $_POST['quantidade'];
 
@@ -123,31 +123,40 @@ function atualizarProduto($vendaProdutoModel) {
     $novoValor = str_replace(',', '.', $novoValor);
     $valorUnitario = $novoValor;
 
-    $resultado = $vendaProdutoModel->atualizarProdutoVenda($idVenda, $idProduto, $quantidade, $valorUnitario);
+    $resultado = $compraProdutoModel->atualizarProdutoCompra($idCompra, $idProduto, $quantidade, $valorUnitario);
     if ($resultado) {
-        header("Location: ../view/VendaView/formAtualizarVenda.php?id=$idVenda");
+        header("Location: ../view/CompraView/formAtualizarCompra.php?id=$idCompra");
         exit;
     } else {
-        echo "Erro ao atualizar o produto na venda: "
-           . mysqli_error($vendaProdutoModel->getConnection());
+        echo "Erro ao atualizar o produto na compra: " . mysqli_error($compraProdutoModel->getConnection());
         exit;
     }
 }
 }
-function excluirProduto($vendaProdutoModel){
-    $idVenda = $_GET['idVenda'];
+function excluirProduto($compraProdutoModel){
+    $idCompra = $_GET['idCompra'];
     $idProduto = $_GET['id'];
-    $resultado = $vendaProdutoModel->excluirProdutoVenda($idVenda, $idProduto);
+    $resultado = $compraProdutoModel->excluirProdutoCompra($idCompra, $idProduto);
     if ($resultado) {
-    echo "Produto excluído com sucesso!";
-    header("Location: ../view/VendaView/formAtualizarVenda.php?id=$idVenda");
-    exit();
+        include('../app/header.php');
+        echo "Produto excluído com sucesso!";
+        header("Location: ../view/CompraView/produtoCompra.php?id=$idCompra");
+        exit();
     } else {
-    echo "Erro ao excluir o produto: " . mysqli_error($vendaProdutoModel->getConnection());
-    exit();
+        echo "Erro ao excluir o produto: " . mysqli_error($compraProdutoModel->getConnection());
+        exit();
     }
 }
-
+function verCompra($compraModel) {
+    include('../app/header.php');
+    if (isset($_GET['id'])) {
+        $idCompra = $_GET['id'];
+        $compra = $compraModel->buscarCompraPorId($idCompra);
+        include('../view/CompraView/verCompra.php');
+    } else {
+        echo "ID não informado.";
+    }
+}
 
 // Determina qual ação chamar com base na URL ou método
 if (isset($_GET['acao'])) {
@@ -155,24 +164,27 @@ if (isset($_GET['acao'])) {
 
     // Chamando a ação de acordo com a URL
     if ($acao == 'cadastrar') {
-        cadastrarCompra($compraModel);
+        cadastrarCompra($compraModel, $usuarioModel, $fornecedorModel);
     } elseif ($acao == 'listar') {
         listarCompras($compraModel, $usuarioModel, $fornecedorModel);
     } elseif ($acao == 'atualizar') {
-        atualizarVenda($vendaModel, $vendaProdutoModel); // Se o formulário for enviado, processa a atualização
+        atualizarCompra($compraModel, $usuarioModel, $fornecedorModel); // Se o formulário for enviado, processa a atualização
     } elseif ($acao == 'excluir') {
-        excluirVenda($vendaModel);
+        excluirCompra($compraModel, $usuarioModel, $fornecedorModel );
     } elseif($acao == 'buscar') {
-        buscarVenda($vendaModel, $vendaProdutoModel, $usuarioModel);
+        buscarServico($compraModel, $compraProdutoModel, $usuarioModel);
     } elseif($acao == 'adicionarProduto'){
-        adicionarProduto($vendaProdutoModel);
+        adicionarProduto($compraProdutoModel);
     } elseif($acao == 'atualizarProduto'){
-        atualizarProduto($vendaProdutoModel);
+        atualizarProduto($compraProdutoModel);
     } elseif($acao == 'excluirProduto'){
-        excluirProduto($vendaProdutoModel);
+        excluirProduto($compraProdutoModel);
+    } elseif($acao == 'verCompra'){
+        verCompra($compraModel);
     }
 } else {
     // Caso nenhuma ação seja especificada, exibe a listagem
+    include('../app/header.php');
     listarCompras($compraModel, $usuarioModel, $fornecedorModel);
 }
 ?>
