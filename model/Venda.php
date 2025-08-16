@@ -102,6 +102,24 @@ public function listarVendas() {
         return $stmt->execute();
     }
 
+     public function totalVendasPorMes($mes, $ano) {
+        $sql = "SELECT SUM(valorTotal) AS totalVendas FROM venda WHERE MONTH(data) = ? AND YEAR(data) = ?";
+
+        $stmt = $this->conn->prepare($sql);
+        if (!$stmt) {
+            // Tratar erro aqui
+            return 0;
+        }
+        $stmt->bind_param("ii", $mes, $ano);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        $row = $resultado->fetch_assoc();
+
+        return $row['totalVendas'] ?? 0;
+    }
+
 }
+
+   
 
 ?>
