@@ -38,7 +38,7 @@ if (!$registro) {
     <h4 class="mb-4">Atualizar Produto na Venda</h4>
 
     
-    <form id="formProduto" action="/Projeto_Extensao/controller/VendaController.php?acao=adicionarProduto" method="POST" class="was-validated">
+    <form id="formProduto" action="/Projeto_Extensao/controller/VendaController.php?acao=atualizarProduto" method="POST" class="was-validated">
         <div class="row">
             
             <!-- Campos ocultos -->
@@ -69,7 +69,7 @@ if (!$registro) {
             </div>
 
             <div class="col-md-12 mb-3 d-flex align-items-end">
-                <button type="submit" class="btn btn-success w-100">Adicionar Produto</button>
+                <button type="submit" class="btn btn-success w-100">Atualizar Produto</button>
             </div>
         </div>
     </form>
