@@ -95,6 +95,12 @@ class Produto {
         return null;
     }
 }
+public function reduzirEstoque($idProduto, $quantidade) {
+    $sql = "UPDATE Produto SET quantidadeProduto = quantidadeProduto - ? WHERE id = ?";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bind_param("ii", $quantidade, $idProduto);
+    return $stmt->execute();
+}
 
 
 }
