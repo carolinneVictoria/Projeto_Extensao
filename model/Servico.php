@@ -123,6 +123,23 @@ class Servico {
         return $stmt->execute();
     }
 
+    public function totalServicosPorMes($mes, $ano) {
+        $sql = "SELECT SUM(valorTotal) AS totalServicos FROM servico WHERE entrega = '0' AND MONTH(dataEntrada) = ? AND YEAR(dataEntrada) = ?";
+        
+        $stmt = $this->conn->prepare($sql);
+        
+        if (!$stmt) {
+            // Logar o erro ou lidar com a falha na preparação
+            return 0;
+        }
+
+        $stmt->bind_param("ii", $mes, $ano);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        $row = $resultado->fetch_assoc();
+        
+        return $row['totalServicos'] ?? 0;
+    }
 }
 
 ?>
