@@ -109,6 +109,23 @@ private $conn;
         return null;
     }
 }
+public function totalDespesasPorMes($mes, $ano) {
+        $sql = "SELECT SUM(valorTotal) AS totalDespesas FROM financeiro WHERE MONTH(dataVencimento) = ? AND YEAR(dataVencimento) = ?";
+        
+        $stmt = $this->conn->prepare($sql);
+        
+        if (!$stmt) {
+            // Logar o erro ou lidar com a falha na preparação
+            return 0;
+        }
+
+        $stmt->bind_param("ii", $mes, $ano);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        $row = $resultado->fetch_assoc();
+        
+        return $row['totalDespesas'] ?? 0;
+    }
 
 }
 
