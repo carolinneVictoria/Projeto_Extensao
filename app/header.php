@@ -26,8 +26,6 @@ $primeiroNome = $nomeUsuario ? explode(' ', $nomeUsuario)[0] : '';
             $pagina = $_GET['pagina'];
             switch($pagina){
                 case "index"        : echo "Página Inicial"; break;
-                case "formUsuario"  : echo "Cadastrar Usuário"; break;
-                case "formProduto"  : echo "Cadastrar Produto"; break;
                 case "formLogin"    : echo "Login"; break;
                 default             : echo "Gestão Samuka Bikes"; break;
             }
@@ -43,6 +41,8 @@ $primeiroNome = $nomeUsuario ? explode(' ', $nomeUsuario)[0] : '';
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <script>
         $(document).ready(function(){
@@ -50,54 +50,73 @@ $primeiroNome = $nomeUsuario ? explode(' ', $nomeUsuario)[0] : '';
         });
     </script>
     <style>
-    .table td, .table th {
-    max-width: 150px;   /* largura máxima da célula */
-    white-space: nowrap; /* evita quebrar linha */
-    overflow: hidden;    /* esconde o que passar */
-    text-overflow: ellipsis; /* coloca "..." */
-    }
+        .table td, .table th {
+        max-width: 150px;   /* largura máxima da célula */
+        white-space: nowrap; /* evita quebrar linha */
+        overflow: hidden;    /* esconde o que passar */
+        text-overflow: ellipsis; /* coloca "..." */
+        }
+        body {
+            min-height: 100vh;
+            display: flex;
+            background-color: #f8f9fa;
+        }
+        .sidebar {
+            min-width: 210px;
+            background-color: #212529;
+            color: white;
+            padding: 20px;
+            
+        }
+        .sidebar h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+        }
+        .sidebar a:hover {
+            background-color: #343a40;
+        }
+        .content {
+            flex: 1;
+            padding: 20px;
+        }
+        .card {
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body>
 
-
-<!-- Top Header -->
-<div class="container-fluid bg-dark d-flex align-items-center position-fixed" style="top: 0; left: 170px; height: 50px; z-index: 1030;">
-    <h4 style="color: white; margin-left: 0px;">Gestão Samuka Bikes</h4>
-</div>
-
 <!-- Sidebar Navbar Lateral -->
-<nav class="navbar bg-dark navbar-dark flex-column vh-100 position-fixed p-2" style="width: 170px;">
-    <div class="container-fluid">
-
+    <div class="sidebar">
+        <h2>Samuka Bikes</h2>
         <?php if(isset($_SESSION['logado']) && $_SESSION['logado'] === true): ?>
-            <div class="text-left mb-3">
-                <img src="/Projeto_Extensao/img/logo.jpg" class="img-fluid rounded-circle" style="height: 120px; margin-top: 10px;" title="logo da loja">
-                <p class="text-white mt-2"><?= $nomeUsuario ?></p>
-            </div>
-
-            <ul class="navbar-nav w-100">
-                    <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/index.php">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/view/VendaView/vendas.php">Vendas</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/view/ProdutoView/produtos.php">Produtos</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/view/ServicoView/servicos.php">Serviços</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/view/ClienteView/clientes.php">Clientes</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/view/FornecedorView/fornecedores.php">Fornecedores</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/controller/CompraController.php">Estoque</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/controller/FinanceiroController.php">Financeiro</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/view/UsuarioView/usuarios.php">Usuarios</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/controller/logout.php">Logout</a></li>
-            </ul>
+        <a href="/Projeto_Extensao/index.php">📈 Dashboard</a>
+        <a href="/Projeto_Extensao/view/ProdutoView/produtos.php">📦 Produtos</a>
+        <a href="/Projeto_Extensao/view/ClienteView/clientes.php">👥 Clientes</a>
+        <a href="/Projeto_Extensao/view/FornecedorView/fornecedores.php">🚚 Fornecedores</a>
+        <a href="/Projeto_Extensao/view/ServicoView/servicos.php">🛠 Serviços</a>
+        <a href="/Projeto_Extensao/view/VendaView/vendas.php">💰 Vendas</a>
+        <a href="/Projeto_Extensao/view/UsuarioView/usuarios.php">👥 Usuários</a>
+        <a href="/Projeto_Extensao/controller/CompraController.php">📦 Estoque</a>
+        <a href="/Projeto_Extensao/controller/FinanceiroController.php">📊 Financeiro</a>
+        <a href="/Projeto_Extensao/controller/logout.php">Logout</a>
         <?php else: ?>
             <ul class="navbar-nav">
                 <li class="nav-item"><a class="nav-link <?= ($pagina == 'formLogin') ? 'active' : '' ?>" href="/Projeto_Extensao/view/UsuarioView/formLogin.php?pagina=formLogin">Login</a></li>
             </ul>
         <?php endif; ?>
     </div>
-</nav>
 
 <!-- Conteúdo Principal -->
 <!-- Container PRINCIPAL do Sistema-->
-<div class="container" style="margin-left: 170px; padding-top: 50px;">
+<div class="container">
         <div class="row">
             <div class="col-12">
