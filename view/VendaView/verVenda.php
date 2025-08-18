@@ -1,147 +1,107 @@
-<?php 
-include("../../app/header.php");
-include('../../config/conexaoBD.php');
-include('../../model/Venda.php');
-include('../../model/Usuario.php');
-include('../../model/VendaProduto.php');
+<?php include("../app/header.php"); ?>
 
-$vendaModel = new Venda($conn);
-$usuarioModel = new Usuario($conn);
-$vendaProdutoModel = new VendaProduto($conn);
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white text-center">
+                    <h4 class="mb-0">Detalhes da Venda</h4>
+                </div>
+                <div class="card-body">
+                    <form novalidate>
+                        <input type="hidden" name="idVenda" value="<?= htmlspecialchars($idVenda); ?>">
 
-if (isset($_GET['id'])) {
-    $idVenda = $_GET['id'];
-    $venda   = $vendaModel->buscarVendaPorId($idVenda);
-    $usuario = $usuarioModel->buscarUsuarioPorId($venda['idUsuario']);
-} else {
-    echo "ID do serviço não informado!";
-    exit();
-}
+                        <div class="row g-3">
+                            <div class="col-md-4">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="idUsuario" value="<?= htmlspecialchars($venda['nomeUsuario']); ?>" disabled placeholder="Usuário">
+                                    <input type="hidden" name="idUsuario" value="<?= htmlspecialchars($venda['idUsuario']); ?>">
+                                    <label for="idUsuario">Usuário:</label>
+                                </div>
+                            </div>
 
-$$valorProdutos = 0;
-$produtosAssociados = $vendaProdutoModel->listarProdutosVenda($idVenda);
-$descontoTotal = $venda['descontoVenda'];
+                            <div class="col-md-4">
+                                <div class="form-floating">
+                                    <input type="date" class="form-control" id="data" name="data" value="<?= htmlspecialchars($venda['data']); ?>" disabled placeholder="Data da Venda">
+                                    <label for="dataEntrada">Data da Venda:</label>
+                                </div>
+                            </div>
 
-if ($produtosAssociados) {
-    while ($registro = mysqli_fetch_assoc($produtosAssociados)) {
-        $valorTotal += ($registro['quantidade'] * $registro['valorUnitario']);
-    }
-    if (!$vendaModel->atualizarValorTotalVenda($idVenda, $valorTotal)) {
-        echo "Erro ao atualizar o valor total no banco de dados!";
-        exit();
-    }
-} else {
-    $produtosAssociados = [];
-}
-?>
+                            <div class="col-md-4">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="valorTotal" disabled value="R$ <?= number_format($venda['valorTotal'], 2, ',', '.'); ?>" placeholder="Valor Total">
+                                    <label for="valorTotal">Valor Total:</label>
+                                </div>
+                            </div>
 
-<div class="container-fluid">
-    <h3>Detalhes da Venda:</h3>
-    <div class="col-sm-12">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="descontoVenda" name="descontoVenda" value="R$ <?= number_format($venda['descontoVenda'], 2, ',', '.'); ?>" disabled placeholder="Desconto">
+                                    <label for="descontoVenda">Desconto:</label>
+                                </div>
+                            </div>
 
-    <form id="formVenda" action="/Projeto_Extensao/controller/VendaController.php" method="POST" class="was-validated">
-        <input type="hidden" name="idVenda" value="<?= $idVenda ?>">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <select class="form-select" id="formaPagamento" name="formaPagamento" required disabled>
+                                        <option value="Pix" <?= ($venda['formaPagamento'] == 'Pix') ? 'selected' : '' ?>>Pix</option>
+                                        <option value="Dinheiro" <?= ($venda['formaPagamento'] == 'Dinheiro') ? 'selected' : '' ?>>Dinheiro</option>
+                                        <option value="Cartão de Débito" <?= ($venda['formaPagamento'] == 'Cartão de Débito') ? 'selected' : '' ?>>Cartão de Débito</option>
+                                        <option value="Cartão de Crédito" <?= ($venda['formaPagamento'] == 'Cartão de Crédito') ? 'selected' : '' ?>>Cartão de Crédito</option>
+                                    </select>
+                                    <label for="formaPagamento">Forma de Pagamento:</label>
+                                </div>
+                            </div>
+                        </div>
 
-        <div class="row">
+                        <hr class="my-4">
 
-            <div class="col-md-4 mb-3">
-                <div class="form-floating ">
-                    <input type="hidden" name="idUsuario" value="<?= $venda['idUsuario'] ?>">
-                    <input type="text" class="form-control" id="idUsuario" value="<?= $usuario['nomeUsuario']; ?>">
-                    <label for="idUsuario">Usuario:</label>
+                        <h5 class="mb-3">Produtos da Venda</h5>
+                        <div class="table-responsive">
+                            <?php if (!empty($produtosAssociados)): ?>
+                                <table class="table table-hover table-striped">
+                                    <thead class="table-dark">
+                                        <tr>
+                                            <th>PRODUTO</th>
+                                            <th>QUANTIDADE</th>
+                                            <th>VALOR UNITÁRIO</th>
+                                            <th>TOTAL</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($produtosAssociados as $registro): ?>
+                                            <?php $totalProduto = $registro['quantidade'] * $registro['valorUnitario']; ?>
+                                            <tr>
+                                                <td><?= htmlspecialchars($registro['nomeProduto']); ?></td>
+                                                <td><?= htmlspecialchars($registro['quantidade']); ?></td>
+                                                <td>R$ <?= number_format($registro['valorUnitario'], 2, ',', '.'); ?></td>
+                                                <td>R$ <?= number_format($totalProduto, 2, ',', '.'); ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            <?php else: ?>
+                                <p class="text-muted">Nenhum produto associado à venda.</p>
+                            <?php endif; ?>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer d-flex justify-content-between">
+                    <a href="javascript:history.back()" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Voltar
+                    </a>
+                    <div>
+                        <a href='../controller/VendaController.php?acao=formAtualizar&id=<?= htmlspecialchars($idVenda); ?>' class='btn btn-warning me-2 text-white' title="Editar Venda">
+                            <i class="fas fa-edit"></i> Editar
+                        </a>
+                        <a href='../../controller/VendaController.php?acao=excluir&id=<?= htmlspecialchars($idVenda); ?>' class='btn btn-danger' onclick='return confirm("Tem certeza que deseja excluir?")' title="Excluir Venda">
+                            <i class="fas fa-trash"></i> Excluir
+                        </a>
+                    </div>
                 </div>
             </div>
-
-            <div class="col-md-4 mb-3">
-                <div class="form-floating ">
-                    <input type="date" class="form-control" id="data" name="data" value="<?= $venda['data']; ?>">
-                    <label for="dataEntrada">Data da venda:</label>
-                </div>
-            </div>
-
-            <div class="col-md-4 mb-3">
-                <div class="form-floating border border-success rounded">
-                    <input type="hidden" name="valorTotal" value="<?= $valorTotal ?>">
-                    <input type="text" class="form-control" id="valorTotal" readonly value="R$ <?= number_format($venda['valorTotal'], 2, ',', '.'); ?>">
-                    <label for="valorTotal">Valor Total:</label>
-                </div>
-            </div>
-
-            <div class="col-md-4 mb-3">
-                <div class="form-floating border border-success rounded">
-                    <input type="text" class="form-control" id="descontoVenda" name="descontoVenda" value="R$ <?= number_format($venda['descontoVenda'], 2, ',', '.'); ?>" readonly>
-                    <label for="descontoVenda">Desconto:</label>
-                </div>
-            </div>
-
-            <div class="col-md-4 mb-3">
-                <div class="form-floating">
-                    <select class="form-select" id="formaPagamento" name="formaPagamento" required>
-                        <option value="Pix" <?= ($venda['formaPagamento'] == 'Pix') ? 'selected' : '' ?>>Pix</option>
-                        <option value="Dinheiro" <?= ($venda['formaPagamento'] == 'Dinheiro') ? 'selected' : '' ?>>Dinheiro</option>
-                        <option value="Cartão de Débito" <?= ($venda['formaPagamento'] == 'Cartão de Débito') ? 'selected' : '' ?>>Cartão de Débito</option>
-                        <option value="Cartão de Crédito" <?= ($venda['formaPagamento'] == 'Cartão de Crédito') ? 'selected' : '' ?>>Cartão de Crédito</option>
-                    </select>
-                    <label for="formaPagamento">Forma de Pagamento:</label>
-                </div>
-            </div>
-
-
-            <h5>Produtos</h5>
-            <div class="col-md-12 mb-3">
-            <?php
-            if (!empty($produtosAssociados)) {
-                echo "
-                    <table class='table table-hover table-bordered table-sm'>
-                        <thead class='thead-light'>
-                            <tr>
-                                <th>PRODUTO</th>
-                                <th>QUANTIDADE</th>
-                                <th>VALOR UNITÁRIO</th>
-                                <th>TOTAL</th>
-                                <th>AÇÕES</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                ";
-
-                // Exibir os produtos associados ao serviço
-                foreach ($produtosAssociados as $registro) {
-                    $totalProduto = $registro['quantidade'] * $registro['valorUnitario'];
-                    echo "
-                        <tr>
-                            <td>{$registro['nomeProduto']}</td>
-                            <td>{$registro['quantidade']}</td>
-                            <td>R$ " . number_format($registro['valorUnitario'], 2, ',', '.') . "</td>
-                            <td>R$ " . number_format($totalProduto, 2, ',', '.') . "</td>
-                            <td>
-                                <a href='atualizarProdutoVenda.php?idProduto={$registro['idProduto']}&idVenda={$registro['idVenda']}' class='btn btn-primary btn-sm'>Atualizar</a>
-                                <a href='../../controller/VendaController.php?acao=excluirProduto&id={$registro['idProduto']}&idVenda={$idVenda}' class='btn btn-danger btn-sm' onclick='return confirm(\"Tem certeza que deseja excluir?\")'>Excluir</a>
-                            </td>
-                        </tr>
-                    ";
-                }
-                echo "</tbody></table>";
-            } else {
-                echo "<p>Nenhum produto associado ao serviço ainda.</p>";
-            }
-            ?>
-            </div>
-
-            <div class="col-md-12 mb-3">
-                <div class="d-flex justify-content-end gap-2">
-                    <a href='formAtualizarVenda.php?id=<?= $idVenda ?>' class='btn btn-primary btn-sm'>Editar</a>
-                    <a href='../../controller/VendaController.php?acao=excluir&id=<?= $idVenda ?>' class='btn btn-danger btn-sm' onclick='return confirm("Tem certeza que deseja excluir?")'>Excluir</a>
-                    <a href="vendas.php" class="btn btn-secondary btn me-2">Voltar</a>
-                </div>
-            </div>
-
-            <p></p>
-
         </div>
-        </form>
     </div>
 </div>
 
-
-<?php include("../../app/footer.php") ?>
+<?php include("../../app/footer.php"); ?>
