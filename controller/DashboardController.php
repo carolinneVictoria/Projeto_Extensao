@@ -13,7 +13,6 @@ class DashboardController {
     }
 
     public function exibirDashboard() {
-        // Lógica de negócio e consultas
         $mesAtual = date('m');
         $anoAtual = date('Y');
 
