@@ -65,17 +65,34 @@ private $conn;
     }
 
     public function buscarClientePorId($idCliente) {
-    $stmt = $this->conn->prepare("SELECT * FROM Cliente WHERE idCliente = ?");
-    $stmt->bind_param("i", $idCliente);
-    $stmt->execute();
-    $result = $stmt->get_result();
+        $stmt = $this->conn->prepare("SELECT * FROM Cliente WHERE idCliente = ?");
+        $stmt->bind_param("i", $idCliente);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
-    if ($row = $result->fetch_assoc()) {
-        return $row;
-    } else {
-        return null; 
+        if ($row = $result->fetch_assoc()) {
+            return $row;
+        } else {
+            return null;
+        }
     }
-}
+
+    public function listarClientesPaginados($limite, $offset) {
+        $sql = "SELECT * FROM Cliente LIMIT ? OFFSET ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("ii", $limite, $offset);
+        $stmt->execute();
+        return $stmt->get_result();
+    }
+
+    // Conta o total de registros
+    public function contarClientes() {
+        $sql = "SELECT COUNT(*) as total FROM Cliente";
+        $resultado = $this->conn->query($sql);
+        $row = $resultado->fetch_assoc();
+        return $row['total'];
+    }
+
 
 }
 
