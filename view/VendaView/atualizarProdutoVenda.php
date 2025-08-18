@@ -1,142 +1,100 @@
-<?php
-include("../../app/header.php");
-include_once "../../config/conexaoBD.php";
-include_once "../../model/Venda.php";
-include_once "../../model/Produto.php";
-include_once "../../model/VendaProduto.php";
+<?php include("../app/header.php"); ?>
 
-// Instanciando o Model
-$vendaModel = new Venda($conn);
-$produtoModel = new Produto($conn);
-$vendaProdutoModel = new VendaProduto($conn);
-
-// Listando produtos
-$produtos = $produtoModel->listarProdutos();
-
-// Verifica se os IDs foram passados corretamente
-if (!isset($_GET['idProduto'], $_GET['idVenda'])) {
-    echo "ID da venda ou do produto não informado!";
-    exit;
-}
-
-$idVenda = (int) $_GET['idVenda'];
-$idProduto = (int) $_GET['idProduto'];
-// Busca os dados necessários
-$venda  = $vendaModel->buscarVendaPorId($idVenda);
-$produto  = $produtoModel->buscarProdutoPorId($idProduto);
-$registro = $vendaProdutoModel->buscarProdutoVenda($idVenda, $idProduto);
-
-if (!$registro) {
-    echo "Registro de produto na venda não encontrado!";
-    exit;
-}
-
-?>
-
-<div class="container-fluid text-left">
-
-    <h4 class="mb-4">Atualizar Produto na Venda</h4>
-
-    
-    <form id="formProduto" action="/Projeto_Extensao/controller/VendaController.php?acao=atualizarProduto" method="POST" class="was-validated">
-        <div class="row">
-            
-            <!-- Campos ocultos -->
-            <input type="hidden" name="idVenda" value="<?= $idVenda ?>">
-            <input type="hidden" name="idProduto" value="<?= $idProduto ?>">
-            
-            <!-- Nome do Produto -->
-            <div class="col-md-4 mb-3">
-                <div class="form-floating">
-                    <input type="text" id="produto" class="form-control border border-success rounded" readonly value="<?= htmlspecialchars($registro['nomeProduto']) ?>">
-                    <label for="produto" class="form-label">Produto</label>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white text-center">
+                    <h4 class="mb-0">Atualizar Produto na Venda</h4>
                 </div>
-            </div>
+                <div class="card-body">
+                    <form id="formProduto" action="/Projeto_Extensao/controller/VendaController.php?acao=atualizarProduto" method="POST" class="needs-validation" novalidate>
+                        <div class="row g-3">
+                            <input type="hidden" name="idVenda" value="<?= htmlspecialchars($idVenda); ?>">
+                            <input type="hidden" name="idProduto" value="<?= htmlspecialchars($idProduto); ?>">
 
-            <div class="col-md-4 mb-3">
-                <div class="form-floating">
-                    <input type="number" class="form-control" id="quantidade" name="quantidade" required min="1" value="<?= (int) $registro['quantidade'] ?>">
-                    <label for="quantidade">Quantidade</label>
+                            <div class="col-md-4">
+                                <div class="form-floating">
+                                    <input type="text" id="produto" class="form-control" readonly value="<?= htmlspecialchars($registro['nomeProduto']); ?>" placeholder="Produto">
+                                    <label for="produto">Produto:</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="form-floating">
+                                    <input type="number" class="form-control" id="quantidade" name="quantidade" required min="1" value="<?= (int) $registro['quantidade']; ?>" placeholder="Quantidade">
+                                    <label for="quantidade">Quantidade:</label>
+                                    <div class="invalid-feedback">Por favor, insira a quantidade.</div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="valorUnitario" name="valorUnitario" required readonly value="<?= number_format($registro['valorUnitario'], 2, ',', '.'); ?>" placeholder="Valor Unitário">
+                                    <label for="valorUnitario">Valor Unitário:</label>
+                                </div>
+                            </div>
+
+                            <div class="col-12 text-end">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Atualizar Produto
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <hr class="my-4">
+
+                    <h5 class="mb-3">Produtos na Venda</h5>
+                    <div class="table-responsive">
+                        <?php
+                        if ($produtosAssociados && mysqli_num_rows($produtosAssociados) > 0) {
+                            echo "
+                            <table class='table table-hover table-striped'>
+                                <thead class='table-dark'>
+                                    <tr>
+                                        <th>PRODUTO</th>
+                                        <th>QUANTIDADE</th>
+                                        <th>VALOR UNITÁRIO</th>
+                                        <th>TOTAL</th>
+                                        <th class='text-center'>AÇÕES</th>
+                                    </tr>
+                                </thead>
+                                <tbody>";
+
+                            while ($registro = mysqli_fetch_assoc($produtosAssociados)) {
+                                $totalProduto = $registro['quantidade'] * $registro['valorUnitario'];
+                                echo "
+                                <tr>
+                                    <td>" . htmlspecialchars($registro['nomeProduto']) . "</td>
+                                    <td>" . htmlspecialchars($registro['quantidade']) . "</td>
+                                    <td>R$ " . number_format($registro['valorUnitario'], 2, ',', '.') . "</td>
+                                    <td>R$ " . number_format($totalProduto, 2, ',', '.') . "</td>
+                                    <td class='text-center'>
+                                        <a href='/Projeto_Extensao/controller/VendaController.php?acao=formAtualizarProduto&idProduto=" . htmlspecialchars($registro['idProduto']) . "&idVenda=" . htmlspecialchars($registro['idVenda']) . "' class='btn btn-warning btn-sm' title='Atualizar'>
+                                            <i class='fas fa-edit'></i>
+                                        </a>
+                                        <a href='../controller/VendaController.php?acao=excluirProduto&id=" . htmlspecialchars($registro['idProduto']) . "&idVenda=" . htmlspecialchars($idVenda) . "' class='btn btn-danger btn-sm' onclick='return confirm(\"Tem certeza que deseja excluir?\")' title='Excluir'>
+                                            <i class='fas fa-trash'></i>
+                                        </a>
+                                    </td>
+                                </tr>";
+                            }
+                            echo "</tbody></table>";
+                        } else {
+                            echo "<p class='text-muted'>Nenhum produto associado à venda ainda.</p>";
+                        }
+                        ?>
+                    </div>
                 </div>
-            </div>
-
-            
-            <div class="col-md-4 mb-3">
-                <div class="form-floating">
-                    <input type="text" class="form-control border border-success rounded" id="valorUnitario" name="valorUnitario" required readonly value="<?= number_format($registro['valorUnitario'], 2, ',', '.') ?>">
-                    <label for="valorUnitario">Valor Unitário</label>
+                <div class="card-footer d-flex justify-content-end">
+                    <button onclick="history.back()" class="btn btn-secondary">
+                        <i class="fas fa-arrow-left"></i> Voltar
+                    </button>
                 </div>
-            </div>
-
-            <div class="col-md-12 mb-3 d-flex align-items-end">
-                <button type="submit" class="btn btn-success w-100">Atualizar Produto</button>
             </div>
         </div>
-    </form>
-
-    <?php
-    
-    $produtosAssociados = $vendaProdutoModel->listarProdutosVenda($idVenda);
-    if ($produtosAssociados) {
-        echo "
-            <table class='table table-hover table-bordered table-sm'>
-                <thead class='thead-light'>
-                    <tr>
-                        <th>PRODUTO</th>
-                        <th>QUANTIDADE</th>
-                        <th>VALOR UNITÁRIO</th>
-                        <th>TOTAL</th>
-                        <th>AÇÕES</th>
-                    </tr>
-                </thead>
-                <tbody>
-        ";
-
-        // Exibindo os produtos associados ao serviço
-        while ($registro = mysqli_fetch_assoc($produtosAssociados)) {
-            $idVenda = $registro['idVenda'];
-            echo "
-                <tr>
-                    <td>{$registro['nomeProduto']}</td>
-                    <td>{$registro['quantidade']}</td>
-                    <td>R$ " . number_format($registro['valorUnitario'], 2, ',', '.') . "</td>
-                    <td>R$ " . number_format($registro['quantidade'] * $registro['valorUnitario'], 2, ',', '.') . "</td>
-                    <td>
-                        <a href='atualizarProdutoVenda.php?idProduto={$registro['idProduto']}&idVenda={$registro['idVenda']}' class='btn btn-primary btn-sm'>Atualizar</a>
-                        <a href='../../controller/VendaController.php?acao=excluirProduto&id={$registro['idProduto']}&idVenda={$idVenda}' class='btn btn-danger btn-sm' onclick='return confirm(\"Tem certeza que deseja excluir?\")'>Excluir</a>
-                    </td>
-                </tr>
-            ";
-        }
-        echo "</tbody></table>";
-    } else {
-        echo "<p>Nenhum produto associado ao serviço ainda.</p>";
-    }
-    ?>
-
-            <div class="d-flex justify-content-end mt-3">
-                <a href="formAtualizarVenda.php?id=<?= $idVenda ?>" class="btn btn-secondary btn me-2">Voltar</a>
-            </div>
-
+    </div>
 </div>
 
-<script>
-document.getElementById("idProduto").addEventListener("change", function() {
-    let selectedOption = this.options[this.selectedIndex];
-    let valor = selectedOption.getAttribute("data-valor");
-
-    // Formata como moeda brasileira
-    let valorFormatado = parseFloat(valor).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-
-    // Atualiza o campo de valor unitário
-    document.getElementById("valorUnitario").value = valorFormatado;
-});
-
-// Ao carregar a página, aplica o valor formatado do item já selecionado
-window.addEventListener("load", function() {
-    document.getElementById("idProduto").dispatchEvent(new Event("change"));
-});
-</script>
-
-
-<?php include("../../app/footer.php"); ?>
+<?php include("../app/footer.php"); ?>
