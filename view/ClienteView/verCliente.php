@@ -14,39 +14,39 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="nome" name="nome" value="<?= htmlspecialchars($cliente['nome']); ?>" readonly>
+                                    <input type="text" class="form-control" id="nome" name="nome" value="<?= htmlspecialchars($cliente['nome']); ?>" disabled>
                                     <label for="nome">Nome:</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="telefone" name="telefone" value="<?= htmlspecialchars($cliente['telefone']); ?>" readonly>
+                                    <input type="text" class="form-control" id="telefone" name="telefone" value="<?= htmlspecialchars($cliente['telefone']); ?>" disabled>
                                     <label for="telefone">Telefone:</label>
                                 </div>
                             </div>
                             
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="cpf" name="cpf" value="<?= htmlspecialchars($cliente['cpf']); ?>" readonly>
+                                    <input type="text" class="form-control" id="cpf" name="cpf" value="<?= htmlspecialchars($cliente['cpf']); ?>" disabled>
                                     <label for="cpf">CPF:</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="date" class="form-control" id="dataNascimento" name="dataNascimento" value="<?= htmlspecialchars($cliente['dataNascimento']); ?>" readonly>
+                                    <input type="date" class="form-control" id="dataNascimento" name="dataNascimento" value="<?= htmlspecialchars($cliente['dataNascimento']); ?>" disabled>
                                     <label for="dataNascimento">Data de Nascimento:</label>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="endereco" name="endereco" value="<?= htmlspecialchars($cliente['endereco']); ?>" readonly>
+                                    <input type="text" class="form-control" id="endereco" name="endereco" value="<?= htmlspecialchars($cliente['endereco']); ?>" disabled>
                                     <label for="endereco">Endereço</label>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="bicicleta" name="bicicleta" value="<?= htmlspecialchars($cliente['bicicleta']); ?>" readonly>
+                                    <input type="text" class="form-control" id="bicicleta" name="bicicleta" value="<?= htmlspecialchars($cliente['bicicleta']); ?>" disabled>
                                     <label for="bicicleta">Bicicleta</label>
                                 </div>
                             </div>
