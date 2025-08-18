@@ -65,19 +65,30 @@ public function listarVendas() {
     return ($stmt->execute());
     }
 
-    public function buscarPorNome($termo) {
+    public function buscarPorNome($termo, $limite, $offset) {
     $buscarPorNome = "SELECT Venda.*, Usuario.nomeUsuario, Produto.nomeProduto
-                            FROM Venda
-                            INNER JOIN Usuario ON Venda.idUsuario = Usuario.idUsuario
-                            INNER JOIN Produto ON Venda.idProduto = Produto.idProduto
-                            WHERE Venda.valorTotal LIKE ? OR Produto.nomeProduto LIKE ? OR Usuario.nomeUsuario LIKE ?";
+                        FROM Venda
+                        INNER JOIN Usuario ON Venda.idUsuario = Usuario.idUsuario
+                        INNER JOIN VendaProduto ON Venda.idVenda = VendaProduto.idVenda
+                        INNER JOIN Produto ON VendaProduto.idProduto = Produto.idProduto
+                        WHERE Venda.valorTotal LIKE ?
+                            OR Produto.nomeProduto LIKE ?
+                            OR Usuario.nomeUsuario LIKE ?
+                        LIMIT ? OFFSET ?";
+
     $stmt = $this->conn->prepare($buscarPorNome);
+
+    if (!$stmt) {
+        die("Erro na query: " . $this->conn->error);
+    }
+
     $like = "%" . $termo . "%";
-    $stmt->bind_param("sss", $like, $like, $like);
+    $stmt->bind_param("sssii", $like, $like, $like, $limite, $offset);
     $stmt->execute();
     $res = $stmt->get_result();
     return $res;
 }
+
 
 // Método para buscar os detalhes
     public function buscarVendaPorId($idVenda) {
@@ -118,8 +129,26 @@ public function listarVendas() {
         return $row['totalVendas'] ?? 0;
     }
 
+    public function listarVendasPaginadas($limite, $offset) {
+    $sql = "SELECT Venda.*, Usuario.nomeUsuario, Produto.nomeProduto FROM Venda
+                        INNER JOIN Usuario ON Venda.idUsuario = Usuario.idUsuario
+                        INNER JOIN VendaProduto ON Venda.idVenda = VendaProduto.idVenda
+                        INNER JOIN Produto ON VendaProduto.idProduto = Produto.idProduto
+                        ORDER BY data DESC LIMIT ?, ?";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bind_param("ii", $offset, $limite);
+    $stmt->execute();
+    return $stmt->get_result();
 }
 
-   
+
+    // Conta o total de registros
+    public function contarVendas() {
+        $sql = "SELECT COUNT(*) as total FROM Venda";
+        $resultado = $this->conn->query($sql);
+        $row = $resultado->fetch_assoc();
+        return $row['total'];
+    }
+}
 
 ?>
