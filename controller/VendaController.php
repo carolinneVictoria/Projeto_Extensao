@@ -1,6 +1,4 @@
-
 <?php
-
 include_once "../config/conexaoBD.php";
 include_once "../model/Venda.php";
 include_once "../model/Cliente.php";
@@ -25,7 +23,7 @@ function cadastrarVenda($vendaModel) {
         $idVenda = $vendaModel->cadastrarVenda($idUsuario, $data, $descontoVenda, $valorTotal, $formaPagamento);
 
         if ($idVenda) {
-            header("Location: ../view/VendaView/formAtualizarVenda.php?id=$idVenda");
+            header("Location: ../controller/VendaController.php?acao=formAtualizar&id=$idVenda");
             exit();
         } else {
             echo "Erro ao cadastrar venda!";
@@ -35,13 +33,21 @@ function cadastrarVenda($vendaModel) {
 
 // Função para listar
 function listarVendas($vendaModel, $usuarioModel) {
-    $vendas   = $vendaModel->listarVendas();
-    $usuarios = $usuarioModel->listarUsuarios();
+    $paginaAtual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+    $limite = 5; // vendas por página
+    $offset = ($paginaAtual - 1) * $limite;
+
+    // Busca vendas
+    $vendas = $vendaModel->listarVendasPaginadas($limite, $offset);
+
+    // Conta total
+    $totalVendas = $vendaModel->contarVendas();
+    $totalPaginas = ceil($totalVendas / $limite);
     include('../view/VendaView/vendas.php');
 }
 
 /// Função para processar a atualização
-function atualizarVenda($vendaModel, $vendaProdutoModel) {
+function atualizarVenda($vendaModel, $vendaProdutoModel, $usuarioModel) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['idVenda'])) {
         $idVenda        = $_POST['idVenda'];
         $idUsuario      = $_POST['idUsuario'];
@@ -59,7 +65,7 @@ function atualizarVenda($vendaModel, $vendaProdutoModel) {
             }
             $valorTotal = $valorProdutos - $descontoVenda;
             $vendaModel->atualizarValorTotalVenda($idVenda, $valorTotal);
-            header("Location: ../view/VendaView/vendas.php");
+            listarVendas($vendaModel, $usuarioModel);
             exit();
 
         } else {
@@ -68,28 +74,30 @@ function atualizarVenda($vendaModel, $vendaProdutoModel) {
     }
 }
 
-
-function excluirVenda($vendaModel){
+function excluirVenda($vendaModel, $usuarioModel){
     $idVenda = $_GET['id'];
     $resultado = $vendaModel->excluirVenda($idVenda);
     if ($resultado) {
-    echo "Venda excluído com sucesso!";
-    header('Location: ../view/VendaView/vendas.php');
+    listarVendas($vendaModel, $usuarioModel);
     exit();
     } else {
     echo "Erro ao excluir a venda: " . mysqli_error($vendaModel->getConnection());
     exit();
     }
 }
-
-function buscarServico($servicoModel, $clienteModel, $usuarioModel) {
+function buscarVenda($vendaModel, $vendaProdutoModel, $usuarioModel) {
     if (isset($_GET['busca'])) {
+        $paginaAtual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+        $limite = 5; // vendas por página
+        $offset = ($paginaAtual - 1) * $limite;
+        // Conta total
+        $totalVendas = $vendaModel->contarVendas();
+        $totalPaginas = ceil($totalVendas / $limite);
         $termo = $_GET['busca'];
-        $servicos = $servicoModel->buscarPorNome($termo);
-        $clientes = $clienteModel->listarClientes();
+        $vendas   = $vendaModel->buscarPorNome($termo, $limite, $offset);
         $usuarios = $usuarioModel->listarUsuarios();
 
-        include('../view/ServicoView/verBuscaServico.php'); 
+        include('../view/VendaView/verBuscaVenda.php');
     } else {
         echo "Nenhum termo de busca informado.";
     }
@@ -105,7 +113,8 @@ function adicionarProduto($vendaProdutoModel) {
             $resultado = $vendaProdutoModel->adicionarProdutoVenda($idProduto, $idVenda, $quantidade, $valorUnitario);
 
             if ($resultado) {
-                header("Location: ../view/VendaView/produtoVenda.php?id=$idVenda");
+                //$produtoModel->reduzirEstoque($idProduto, $quantidade);
+                header("Location: ../controller/VendaController.php?acao=formProdutoVenda&id=$idVenda");
                 exit();
             } else {
                 echo "Erro ao adicionar o produto a venda! " . mysqli_error($vendaProdutoModel->getConnection());
@@ -127,29 +136,136 @@ function atualizarProduto($vendaProdutoModel) {
 
     $resultado = $vendaProdutoModel->atualizarProdutoVenda($idVenda, $idProduto, $quantidade, $valorUnitario);
     if ($resultado) {
-        header("Location: ../view/VendaView/formAtualizarVenda.php?id=$idVenda");
+        header("Location: ../controller/VendaController.php?acao=formAtualizar&id=$idVenda");
         exit;
     } else {
-        echo "Erro ao atualizar o produto na venda: "
-           . mysqli_error($vendaProdutoModel->getConnection());
+        echo "Erro ao atualizar o produto na venda: " . mysqli_error($vendaProdutoModel->getConnection());
+        header("Location: ../controller/VendaController.php?acao=formAtualizar&id=$idVenda");
         exit;
     }
 }
 }
+
 function excluirProduto($vendaProdutoModel){
     $idVenda = $_GET['idVenda'];
     $idProduto = $_GET['id'];
     $resultado = $vendaProdutoModel->excluirProdutoVenda($idVenda, $idProduto);
     if ($resultado) {
-    echo "Produto excluído com sucesso!";
-    header("Location: ../view/VendaView/formAtualizarVenda.php?id=$idVenda");
-    exit();
+        header("Location: ../controller/VendaController.php?acao=formAtualizar&id=$idVenda");
+        exit();
     } else {
-    echo "Erro ao excluir o produto: " . mysqli_error($vendaProdutoModel->getConnection());
-    exit();
+        echo "Erro ao excluir o produto: " . mysqli_error($vendaProdutoModel->getConnection());
+        header("Location: ../controller/VendaController.php?acao=formAtualizar&id=$idVenda");
+        exit();
     }
 }
 
+function verVenda($vendaModel, $vendaProdutoModel){
+    if (isset($_GET['id'])) {
+        $idVenda = $_GET['id'];
+        $venda = $vendaModel->buscarVendaPorId($idVenda);
+
+        if ($venda) {
+            $valorProdutos = 0;
+            $produtosAssociados = $vendaProdutoModel->listarProdutosVenda($idVenda);
+            $descontoTotal = $venda['descontoVenda'];
+            
+            include_once '../view/VendaView/verVenda.php';
+        } else {
+            header('Location: ../view/VendaView/vendas.php&erro=naoencontrado');
+            exit();
+        }
+    } else {
+        header('Location: ../view/VendaView/vendas.php&erro=naoencontrado');
+        exit();
+    }
+}
+
+function formAtualizar($vendaModel, $vendaProdutoModel, $usuarioModel){
+    if (isset($_GET['id'])) {
+        $idVenda = $_GET['id'];
+        $venda = $vendaModel->buscarVendaPorId($idVenda);
+        $usuarios = $usuarioModel->buscarUsuarioPorId($venda['idUsuario']);
+
+        if ($venda) {
+            $valorTotal = 0;
+            $produtosAssociados = $vendaProdutoModel->listarProdutosVenda($idVenda);
+            $descontoTotal = $venda['descontoVenda'];
+
+            if ($produtosAssociados) {
+                while ($registro = mysqli_fetch_assoc($produtosAssociados)) {
+                    $valorTotal += ($registro['quantidade'] * $registro['valorUnitario']);
+                }
+                if (!$vendaModel->atualizarValorTotalVenda($idVenda, $valorTotal)) {
+                    echo "Erro ao atualizar o valor total no banco de dados!";
+                    exit();
+                }
+            } else {
+                $produtosAssociados = [];
+            }
+            include_once '../view/VendaView/formAtualizarVenda.php';
+        } else {
+            header('Location: ../view/VendaView/vendas.php&erro=naoencontrado');
+            exit();
+        }
+    } else {
+        header('Location: ../view/VendaView/vendas.php&erro=naoencontrado');
+        exit();
+    }
+}
+
+function formVenda($vendaModel, $usuarioModel){
+    $usuarios = $usuarioModel->listarUsuarios();
+    include_once '../view/VendaView/formVenda.php';
+}
+
+function formProdutoVenda($vendaModel, $vendaProdutoModel, $produtoModel){
+    if (isset($_GET['id'])) {
+        $idVenda = $_GET['id'];
+
+        // Verifica se o idVenda é um valor válido (um número positivo)
+        if (!is_numeric($idVenda) || $idVenda <= 0) {
+            echo "ID de venda inválido.";
+            exit();
+        }
+
+        // Buscando informações da venda
+        $venda = $vendaModel->buscarVendaPorId($idVenda);
+        
+        // Verifica se o serviço foi encontrado
+        if ($venda === null) {
+            echo "Venda não encontrado.";
+            exit();
+            }
+    } else {
+        echo "ID da venda não foi fornecido.";
+        exit();
+    }
+    $produtos = $produtoModel->listarProdutos();
+    include_once '../view/VendaView/produtoVenda.php';
+}
+
+function formAtualizarProduto($vendaModel, $vendaProdutoModel, $produtoModel){
+    // Verifica se os IDs foram passados corretamente
+    if (!isset($_GET['idProduto'], $_GET['idVenda'])) {
+        echo "ID da venda ou do produto não informado!";
+        exit;
+    }
+
+    $idVenda = (int) $_GET['idVenda'];
+    $idProduto = (int) $_GET['idProduto'];
+    // Busca os dados necessários
+    $venda  = $vendaModel->buscarVendaPorId($idVenda);
+    $produto  = $produtoModel->buscarProdutoPorId($idProduto);
+    $registro = $vendaProdutoModel->buscarProdutoVenda($idVenda, $idProduto);
+    $produtosAssociados = $vendaProdutoModel->listarProdutosVenda($idVenda);
+    if (!$registro) {
+        echo "Registro de produto na venda não encontrado!";
+        exit;
+    }
+    $produtos = $produtoModel->listarProdutos();
+    include_once '../view/VendaView/atualizarProdutoVenda.php';
+}
 
 // Determina qual ação chamar com base na URL ou método
 if (isset($_GET['acao'])) {
@@ -161,17 +277,27 @@ if (isset($_GET['acao'])) {
     } elseif ($acao == 'listar') {
         listarVendas($vendaModel,  $usuarioModel);
     } elseif ($acao == 'atualizar') {
-        atualizarVenda($vendaModel, $vendaProdutoModel); // Se o formulário for enviado, processa a atualização
+        atualizarVenda($vendaModel, $vendaProdutoModel, $usuarioModel); // Se o formulário for enviado, processa a atualização
     } elseif ($acao == 'excluir') {
-        excluirVenda($vendaModel);
+        excluirVenda($vendaModel, $usuarioModel);
     } elseif($acao == 'buscar') {
         buscarVenda($vendaModel, $vendaProdutoModel, $usuarioModel);
     } elseif($acao == 'adicionarProduto'){
-        adicionarProduto($vendaProdutoModel);
+        adicionarProduto($vendaProdutoModel, $produtoModel);
     } elseif($acao == 'atualizarProduto'){
         atualizarProduto($vendaProdutoModel);
     } elseif($acao == 'excluirProduto'){
         excluirProduto($vendaProdutoModel);
+    } elseif($acao == 'ver'){
+        verVenda($vendaModel, $vendaProdutoModel);
+    } elseif($acao == 'formCadastrar'){
+        formVenda($vendaModel, $usuarioModel);
+    } elseif($acao == 'formAtualizar'){
+        formAtualizar($vendaModel, $vendaProdutoModel, $usuarioModel);
+    } elseif($acao == 'formProdutoVenda'){
+        formProdutoVenda($vendaModel, $vendaProdutoModel, $produtoModel);
+    } elseif($acao == 'formAtualizarProduto'){
+        formAtualizarProduto($vendaModel, $vendaProdutoModel, $produtoModel);
     }
 } else {
     // Caso nenhuma ação seja especificada, exibe a listagem
