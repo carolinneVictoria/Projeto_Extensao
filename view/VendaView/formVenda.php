@@ -1,81 +1,70 @@
-<?php 
-include("../../app/header.php");
-include_once('../../config/conexaoBD.php');
-include_once('../../model/Cliente.php');
-include_once('../../model/Usuario.php');
+<?php include("../app/header.php");?>
 
-session_start();
-
-$clienteModel = new Cliente($conn);
-$clientes = $clienteModel->listarClientes();
-
-$usuarioModel = new Usuario($conn);
-$usuarios = $usuarioModel->listarUsuarios();
-
-
-?>
-
-<div class="container-fluid"><p></p>
-    <h4>Insira os dados:</h4>
-    <div class="col-sm-12">
-
-        <form id="formServico" action="/Projeto_Extensao/controller/VendaController.php?acao=cadastrar" method="POST" class="was-validated">
-            <div class="row mt-4">
-
-                <!-- Usuário -->
-                <div class="col-md-4 mb-3">
-                    <div class="form-floating">
-                        <select class="form-control" id="usuario" name="idUsuario" required>
-                            <?php foreach ($usuarios as $usuario): ?>
-                                <option value="<?= $usuario['idUsuario']; ?>"><?= $usuario['nomeUsuario']; ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                        <label for="usuario">Usuário:</label>
-                    </div>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white text-center">
+                    <h4 class="mb-0">Dados da Venda</h4>
                 </div>
-
-                <!-- Data de Entrada -->
-                <div class="col-md-4 mb-3">
-                    <div class="form-floating">
-                        <input type="date" class="form-control" id="data" name="data" required>
-                        <label for="data">Data da venda:</label>
-                    </div>
-                </div>
-
-                <!-- Desconto -->
-                <div class="col-md-4 mb-3 d-none">
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="descontoVenda" name="descontoVenda" >
-                        <label for="descontoVenda">Desconto:</label>
-                    </div>
-                </div>
-
-                <!-- Valor Total -->
-                <div class="col-md-4 mb-3 d-none">
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="valorTotal" name="valorTotal" >
-                        <label for="valorTotal">ValorTotal:</label>
-                    </div>
-                </div>
-                
-                <div class="col-md-4 mb-3">
-                    <div class="form-floating">
-                        <select class="form-control" id="formaPagamento" name="formaPagamento" required>
-                            <option value="">-- Selecione uma forma de Pagamento --</option>
-                            <option value="Pix">Pix</option>
-                            <option value="Dinheiro">Dinheiro</option>
-                            <option value="Cartão de Débito">Cartão de Débito</option>
-                            <option value="Cartão de Crédito">Cartão de Crédito</option>
-                        </select>
-                        <label for="formaPagamento">Forma de Pagamento:</label>
-                    </div>
-                </div>
-
-
-                <div class="d-flex justify-content-end mt-3">
-                    <button type="submit" class="btn btn-primary">Próximo</button>
+                <div class="card-body">
+                    <form id="formServico" action="/Projeto_Extensao/controller/VendaController.php?acao=cadastrar" method="POST" class="needs-validation" novalidate>
+                        <div class="row g-3">
+                            <!-- Usuário -->
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <select class="form-select" id="usuario" name="idUsuario" required>
+                                        <option value="" selected disabled>-- Selecione um Usuário --</option>
+                                        <?php foreach ($usuarios as $usuario): ?>
+                                            <option value="<?= htmlspecialchars($usuario['idUsuario']); ?>"><?= htmlspecialchars($usuario['nomeUsuario']); ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <label for="usuario">Usuário:</label>
+                                    <div class="invalid-feedback">Por favor, selecione um usuário.</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Data da Venda -->
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="date" class="form-control" id="data" name="data" required>
+                                    <label for="data">Data da Venda:</label>
+                                    <div class="invalid-feedback">Por favor, insira a data da venda.</div>
+                                </div>
+                            </div>
+                            
+                            <!-- Forma de Pagamento -->
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <select class="form-select" id="formaPagamento" name="formaPagamento" required>
+                                        <option value="" selected disabled>-- Selecione uma Forma de Pagamento --</option>
+                                        <option value="Pix">Pix</option>
+                                        <option value="Dinheiro">Dinheiro</option>
+                                        <option value="Cartão de Débito">Cartão de Débito</option>
+                                        <option value="Cartão de Crédito">Cartão de Crédito</option>
+                                    </select>
+                                    <label for="formaPagamento">Forma de Pagamento:</label>
+                                    <div class="invalid-feedback">Por favor, selecione uma forma de pagamento.</div>
+                                </div>
+                            </div>
+                            
+                            <input type="hidden" id="descontoVenda" name="descontoVenda" value="0.00">
+                            <input type="hidden" id="valorTotal" name="valorTotal" value="0.00">
+                        </div>
+                        
+                        <hr class="my-4">
+                        
+                        <div class="d-flex justify-content-between">
+                            <a href="javascript:history.back()" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Voltar
+                            </a>
+                            <button type="submit" class="btn btn-primary">Próximo <i class="fas fa-arrow-right"></i></button>
+                        </div>
+                    </form>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
 </div>
+
+<?php include("../../app/footer.php");?>
