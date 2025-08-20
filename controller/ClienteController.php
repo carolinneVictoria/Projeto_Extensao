@@ -135,6 +135,4 @@ if (isset($_GET['acao'])) {
     // Caso nenhuma ação seja especificada, exibe a listagem
     listarCategorias($clienteModel);
 }
-
-
 ?>
