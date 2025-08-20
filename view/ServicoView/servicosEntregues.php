@@ -63,10 +63,10 @@ while ($registro = mysqli_fetch_assoc($servicos)) {
       <td>$entrega</td>
       <td>R$ $valor</td>
       <td class='text-center'>
-        <a class='btn btn-warning btn-sm' href='verServico.php?id=$idServico'>
+        <a class='btn btn-warning btn-sm' href='/Projeto_Extensao/controller/ServicoController.php?acao=ver&id=$idServico'>
             <i class='fas fa-edit'></i>
         </a>
-        <a class='btn btn-danger btn-sm' href='../../controller/ServicoController.php?acao=excluir&id=$idServico' onclick=\"return confirm('Tem certeza que deseja excluir?')\">
+        <a class='btn btn-danger btn-sm' href='../controller/ServicoController.php?acao=excluir&id=$idServico' onclick=\"return confirm('Tem certeza que deseja excluir?')\">
           <i class='fas fa-trash'></i>
         </a>
       </td>
