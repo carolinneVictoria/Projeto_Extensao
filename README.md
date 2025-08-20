@@ -1,1 +1,2 @@
-# Projeto_Extensao
+# Projeto_Extensao - Sistema de Gestão para uma Bicicletaria
+
