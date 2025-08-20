@@ -1,84 +1,81 @@
 <?php include ("../../app/header.php"); ?>
 
-
-<!-- Navbar e Barra de Busca -->
-<div class="container-fluid bg-dark d-flex position-fixed" style="top: 50px; left: 170px; width: calc(100% - 170px); height: 50px; z-index: 1030;">
-  <nav class="navbar navbar-expand-sm navbar-dark bg-dark w-100">
-    <div class="container-fluid">
-      <div class="collapse navbar-collapse d-flex justify-content-between" id="mynavbar">
-        <ul class="navbar-nav mb-4 mb-lg-0">
-          <li class="nav-item"><a class="nav-link" href="servicos.php">Todos</a></li>
-          <li class="nav-item"><a class="nav-link" href="servicosPendentes.php">Serviços Pendentes</a></li>
-          <li class="nav-item"><a class="nav-link" href="servicosEntregues.php">Serviços Finalizados</a></li>
-          <li class="nav-item"><a class="nav-link" href="formServico.php">Cadastrar novo Serviço</a></li>
-        </ul>
-
-        <!-- Campo de busca -->
-        <form method="GET" action="/Projeto_Extensao/controller/ServicoController.php?acao=buscar" class="d-flex me-2" role="search">
-          <input type="hidden" name="acao" value="buscar">
-          <input type="text" name="busca" class="form-control me-2" placeholder="Buscar por Descricao"value="<?= $_GET['busca'] ?? '' ?>">
-          <button class="btn btn-outline-light" type="submit">Buscar</button>
-        </form>
-      </div>
+<!-- Conteúdo principal -->
+<div class="container" style="margin-left: -10px; padding-top: 10px;"></div>
+    <!-- Título e botão -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Lista de Serviços</h2>
+        <a href="formProdutos.php" class="btn btn-success"><i class="fas fa-plus"></i> Novo Serviço</a>
     </div>
-  </nav>
+
+    <!-- Formulário de busca -->
+    <form action="/Projeto_Extensao/controller/ServicoController.php?acao=buscar" method="GET" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="busca" class="form-control" placeholder="Pesquisar serviço...">
+            <button class="btn btn-primary" type="submit" name="acao" value="buscar">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+    </form>
+<div style="padding-bottom: 10px;">
+  <a href="servicos.php" class="btn btn-success"></i> Todos</a>
+  <a href="servicosEntregues.php" class="btn btn-success"></i> Serviços Entregues</a>
+  <a href="servicosPendentes.php" class="btn btn-success"></i> Serviços Pendentes</a>
 </div>
 
-<!-- Conteúdo principal -->
-<div class="container" style="margin-left: -10px; padding-top: 50px;">
-
 <?php
-
-// Inclui a conexão ao banco e o modelo de cliente
-include_once "../../config/conexaoBD.php"; 
+include_once "../../config/conexaoBD.php";
 include_once "../../model/Servico.php";
 
-// Instanciando o Model
+// Instancia o model e busca os serviços
 $servicoModel = new Servico($conn);
-
-// Listando os clientes
 $servicos = $servicoModel->listarEntregues();
-$totalServicos = mysqli_num_rows($servicos); 
+$totalServicos = mysqli_num_rows($servicos);
 
-echo "<h5>Servicos Entregues: $totalServicos</h5>";
-
-// Exibindo a tabela de servicos
+// Exibe a tabela de serviços
 echo "
-    <table class='table table-hover table-bordered table-sm'>
-        <thead class='thead-light'>
-            <tr>
+<div class='table-responsive'>
+        <table class='table table-striped align-middle'>
+            <thead class='table-dark'>
+              <tr>
                 <th>ID</th>
                 <th>CLIENTE</th>
-                <th>USUARIO</th>
-                <th>DESCRIÇÃO</th>
+                <th class='col-descricao'>DESCRIÇÃO</th>
                 <th>DATA DE ENTRADA</th>
                 <th>ENTREGA</th>
                 <th>VALOR</th>
                 <th>AÇÕES</th>
-            </tr>
-        </thead>";
+              </tr>
+            </thead>";
 
 while ($registro = mysqli_fetch_assoc($servicos)) {
   $idServico = $registro['idServico'];
-    echo "
-        <tbody>
-            <tr>
-                <td>{$registro['idServico']}</td>
-                <td>{$registro['nome']}</td>
-                <td>{$registro['nomeUsuario']}</td>
-                <td>{$registro['descricao']}</td>
-                <td>{$registro['dataEntrada']}</td>
-                <td>" . ($registro['entrega'] == 0 ? 'Sim' : 'Não') . "</td>
-                <td>{$registro['valorTotal']}</td>
-                <td>
-                <a href='verServico.php?id=$idServico' class='btn btn-primary brn-sm'>Ver Detalhes</a>
-                </td>
-            </tr>
-        </tbody>
-    ";
-}
-echo "</table>";
-?>
+  $entrega = $registro['entrega'] == 0 ? 'Sim' : 'Não';
+  $valor = number_format($registro['valorTotal'], 2, ',', '.');
 
+  echo "
+  <tbody>
+    <tr>
+      <td>{$registro['idServico']}</td>
+      <td>{$registro['nome']}</td>
+      <td>{$registro['descricao']}</td>
+      <td>{$registro['dataEntrada']}</td>
+      <td>$entrega</td>
+      <td>R$ $valor</td>
+      <td class='text-center'>
+        <a class='btn btn-warning btn-sm' href='verServico.php?id=$idServico'>
+            <i class='fas fa-edit'></i>
+        </a>
+        <a class='btn btn-danger btn-sm' href='../../controller/ServicoController.php?acao=excluir&id=$idServico' onclick=\"return confirm('Tem certeza que deseja excluir?')\">
+          <i class='fas fa-trash'></i>
+        </a>
+      </td>
+    </tr>";
+}
+
+echo "
+  </tbody>
+</table>";
+?>
 <?php include "../../app/footer.php"; ?>
 </div>
