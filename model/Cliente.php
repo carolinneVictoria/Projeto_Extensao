@@ -93,7 +93,6 @@ private $conn;
         return $row['total'];
     }
 
-
 }
 
 ?>
