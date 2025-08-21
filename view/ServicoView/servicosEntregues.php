@@ -24,13 +24,6 @@
 </div>
 
 <?php
-include_once "../../config/conexaoBD.php";
-include_once "../../model/Servico.php";
-
-// Instancia o model e busca os serviços
-$servicoModel = new Servico($conn);
-$servicos = $servicoModel->listarEntregues();
-$totalServicos = mysqli_num_rows($servicos);
 
 // Exibe a tabela de serviços
 echo "
