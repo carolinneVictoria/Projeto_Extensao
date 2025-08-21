@@ -24,15 +24,7 @@
 </div>
 
 <?php
-include_once "../../config/conexaoBD.php";
-include_once "../../model/Servico.php";
 
-// Instancia o model e busca os serviços
-$servicoModel = new Servico($conn);
-$servicos = $servicoModel->listarPendentes();
-$totalServicos = mysqli_num_rows($servicos);
-
-// Exibe a tabela de serviços
 echo "
 <div class='table-responsive'>
         <table class='table table-striped align-middle'>
