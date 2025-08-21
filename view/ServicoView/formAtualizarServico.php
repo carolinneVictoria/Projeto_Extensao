@@ -1,157 +1,136 @@
-<?php 
-include("../../app/header.php");
-include('../../config/conexaoBD.php');
-include('../../model/Servico.php');
-include('../../model/Cliente.php');
-include('../../model/Usuario.php');
-include('../../model/ServicoProduto.php');
+<?php include("../app/header.php"); ?>
 
-$servicoModel = new Servico($conn);
-$clienteModel = new Cliente($conn);
-$usuarioModel = new Usuario($conn);
-$servicoProdutoModel = new ServicoProduto($conn); 
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white text-center">
+                    <h4 class="mb-0">Atualizar Serviço</h4>
+                </div>
+                <div class="card-body">
+                    <form id="formServico" action="/Projeto_Extensao/controller/ServicoController.php?acao=atualizar" method="POST" class="needs-validation" novalidate>
+                        <input type="hidden" name="idServico" value="<?= htmlspecialchars($idServico); ?>">
 
-if (isset($_GET['id'])) {
-    $idServico = $_GET['id'];
-    $servico = $servicoModel->buscarServicoPorId($idServico);
-    $cliente = $clienteModel->buscarClientePorId($servico['idCliente']);
-    $usuario = $usuarioModel->buscarUsuarioPorId($servico['idUsuario']);
-} else {
-    echo "ID do serviço não informado!";
-    exit();
-}
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="idCliente" readonly value="<?= htmlspecialchars($servico['nome']); ?>" placeholder="Cliente">
+                                    <input type="hidden" name="idCliente" value="<?= htmlspecialchars($servico['idCliente']); ?>">
+                                    <label for="idCliente">Cliente:</label>
+                                </div>
+                            </div>
 
-$valorProdutos = 0;
-$produtosAssociados = $servicoProdutoModel->listarProdutosServico($idServico);
-$maoDeObraTotal = $servico['maodeObra'];
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="idUsuario" readonly value="<?= htmlspecialchars($servico['nomeUsuario']); ?>" placeholder="Usuário">
+                                    <input type="hidden" name="idUsuario" value="<?= htmlspecialchars($servico['idUsuario']); ?>">
+                                    <label for="idUsuario">Usuário:</label>
+                                </div>
+                            </div>
 
-if ($produtosAssociados) {
-    while ($registro = mysqli_fetch_assoc($produtosAssociados)) {
-        $valorProdutos += ($registro['quantidade'] * $registro['valorUnitario']);
-    }
-}
-else {
-    $produtosAssociados = [];
-}
-$valorTotal = $valorProdutos + $maoDeObraTotal;
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="date" class="form-control" id="dataEntrada" name="dataEntrada" value="<?= htmlspecialchars($servico['dataEntrada']); ?>" placeholder="Data de Entrada">
+                                    <label for="dataEntrada">Data de Entrada:</label>
+                                </div>
+                            </div>
 
-?>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="maoDeObra" name="maodeObra" value="<?= number_format($servico['maodeObra'], 2, ',', '.'); ?>" placeholder="Mão de Obra" required>
+                                    <label for="maoDeObra">Mão de Obra:</label>
+                                </div>
+                            </div>
 
-<div class="container-fluid">
-    <h3>Detalhes do Serviço:</h3>
-    <div class="col-sm-12">
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <textarea style="height: 100px" class="form-control" id="descricao" name="descricao" placeholder="Descrição"><?= htmlspecialchars($servico['descricao']); ?></textarea>
+                                    <label for="descricao">Descrição:</label>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="valorTotal" readonly value="R$ <?= number_format($valorTotal + $servico['maodeObra'], 2, ',', '.'); ?>" placeholder="Valor Total">
+                                    <label for="valorTotal">Valor Total:</label>
+                                </div>
+                            </div>
 
-    <form id="formServico" action="/Projeto_Extensao/controller/ServicoController.php?acao=atualizar" method="POST" class="was-validated">
-        <input type="hidden" name="idServico" value="<?= $idServico ?>">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <select class="form-select" id="entrega" name="entrega" required>
+                                        <option value="0" <?= ($servico['entrega'] == 0) ? 'selected' : ''; ?>>Não</option>
+                                        <option value="1" <?= ($servico['entrega'] == 1) ? 'selected' : ''; ?>>Sim</option>
+                                    </select>
+                                    <label for="entrega">Entregue:</label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <hr class="my-4">
 
-        <div class="row">
+                        <h5>Produtos Usados</h5>
+                        <div class="table-responsive">
+                            <?php
+                            if (!empty($produtosAssociados)) {
+                                echo "
+                                <table class='table table-hover table-bordered table-sm'>
+                                    <thead class='table-dark'>
+                                        <tr>
+                                            <th>PRODUTO</th>
+                                            <th>QUANTIDADE</th>
+                                            <th>VALOR UNITÁRIO</th>
+                                            <th>TOTAL</th>
+                                            <th class='text-center'>AÇÕES</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>";
 
-            <div class="col-md-4 mb-3">
-                <div class="form-floating ">
-                    <input type="hidden" name="idCliente" value="<?= $servico['idCliente'] ?>">
-                    <input type="text" class="form-control" id="idCliente" value="<?= $cliente['nome']; ?>">
-                    <label for="cliente">Cliente:</label>
+                                foreach ($produtosAssociados as $registro) {
+                                    $totalProduto = $registro['quantidade'] * $registro['valorUnitario'];
+                                    echo "
+                                    <tr>
+                                        <td>" . htmlspecialchars($registro['nomeProduto']) . "</td>
+                                        <td>" . htmlspecialchars($registro['quantidade']) . "</td>
+                                        <td>R$ " . number_format($registro['valorUnitario'], 2, ',', '.') . "</td>
+                                        <td>R$ " . number_format($totalProduto, 2, ',', '.') . "</td>
+                                        <td class='text-center'>
+                                            <a href='/Projeto_Extensao/controller/ServicoController.php?acao=formAtualizarProduto&idProduto=" . htmlspecialchars($registro['idProduto']) . "&idServico=" . htmlspecialchars($registro['idServico']) . "' class='btn btn-warning btn-sm' title='Atualizar'>
+                                                <i class='fas fa-edit'></i>
+                                            </a>
+                                            <a href='/Projeto_Extensao/controller/ServicoController.php?acao=excluirProduto&id=" . htmlspecialchars($registro['idProduto']) . "&idServico=" . htmlspecialchars($idServico) . "' class='btn btn-danger btn-sm' onclick='return confirm(\"Tem certeza que deseja excluir?\")' title='Excluir'>
+                                                <i class='fas fa-trash'></i>
+                                            </a>
+                                        </td>
+                                    </tr>";
+                                }
+                                echo "</tbody></table>";
+                            } else {
+                                echo "<p class='text-muted'>Nenhum produto associado ao serviço ainda.</p>";
+                            }
+                            ?>
+                        </div>
+
+                        <hr class="my-4">
+                        
+                        <div class="d-flex justify-content-between">
+                            <button onclick="history.back()" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Voltar
+                            </button>
+                            <div>
+                                <a href="/Projeto_Extensao/controller/ServicoController.php?acao=formProdutoServico&id=<?= htmlspecialchars($idServico); ?>" class="btn btn-info me-2 text-white" title="Adicionar Produtos">
+                                    <i class="fas fa-plus"></i> Adicionar Produtos
+                                </a>
+                                <button type="submit" class="btn btn-success text-white">
+                                    <i class="fas fa-save"></i> Atualizar Serviço
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
-
-            <div class="col-md-4 mb-3">
-                <div class="form-floating ">
-                    <input type="hidden" name="idUsuario" value="<?= $servico['idUsuario'] ?>">
-                    <input type="text" class="form-control" id="idUsuario" value="<?= $usuario['nomeUsuario']; ?>">
-                    <label for="idUsuario">Usuario:</label>
-                </div>
-            </div>
-
-            <div class="col-md-4 mb-3">
-                <div class="form-floating ">
-                    <input type="date" class="form-control" id="dataEntrada" name="dataEntrada" value="<?= $servico['dataEntrada']; ?>">
-                    <label for="dataEntrada">Data de Entrada:</label>
-                </div>
-            </div>
-
-            <div class="col-md-12 mb-3">
-                <div class="form-floating">
-                    <textarea style="height: 100px" class="form-control" id="descricao" name="descricao" ><?= $servico['descricao']; ?></textarea>
-                    <label for="descricao">Descrição:</label>
-                </div>
-            </div>
-
-            <div class="col-md-4 mb-3">
-                <div class="form-floating border border-success rounded">
-                    <input type="hidden" name="valorTotal" id="valorTotalHidden" value="<?= $valorTotal ?>">
-                    <input type="text" class="form-control" id="valorTotal" readonly value="R$ <?= number_format($valorTotal, 2, ',', '.'); ?>">
-                    <label for="valorTotal">Valor Total:</label>
-                </div>
-            </div>
-
-            <div class="col-md-4 mb-3">
-                <div class="form-floating">
-                    <input type="text" class="form-control" id="maoDeObra" name="maodeObra" value="<?= number_format($servico['maodeObra'], 2, ',', '.') ?>" required>
-                    <label for="maoDeObra">Mão de Obra:</label>
-                </div>
-            </div>
-
-            <div class="col-md-4 mb-3">
-                <div class="form-floating">
-                    <select class="form-select" id="entrega" name="entrega" required>
-                        <option value="1" <?= $servico['entrega']==1?'selected':'' ?>>Não</option>
-                        <option value="0" <?= $servico['entrega']==0?'selected':'' ?>>Sim</option>
-                    </select>
-                    <label for="entrega">Entregue:</label>
-                </div>
-            </div>
-
-            <h5>Produtos Usados</h5>
-            <div class="col-md-12 mb-3">
-            <?php
-            if (!empty($produtosAssociados)) {
-                echo "
-                    <table class='table table-hover table-bordered table-sm'>
-                        <thead class='thead-light'>
-                            <tr>
-                                <th>PRODUTO</th>
-                                <th>QUANTIDADE</th>
-                                <th>VALOR UNITÁRIO</th>
-                                <th>TOTAL</th>
-                                <th>AÇÕES</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                ";
-
-                // Exibir os produtos associados ao serviço
-                foreach ($produtosAssociados as $registro) {
-                    $totalProduto = $registro['quantidade'] * $registro['valorUnitario'];
-                    echo "
-                        <tr>
-                            <td>{$registro['nomeProduto']}</td>
-                            <td>{$registro['quantidade']}</td>
-                            <td>R$ " . number_format($registro['valorUnitario'], 2, ',', '.') . "</td>
-                            <td>R$ " . number_format($totalProduto, 2, ',', '.') . "</td>
-                            <td>
-                                <a href='atualizarProdutoServico.php?idProduto={$registro['idProduto']}&idServico={$registro['idServico']}' class='btn btn-primary btn-sm'>Atualizar</a>
-                                <a href='../../controller/ServicoController.php?acao=excluirProduto&id={$registro['idProduto']}&idServico={$idServico}' class='btn btn-danger btn-sm' onclick='return confirm(\"Tem certeza que deseja excluir?\")'>Excluir</a>
-                            </td>
-                        </tr>
-                    ";
-                }
-                echo "</tbody></table>";
-            } else {
-                echo "<p>Nenhum produto associado ao serviço ainda.</p>";
-            }
-            ?>
-            </div>
-
-            <div class="d-flex justify-content-end mt-3">
-                <a href="servicos.php" class="btn btn-secondary btn me-2">Voltar</a>
-                <a href="produtoServico.php?id=<?= $idServico ?>" class="btn btn-primary btn me-2">Adicionar Produtos</a>
-                <button type="submit" class="btn btn-primary">Atualizar Serviço</button>
-            </div>
-            <p></p>
-
         </div>
-        </form>
     </div>
 </div>
 
-<?php include("../../app/footer.php") ?>
+<?php include("../../app/footer.php"); ?>
