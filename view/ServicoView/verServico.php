@@ -44,7 +44,7 @@
                         <!-- Valor Total -->
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <input type="text" class="form-control" id="valorTotal" readonly value="R$ <?= number_format($valorTotal + $servico['maodeObra'], 2, ',', '.'); ?>" placeholder="Valor Total">
+                                <input type="text" class="form-control" id="valorTotal" readonly value="R$ <?= number_format($valorTotal, 2, ',', '.'); ?>" placeholder="Valor Total">
                                 <label for="valorTotal">Valor Total:</label>
                             </div>
                         </div>
@@ -95,10 +95,10 @@
                         <i class="fas fa-arrow-left"></i> Voltar
                     </button>
                     <div>
-                        <a href='formAtualizarServico.php?id=<?= htmlspecialchars($idServico); ?>' class='btn btn-warning me-2 text-white' title="Editar Serviço">
+                        <a href='/Projeto_Extensao/controller/ServicoController.php?acao=formAtualizar&id=<?= htmlspecialchars($idServico); ?>' class='btn btn-warning me-2 text-white' title="Editar Serviço">
                             <i class="fas fa-edit"></i> Editar
                         </a>
-                        <a href='../../controller/ServicoController.php?acao=excluir&id=<?= htmlspecialchars($idServico); ?>' class='btn btn-danger' onclick='return confirm("Tem certeza que deseja excluir?")' title="Excluir Serviço">
+                        <a href='/Projeto_Extensao/controller/ServicoController.php?acao=excluir&id=<?= htmlspecialchars($idServico); ?>' class='btn btn-danger' onclick='return confirm("Tem certeza que deseja excluir?")' title="Excluir Serviço">
                             <i class="fas fa-trash"></i> Excluir
                         </a>
                     </div>
