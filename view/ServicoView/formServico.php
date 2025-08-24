@@ -68,8 +68,8 @@
                                 <div class="form-floating">
                                     <select class="form-select" id="entrega" name="entrega" required>
                                         <option value="" selected disabled>-- Status de Entrega --</option>
-                                        <option value="0">Não</option>
-                                        <option value="1">Sim</option>
+                                        <option value="1">Não</option>
+                                        <option value="0">Sim</option>
                                     </select>
                                     <label for="entrega">Entregue:</label>
                                     <div class="invalid-feedback">Por favor, selecione o status de entrega.</div>
