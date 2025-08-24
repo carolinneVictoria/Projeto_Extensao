@@ -59,8 +59,8 @@
                             <div class="col-md-6">
                                 <div class="form-floating">
                                     <select class="form-select" id="entrega" name="entrega" required>
-                                        <option value="0" <?= ($servico['entrega'] == 0) ? 'selected' : ''; ?>>Não</option>
-                                        <option value="1" <?= ($servico['entrega'] == 1) ? 'selected' : ''; ?>>Sim</option>
+                                        <option value="1" <?= ($servico['entrega'] == 1) ? 'selected' : ''; ?>>Não</option>
+                                        <option value="0" <?= ($servico['entrega'] == 0) ? 'selected' : ''; ?>>Sim</option>
                                     </select>
                                     <label for="entrega">Entregue:</label>
                                 </div>
