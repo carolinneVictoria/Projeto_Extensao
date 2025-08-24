@@ -11,7 +11,6 @@ class Produto {
         return $this->conn;
     }
 
-    // Método para listar todos os produtos
     public function listarProdutos() {
         $listarProdutos = "SELECT Produto.*, Categoria.descricao FROM Produto INNER JOIN Categoria ON Produto.idCategoria = Categoria.idCategoria ORDER BY Produto.nomeProduto ASC";
         $res = mysqli_query($this->conn, $listarProdutos);
@@ -101,7 +100,23 @@ public function reduzirEstoque($idProduto, $quantidade) {
     $stmt->bind_param("ii", $quantidade, $idProduto);
     return $stmt->execute();
 }
-
+public function listarProdutosPaginados($limite, $offset) {
+        $sql = "SELECT Produto.*, Categoria.descricao
+                    FROM Produto
+                    INNER JOIN Categoria ON Produto.idCategoria = Categoria.idCategoria
+                    ORDER BY nomeProduto ASC
+                    LIMIT ? OFFSET ?";
+        $stmt = $this->conn->prepare($sql);
+        $stmt->bind_param("ii", $limite, $offset);
+        $stmt->execute();
+        return $stmt->get_result();
+    }
+    public function contarProdutos() {
+        $sql = "SELECT COUNT(*) as total FROM Produto";
+        $resultado = $this->conn->query($sql);
+        $row = $resultado->fetch_assoc();
+        return $row['total'];
+    }
 
 }
 ?>
