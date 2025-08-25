@@ -203,7 +203,7 @@ function formCadastro($servicoModel, $usuarioModel, $clienteModel){
 function formAtualizar($servicoModel, $usuarioModel, $clienteModel, $servicoProdutoModel){
     if (isset($_GET['id'])) {
         $idServico = $_GET['id'];
-        $servico = $servicoModel->buscarServicoPorId($idServico);
+        $servico =  $servicoModel->buscarServicoPorId($idServico);
         $usuarios = $usuarioModel->buscarUsuarioPorId($servico['idUsuario']);
         $clientes = $clienteModel->buscarClientePorId($servico['idUsuario']);
 
