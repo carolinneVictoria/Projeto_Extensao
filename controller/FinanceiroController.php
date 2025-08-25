@@ -4,13 +4,42 @@ include_once "../model/Financeiro.php";
 
 $financeiroModel = new Financeiro($conn);
 function listarContas($financeiroModel) {
-    
-    $contas = $financeiroModel->listarContas();
+    $paginaAtual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+    $limite = 5;
+    $offset = ($paginaAtual - 1) * $limite;
+
+    $contas = $financeiroModel->listarContasPaginadas($limite, $offset);
+
+    $totalContas = $financeiroModel->contarContas();
+    $totalPaginas = ceil($totalContas / $limite);
     include('../view/FinanceiroView/contas.php');
     
 }
+function listarContasPagas($financeiroModel) {
+    $paginaAtual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+    $limite = 5;
+    $offset = ($paginaAtual - 1) * $limite;
+
+    $contas = $financeiroModel->listarContasPaginadasPagas($limite, $offset);
+
+    $totalContas = $financeiroModel->contarContas();
+    $totalPaginas = ceil($totalContas / $limite);
+    include('../view/FinanceiroView/contasPagas.php');
+    
+}
+function listarContasPendentes($financeiroModel) {
+    $paginaAtual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+    $limite = 5;
+    $offset = ($paginaAtual - 1) * $limite;
+
+    $contas = $financeiroModel->listarContasPaginadasPendentes($limite, $offset);
+
+    $totalContas = $financeiroModel->contarContas();
+    $totalPaginas = ceil($totalContas / $limite);
+    include('../view/FinanceiroView/contasPendentes.php');
+    
+}
 function filtrarContas($financeiroModel) {
-    include('../app/header.php');
     $mes = isset($_GET['mes']) && $_GET['mes'] !== '' ? (int)$_GET['mes'] : null;
     $ano = isset($_GET['ano']) && $_GET['ano'] !== '' ? (int)$_GET['ano'] : null;
 
@@ -18,7 +47,6 @@ function filtrarContas($financeiroModel) {
     include('../view/FinanceiroView/verFiltroContas.php');
 }
 function cadastrarConta($financeiroModel) {
-    include('../app/header.php');
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $descricao      = $_POST['descricao'];
         $valorTotal     = $_POST['valorTotal'];
@@ -34,15 +62,6 @@ function cadastrarConta($financeiroModel) {
     }
 }
 function atualizarConta($financeiroModel) {
-    include('../app/header.php');
-    if (isset($_GET['id'])) {
-        $idConta = $_GET['id'];
-        $conta = $financeiroModel->buscarContaPorId($idConta);
-        include('../view/FinanceiroView/formAtualizarConta.php');
-    } else {
-        echo "ID não informado.";
-    }
-
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['idConta'])) {
         $idConta           = $_POST['idConta'];
         $descricao         = $_POST['descricao'];
@@ -62,7 +81,6 @@ function atualizarConta($financeiroModel) {
     include ('../../app/footer.php');
 }
 function verConta($financeiroModel) {
-    include('../app/header.php');
     if (isset($_GET['id'])) {
         $idConta = $_GET['id'];
         $conta = $financeiroModel->buscarContaPorId($idConta);
@@ -75,7 +93,6 @@ function excluirConta($financeiroModel) {
     $idConta = $_GET['id'];
     $resultado = $financeiroModel->excluirConta($idConta);
     if($resultado) {
-        include('../app/header.php');
         listarContas($financeiroModel);
     } else {
         echo "ERRO AO EXCLUIR!";
@@ -84,10 +101,26 @@ function excluirConta($financeiroModel) {
 function buscarConta($financeiroModel) {
     if (isset($_GET['busca'])) {
         $termo = $_GET['busca'];
-        $fornecedores = $financeiroModel->buscarPorNome($termo);
+        $contas = $financeiroModel->buscarPorNome($termo);
         include('../view/FinanceiroView/verBuscaConta.php');
     } else {
         echo "NENHUM TERMO DE BUSCA INFORMADO.";
+    }
+}
+function formAtualizarConta($financeiroModel){
+    if (isset($_GET['id'])) {
+        $idConta = $_GET['id'];
+        $conta = $financeiroModel->buscarContaPorId($idConta);
+
+        if ($conta) {
+            include_once '../view/FinanceiroView/formAtualizarConta.php';
+        } else {
+            header('Location: ../view/FinanceiroView/contas.php&erro=naoencontrado');
+            exit();
+        }
+    } else {
+        header('Location: ../view/FinanceiroView/contas.php&erro=naoencontrado');
+        exit();
     }
 }
 // Controle das rotas (ações)
@@ -106,11 +139,19 @@ if (isset($_GET['acao'])) {
         buscarConta($financeiroModel);
     } elseif ($acao == 'filtrar') {
         filtrarContas($financeiroModel);
-    } elseif ($acao == 'verConta') {
-    verConta($financeiroModel);
-}
-} else {
-    include('../app/header.php');
+    } elseif ($acao == 'ver') {
+        verConta($financeiroModel);
+    } elseif ($acao == 'listarPagos') {
+        listarContasPagas($financeiroModel);
+    } elseif ($acao == 'listarPendentes') {
+        listarContasPendentes($financeiroModel);
+    } elseif ($acao == 'formCadastrar') {
+        include_once "../view/FinanceiroView/formConta.php";
+    } elseif ($acao == 'formAtualizar') {
+        formAtualizarConta($financeiroModel);
+    }
+else {
     listarContas($financeiroModel);
+}
 }
 ?>
