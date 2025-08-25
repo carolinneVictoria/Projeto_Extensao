@@ -70,6 +70,21 @@ private $conn;
     }
 }
 
-}
+    public function listarFornecedoresPaginados($limite, $offset) {
+            $sql = "SELECT * FROM Fornecedor LIMIT ? OFFSET ?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("ii", $limite, $offset);
+            $stmt->execute();
+            return $stmt->get_result();
+        }
+
+        // Conta o total de registros
+        public function contarFornecedores() {
+            $sql = "SELECT COUNT(*) as total FROM Fornecedor";
+            $resultado = $this->conn->query($sql);
+            $row = $resultado->fetch_assoc();
+            return $row['total'];
+        }
+    }
 
 ?>
