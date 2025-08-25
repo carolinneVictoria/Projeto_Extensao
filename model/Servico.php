@@ -126,7 +126,6 @@ class Servico {
         $stmt = $this->conn->prepare($sql);
         
         if (!$stmt) {
-            // Logar o erro ou lidar com a falha na preparação
             return 0;
         }
 
