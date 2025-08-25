@@ -1,74 +1,67 @@
-<?php include("../../app/header.php"); ?>
+<?php include("../app/header.php"); ?>
 
-<!-- Navbar e Barra de Busca -->
-<div class="container-fluid bg-dark d-flex position-fixed" style="top: 50px; left: 160px; width: calc(100% - 160px); height: 50px; z-index: 1030;">
-  <nav class="navbar navbar-expand-sm navbar-dark bg-dark w-100">
-    <div class="container-fluid">
-      <div class="collapse navbar-collapse d-flex justify-content-between" id="mynavbar">
-        <ul class="navbar-nav mb-4 mb-lg-0">
-          <li class="nav-item"><a class="nav-link" href="../controller/FinanceiroController.php">Todos</a></li>
-          <li class="nav-item"><a class="nav-link" href="../view/FinanceiroView/contasPagas.php">Contas Pagas</a></li>
-          <li class="nav-item"><a class="nav-link" href="../view/FinanceiroView/contasPendentes.php">Contas Pendentes</a></li>
-          <li class="nav-item"><a class="nav-link" href="../view/FinanceiroView/formConta.php">Cadastrar nova Conta</a></li>
-        </ul>
-
-        <!-- Campo de busca -->
-        <form method="GET" action="/Projeto_Extensao/controller/FinanceiroController.php?acao=buscar" class="d-flex me-2" role="search">
-          <input type="hidden" name="acao" value="buscar">
-          <input type="text" name="busca" class="form-control me-2" placeholder="Buscar por Mês"value="<?= $_GET['busca'] ?? '' ?>">
-          <button class="btn btn-outline-light" type="submit">Buscar</button>
-        </form>
-      </div>
+<div class="container" style="margin-left: -10px; padding-top: 10px;">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Lista de Contas</h2>
+        <a href="/Projeto_Extensao/controller/FinanceiroController.php?acao=formCadastrar" class="btn btn-success"><i class="fas fa-plus"></i> Nova Conta</a>
     </div>
-  </nav>
-</div>
 
-<!-- Conteúdo principal -->
-<div class="container" style="margin-left: -10px; padding-top: 50px;">
-
-<!-- Campo para filtrar por mês -->
-    <form method="GET" action="/Projeto_Extensao/controller/FinanceiroController.php" class="row g-1 mt-4 mb-4">
-      <input type="hidden" name="acao" value="filtrar">
-
-      <div class="col-md-3">
-          <label class="form-label">Mês</label>
-          <select name="mes" class="form-select">
-          <option value="">Todos</option>
-          <?php
-          for ($i = 1; $i <= 12; $i++) {
-              $mesSelecionado = (isset($_GET['mes']) && $_GET['mes'] == $i) ? 'selected' : '';
-              echo "<option value='$i' $mesSelecionado>" . str_pad($i, 2, '0', STR_PAD_LEFT) . "</option>";
-          }
-          ?>
-          </select>
-      </div>
-
-      <div class="col-md-3">
-          <label class="form-label">Ano</label>
-          <input type="number" name="ano" class="form-control" value="<?= $_GET['ano'] ?? date('Y') ?>">
-      </div>
-
-      <div class="col-md-3 align-self-end">
-          <button type="submit" class="btn btn-primary">Filtrar</button>
-      </div>
+    <form action="/Projeto_Extensao/controller/FinanceiroController.php?acao=buscar" method="GET" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="busca" class="form-control" placeholder="Pesquisar conta...">
+            <button class="btn btn-primary" type="submit" name="acao" value="buscar">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
     </form>
+    
+    <div class="row g-2 align-items-end mb-4">
+        <form method="GET" action="/Projeto_Extensao/controller/FinanceiroController.php" class="col-md-auto d-flex align-items-end">
+            <input type="hidden" name="acao" value="filtrar">
 
-<!-- Listagem principal -->
+            <div class="me-2">
+                <label class="form-label">Mês</label>
+                <select name="mes" class="form-select">
+                <option value="">Todos</option>
+                <?php
+                for ($i = 1; $i <= 12; $i++) {
+                    $mesSelecionado = (isset($_GET['mes']) && $_GET['mes'] == $i) ? 'selected' : '';
+                    echo "<option value='$i' $mesSelecionado>" . str_pad($i, 2, '0', STR_PAD_LEFT) . "</option>";
+                }
+                ?>
+                </select>
+            </div>
+
+            <div class="me-2">
+                <label class="form-label">Ano</label>
+                <input type="number" name="ano" class="form-control" value="<?= $_GET['ano'] ?? date('Y') ?>">
+            </div>
+
+            <div>
+                <button type="submit" class="btn btn-primary">Filtrar</button>
+            </div>
+        </form>
+
+        <div class="col-md-auto d-flex align-items-end">
+            <a href="/Projeto_Extensao/controller/FinanceiroController.php?acao=listar" class="btn btn-success me-2">Todos</a>
+            <a href="/Projeto_Extensao/controller/FinanceiroController.php?acao=listarPagos" class="btn btn-success me-2">Contas Pagas</a>
+            <a href="/Projeto_Extensao/controller/FinanceiroController.php?acao=listarPendentes" class="btn btn-success">Contas a Pagar</a>
+        </div>
+    </div>
 <?php
-  echo "<h5>Contas:</h5>";
-
   echo "
-  <table class='table table-hover table-bordered table-sm'>
-    <thead class='thead-light'>
-      <tr>
-        <th>ID</th>
-        <th>DESCRIÇÃO</th>
-        <th>VALOR</th>
-        <th>DATA DE VENCIMENTO</th>
-        <th>STATUS</th>
-        <th>AÇÕES</th>
-      </tr>
-    </thead>
+  <div class='table-responsive'>
+        <table class='table table-striped align-middle'>
+            <thead class='table-dark'>
+                <tr>
+                  <th>ID</th>
+                  <th>DESCRIÇÃO</th>
+                  <th>VALOR</th>
+                  <th>DATA DE VENCIMENTO</th>
+                  <th>STATUS</th>
+                  <th>AÇÕES</th>
+                </tr>
+            </thead>
     <tbody>";
 ?>
 
@@ -78,16 +71,22 @@
     $valor = number_format($registro['valorTotal'], 2, ',', '.');
 ?>
     <tr>
-    <td><?= $registro['idConta'] ?></td>
-    <td><?= $registro['descricao'] ?></td>
-    <td>R$ <?= $valor ?></td>
-    <td><?= $registro['dataVencimento'] ?></td>
-    <td><?= $status ?></td>
-    <td>
-        <a href='/Projeto_Extensao/controller/FinanceiroController.php?acao=verConta&id=<?= $idConta ?>' class='btn btn-primary btn-sm'>Ver Detalhes</a>
-    </td>
+      <td><?= $registro['idConta'] ?></td>
+      <td><?= $registro['descricao'] ?></td>
+      <td>R$ <?= $valor ?></td>
+      <td><?= $registro['dataVencimento'] ?></td>
+      <td><?= $status ?></td>
+      <td class='text-center'>
+        <a class='btn btn-warning btn-sm' href='../controller/FinanceiroController.php?acao=ver&id=<?= $idConta ?>'>
+            <i class='fas fa-edit'></i>
+        </a>
+        <a class='btn btn-danger btn-sm' href='../controller/FinanceiroController.php?acao=excluir&id=<?= $idConta ?>' onclick="return confirm('Tem certeza que deseja excluir?')">
+            <i class='fas fa-trash'></i>
+        </a>
+      </td>
     </tr>
 <?php endforeach; ?>
     </tbody>
     </table>
 </div>
+<?php include("../app/footer.php") ?>
