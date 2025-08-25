@@ -69,7 +69,6 @@ private $conn;
         return null;
     }
 }
-
     public function listarFornecedoresPaginados($limite, $offset) {
             $sql = "SELECT * FROM Fornecedor LIMIT ? OFFSET ?";
             $stmt = $this->conn->prepare($sql);
@@ -78,8 +77,7 @@ private $conn;
             return $stmt->get_result();
         }
 
-        // Conta o total de registros
-        public function contarFornecedores() {
+    public function contarFornecedores() {
             $sql = "SELECT COUNT(*) as total FROM Fornecedor";
             $resultado = $this->conn->query($sql);
             $row = $resultado->fetch_assoc();
