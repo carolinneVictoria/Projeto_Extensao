@@ -5,10 +5,16 @@ include_once "../model/Fornecedor.php";
 $fornecedorModel = new Fornecedor($conn);
 
 function listarFornecedores($fornecedorModel) {
-    $fornecedores = $fornecedorModel->listarFornecedores();
+    $paginaAtual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+    $limite = 5;
+    $offset = ($paginaAtual - 1) * $limite;
+
+    $fornecedores = $fornecedorModel->listarFornecedoresPaginados($limite, $offset);
+
+    $totalFornecedores = $fornecedorModel->contarFornecedores();
+    $totalPaginas = ceil($totalFornecedores / $limite);
     include('../view/FornecedorView/fornecedores.php');
 }
-
 function cadastrarFornecedor($fornecedorModel) {
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $telefone       = $_POST['telefone'];
@@ -17,14 +23,13 @@ function cadastrarFornecedor($fornecedorModel) {
         $endereco       = $_POST['endereco'];
 
         if ($fornecedorModel->cadastrarFornecedor($telefone, $cnpj, $razaoSocial, $endereco)){
-            header("Location: ../view/FornecedorView/fornecedores.php");
+            listarFornecedores($fornecedorModel);
             exit();
         } else {
             echo "ERRO AO CADASTRAR Fornecedor.";
         }
     }
 }
-
 function atualizarFornecedor($fornecedorModel) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['idFornecedor'])) {
         $idFornecedor   = $_POST['idFornecedor'];
@@ -34,7 +39,7 @@ function atualizarFornecedor($fornecedorModel) {
         $endereco       = $_POST['endereco'];
 
         if ($fornecedorModel->atualizarFornecedor($idFornecedor, $telefone, $cnpj, $razaoSocial, $endereco)) {
-            header("Location: ../view/FornecedorView/fornecedores.php");
+            listarFornecedores($fornecedorModel);
             exit();
         } else {
            global $conn;
@@ -43,17 +48,15 @@ function atualizarFornecedor($fornecedorModel) {
         }
     }
 }
-
 function excluirFornecedor($fornecedorModel) {
     $idFornecedor = $_GET['id'];
     $resultado = $fornecedorModel->excluirFornecedor($idFornecedor);
     if($resultado) {
-        header('Location: ../view/FornecedorView/fornecedores.php');
+        listarFornecedores($fornecedorModel);
     } else {
         echo "ERRO AO EXCLUIR!";
     }
 }
-
 function buscarFornecedor($fornecedorModel) {
     if (isset($_GET['busca'])) {
             $termo = $_GET['busca'];
@@ -63,10 +66,41 @@ function buscarFornecedor($fornecedorModel) {
         echo "NENHUM TERMO DE BUSCA INFORMADO.";
     }
 }
+function verFornecedor($fornecedorModel){
+    if (isset($_GET['id'])) {
+        $idFornecedor = $_GET['id'];
+        $fornecedor = $fornecedorModel->buscarFornecedorPorId($idFornecedor);
+
+        if ($fornecedor) {
+            include_once '../view/FornecedorView/verFornecedor.php';
+        } else {
+            header('Location: ../view/FornecedorView/fornecedores.php&erro=naoencontrado');
+            exit();
+        }
+    } else {
+        header('Location: ../view/FornecedorView/fornecedores.php&erro=naoencontrado');
+        exit();
+    }
+}
+function formAtualizar($fornecedorModel){
+    if (isset($_GET['id'])) {
+        $idFornecedor = $_GET['id'];
+        $fornecedor = $fornecedorModel->buscarFornecedorPorId($idFornecedor);
+
+        if ($fornecedor) {
+            include_once '../view/FornecedorView/formAtualizarFornecedor.php';
+        } else {
+            header('Location: ../view/FornecedorView/fornecedores.php&erro=naoencontrado');
+            exit();
+        }
+    } else {
+        header('Location: ../view/FornecedorView/fornecedores.php&erro=naoencontrado');
+        exit();
+    }
+}
 
 if (isset($_GET['acao'])) {
     $acao = $_GET['acao'];
-
     // Chamando a ação de acordo com a URL
     if ($acao == 'cadastrar') {
         cadastrarFornecedor($fornecedorModel);
@@ -78,6 +112,12 @@ if (isset($_GET['acao'])) {
         excluirFornecedor($fornecedorModel);
     } elseif($acao == 'buscar') {
         buscarFornecedor($fornecedorModel);
+    } elseif($acao == 'ver'){
+        verFornecedor($fornecedorModel);
+    } elseif($acao == 'formCadastrar'){
+        include_once "../view/FornecedorView/formFornecedor.php";
+    } elseif($acao == 'formAtualizar'){
+        formAtualizar($fornecedorModel);
     }
 } else {
     // Caso nenhuma ação seja especificada, exibe a listagem
