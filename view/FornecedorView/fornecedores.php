@@ -1,70 +1,102 @@
-<?php include ("../../app/header.php"); ?>
-<!-- Navbar e Barra de Busca -->
-<div class="container-fluid bg-dark d-flex position-fixed" style="top: 50px; left: 160px; width: calc(100% - 160px); height: 50px; z-index: 1030;">
-  <nav class="navbar navbar-expand-sm navbar-dark bg-dark w-100">
-    <div class="container-fluid">
-      <div class="collapse navbar-collapse d-flex justify-content-between" id="mynavbar">
-          <ul class="navbar-nav mb-4 mb-lg-0">
-            <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/view/FornecedorView/formFornecedor.php?acao=cadastrar">Cadastrar novo Fornecedor</a></li>
-          </ul>
-        <!-- Campo de busca -->
-        <form method="GET" action="/Projeto_Extensao/controller/FornecedorController.php?acao=buscar" class="d-flex me-2" role="search">
-          <input type="hidden" name="acao" value="buscar">
-          <input type="text" name="busca" class="form-control me-2" placeholder="Buscar por Nome"value="<?= $_GET['busca'] ?? '' ?>">
-          <button class="btn btn-outline-light" type="submit">Buscar</button>
-        </form>
-      </div>
+<?php include ("../app/header.php"); ?>
+<div class="container" style="margin-left: -10px; padding-top: 10px;">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Lista de Fornecedores</h2>
+        <a href="/Projeto_Extensao/controller/FornecedorController.php?acao=formCadastrar" class="btn btn-success"><i class="fas fa-plus"></i> Novo Fornecedor</a>
     </div>
-  </nav>
-</div>
 
-<!-- Conteúdo principal -->
-<div class="container" style="margin-left: -10px; padding-top: 50px;">
+    <form action="/Projeto_Extensao/controller/FornecedorController.php?acao=buscar" method="GET" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="busca" class="form-control" placeholder="Pesquisar fornecedor...">
+            <button class="btn btn-primary" type="submit" name="acao" value="buscar">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+    </form>
 
-<?php
-include ('../../config/conexaoBD.php');
-require_once ('../../model/Fornecedor.php');
-
-// Instanciando o Model
-$fornecedorModel = new Fornecedor($conn);
-// Listando os clientes
-$fornecedores = $fornecedorModel->listarFornecedores();
-
-echo "<h5>Fornecedores cadastrados:</h5>";
-
-// Exibindo a tabela de fornecedores
-echo "
-    <table class='table table-hover table-bordered table-sm'>
-        <thead class='thead-light'>
-            <tr>
-                <th>ID</th>
-                <th>CNPJ</th>
-                <th>RAZÃO SOCIAL</th>
-                <th>ENDEREÇO</th>
-                <th>TELEFONE</th>
-                <th>AÇÕES</th>
-            </tr>
-        </thead>";
-
-while ($registro = mysqli_fetch_assoc($fornecedores)) {
-  $idFornecedor = $registro['idFornecedor'];
-    echo "
+<div class='table-responsive'>
+        <table class='table table-striped align-middle'>
+            <thead class='table-dark'>
+                <tr>
+                  <th>ID</th>
+                  <th>CNPJ</th>
+                  <th>RAZÃO SOCIAL</th>
+                  <th>ENDEREÇO</th>
+                  <th>TELEFONE</th>
+                  <th>AÇÕES</th>
+                </tr>
+        </thead>
         <tbody>
-            <tr>
-                <td>{$registro['idFornecedor']}</td>
-                <td>{$registro['cnpj']}</td>
-                <td>{$registro['razaoSocial']}</td>
-                <td>{$registro['endereco']}</td>
-                <td>{$registro['telefone']}</td>
-                <td>
-                <a href='verFornecedor.php?id=$idFornecedor' class='btn btn-primary brn-sm'>Ver</a>
-                </td>
-            </tr>
+        <?php
+        while ($registro = mysqli_fetch_assoc($fornecedores)) {
+          $idFornecedor = $registro['idFornecedor'];
+            echo "
+                <tbody>
+                    <tr>
+                        <td>{$registro['idFornecedor']}</td>
+                        <td>{$registro['cnpj']}</td>
+                        <td>{$registro['razaoSocial']}</td>
+                        <td>{$registro['endereco']}</td>
+                        <td>{$registro['telefone']}</td>
+                        <td class='text-center'>
+                            <a class='btn btn-warning btn-sm' href='../controller/FornecedorController.php?acao=ver&id=$idFornecedor'>
+                                <i class='fas fa-edit'></i>
+                            </a>
+                            <a class='btn btn-danger btn-sm' href='../controller/FornecedorController.php?acao=excluir&id=$idFornecedor' onclick=\"return confirm('Tem certeza que deseja excluir?')\">
+                                <i class='fas fa-trash'></i>
+                            </a>
+                        </td>
+                    </tr>
+              ";
+            }
+          ?>
         </tbody>
-    ";
-}
-echo "</table>";
-?>
-<?php include "../../app/footer.php"; ?>
+      </table>
+  </div>
+
+  <!-- Paginação -->
+    <nav>
+        <ul class="pagination justify-content-center">
+            <li class="page-item <?= ($paginaAtual <= 1) ? 'disabled' : '' ?>">
+                <a class="page-link" href="?acao=listar&pagina=<?= $paginaAtual - 1 ?>">Anterior</a>
+            </li>
+
+            <?php
+            $limiteLinks = 5;
+            $primeiroLink = max(1, $paginaAtual - floor($limiteLinks / 2));
+            $ultimoLink = min($totalPaginas, $primeiroLink + $limiteLinks - 1);
+
+            if ($ultimoLink - $primeiroLink + 1 < $limiteLinks) {
+                $primeiroLink = max(1, $ultimoLink - $limiteLinks + 1);
+            }
+
+            if ($primeiroLink > 1) {
+                echo '<li class="page-item"><a class="page-link" href="?acao=listar&pagina=1">1</a></li>';
+                if ($primeiroLink > 2) {
+                    echo '<li class="page-item disabled"><a class="page-link">...</a></li>';
+                }
+            }
+
+            for ($i = $primeiroLink; $i <= $ultimoLink; $i++) {
+                ?>
+                <li class="page-item <?= ($i == $paginaAtual) ? 'active' : '' ?>">
+                    <a class="page-link" href="?acao=listar&pagina=<?= $i ?>"><?= $i ?></a>
+                </li>
+            <?php }
+
+            if ($ultimoLink < $totalPaginas) {
+                if ($ultimoLink < $totalPaginas - 1) {
+                    echo '<li class="page-item disabled"><a class="page-link">...</a></li>';
+                }
+                echo '<li class="page-item"><a class="page-link" href="?acao=listar&pagina=' . $totalPaginas . '">' . $totalPaginas . '</a></li>';
+            }
+            ?>
+
+            <li class="page-item <?= ($paginaAtual >= $totalPaginas) ? 'disabled' : '' ?>">
+                <a class="page-link" href="?acao=listar&pagina=<?= $paginaAtual + 1 ?>">Próximo</a>
+            </li>
+        </ul>
+    </nav>
 
 </div>
+<?php include "../app/footer.php"; ?>
