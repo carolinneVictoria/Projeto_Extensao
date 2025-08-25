@@ -9,8 +9,6 @@ private $conn;
     public function getConnection() {
     return $this->conn;
 }
-
-
     public function cadastrarConta($descricao, $valorTotal, $dataVencimento, $status){
         $cadastrar = "INSERT INTO Financeiro (descricao, valorTotal, dataVencimento, status)
                             VALUES ('$descricao', '$valorTotal', '$dataVencimento', '$status')";
@@ -20,7 +18,6 @@ private $conn;
         }
         return $res;
     }
-
     public function listarContas(){
         $listar = "SELECT * FROM Financeiro";
         $res = mysqli_query($this->conn, $listar);
@@ -42,7 +39,6 @@ private $conn;
         $res = mysqli_query($this->conn, $listarContas);
         return $res;
     }
-
     public function atualizarConta($idConta, $descricao, $valorTotal, $dataVencimento, $status){
         $atualizar = "UPDATE Financeiro
                         SET descricao       = '$descricao',
@@ -55,7 +51,6 @@ private $conn;
         $res = mysqli_query($this->conn, $atualizar);
         return $res;
     }
-
     public function excluirConta($idConta) {
         $excluir = "DELETE FROM Financeiro WHERE idConta=?";
         $stmt = $this->conn->prepare($excluir);
@@ -66,7 +61,6 @@ private $conn;
         $stmt->bind_param("i", $idConta);
         return ($stmt->execute());
     }
-
     public function buscarPorNome($termo) {
         $buscar = "SELECT * FROM Financeiro WHERE descricao LIKE ?";
         $stmt = $this->conn->prepare($buscar);
@@ -76,7 +70,6 @@ private $conn;
         $res = $stmt->get_result();
         return $res;
     }
-
     public function listarContasPorMesEAno($mes, $ano) {
         $sql = "SELECT * FROM Financeiro WHERE 1=1";
 
@@ -96,7 +89,6 @@ private $conn;
 
         return $contas;
     }
-
     public function buscarContaPorId($idConta) {
     $stmt = $this->conn->prepare("SELECT * FROM Financeiro WHERE idConta = ?");
     $stmt->bind_param("i", $idConta);
@@ -108,8 +100,8 @@ private $conn;
     } else {
         return null;
     }
-}
-public function totalDespesasPorMes($mes, $ano) {
+    }
+    public function totalDespesasPorMes($mes, $ano) {
         $sql = "SELECT SUM(valorTotal) AS totalDespesas FROM financeiro WHERE MONTH(dataVencimento) = ? AND YEAR(dataVencimento) = ?";
         
         $stmt = $this->conn->prepare($sql);
@@ -125,6 +117,35 @@ public function totalDespesasPorMes($mes, $ano) {
         $row = $resultado->fetch_assoc();
         
         return $row['totalDespesas'] ?? 0;
+    }
+    public function listarContasPaginadas($limite, $offset) {
+            $sql = "SELECT * FROM Financeiro LIMIT ? OFFSET ?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("ii", $limite, $offset);
+            $stmt->execute();
+            return $stmt->get_result();
+    }
+    public function listarContasPaginadasPagas($limite, $offset) {
+            $sql = "SELECT * FROM Financeiro WHERE status = 1
+                            ORDER BY dataVencimento LIMIT ? OFFSET ?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("ii", $limite, $offset);
+            $stmt->execute();
+            return $stmt->get_result();
+    }
+    public function listarContasPaginadasPendentes($limite, $offset) {
+            $sql = "SELECT * FROM Financeiro WHERE status = 0
+                            ORDER BY dataVencimento LIMIT ? OFFSET ?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("ii", $limite, $offset);
+            $stmt->execute();
+            return $stmt->get_result();
+    }
+    public function contarContas() {
+            $sql = "SELECT COUNT(*) as total FROM Financeiro";
+            $resultado = $this->conn->query($sql);
+            $row = $resultado->fetch_assoc();
+            return $row['total'];
     }
 
 }
