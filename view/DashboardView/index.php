@@ -1,5 +1,3 @@
-<!-- O header.php e footer.php são incluídos pelo Controller -->
-
 <style>
     body {
         margin: 0;
@@ -118,7 +116,6 @@
     </div>
 </div>
 
-<!-- Inclui o Bootstrap JS para que o carrossel funcione -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -132,7 +129,7 @@
             datasets: [{
                 label: 'R$',
                 data: [
-                    <?= $vendasNumerico ?>,
+                    <?= $servicosEVendas ?>,
                     <?= $despesasNumerico ?>,
                     <?= $lucroMes ?>
                 ],
