@@ -30,8 +30,6 @@ function cadastrarVenda($vendaModel) {
         }
     }
 }
-
-// Função para listar
 function listarVendas($vendaModel, $usuarioModel) {
     $paginaAtual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
     $limite = 5; // vendas por página
@@ -45,8 +43,6 @@ function listarVendas($vendaModel, $usuarioModel) {
     $totalPaginas = ceil($totalVendas / $limite);
     include('../view/VendaView/vendas.php');
 }
-
-/// Função para processar a atualização
 function atualizarVenda($vendaModel, $vendaProdutoModel, $usuarioModel) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['idVenda'])) {
         $idVenda        = $_POST['idVenda'];
@@ -73,7 +69,6 @@ function atualizarVenda($vendaModel, $vendaProdutoModel, $usuarioModel) {
         }
     }
 }
-
 function excluirVenda($vendaModel, $usuarioModel){
     $idVenda = $_GET['id'];
     $resultado = $vendaModel->excluirVenda($idVenda);
@@ -102,7 +97,6 @@ function buscarVenda($vendaModel, $vendaProdutoModel, $usuarioModel) {
         echo "Nenhum termo de busca informado.";
     }
 }
-
 function adicionarProduto($vendaProdutoModel) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $idProduto = $_POST['idProduto'];
@@ -121,7 +115,6 @@ function adicionarProduto($vendaProdutoModel) {
             }
     }
 }
-
 function atualizarProduto($vendaProdutoModel) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
@@ -145,7 +138,6 @@ function atualizarProduto($vendaProdutoModel) {
     }
 }
 }
-
 function excluirProduto($vendaProdutoModel){
     $idVenda = $_GET['idVenda'];
     $idProduto = $_GET['id'];
@@ -159,7 +151,6 @@ function excluirProduto($vendaProdutoModel){
         exit();
     }
 }
-
 function verVenda($vendaModel, $vendaProdutoModel){
     if (isset($_GET['id'])) {
         $idVenda = $_GET['id'];
@@ -180,7 +171,6 @@ function verVenda($vendaModel, $vendaProdutoModel){
         exit();
     }
 }
-
 function formAtualizar($vendaModel, $vendaProdutoModel, $usuarioModel){
     if (isset($_GET['id'])) {
         $idVenda = $_GET['id'];
@@ -213,12 +203,10 @@ function formAtualizar($vendaModel, $vendaProdutoModel, $usuarioModel){
         exit();
     }
 }
-
 function formVenda($vendaModel, $usuarioModel){
     $usuarios = $usuarioModel->listarUsuarios();
     include_once '../view/VendaView/formVenda.php';
 }
-
 function formProdutoVenda($vendaModel, $vendaProdutoModel, $produtoModel){
     if (isset($_GET['id'])) {
         $idVenda = $_GET['id'];
@@ -244,7 +232,6 @@ function formProdutoVenda($vendaModel, $vendaProdutoModel, $produtoModel){
     $produtos = $produtoModel->listarProdutos();
     include_once '../view/VendaView/produtoVenda.php';
 }
-
 function formAtualizarProduto($vendaModel, $vendaProdutoModel, $produtoModel){
     // Verifica se os IDs foram passados corretamente
     if (!isset($_GET['idProduto'], $_GET['idVenda'])) {
