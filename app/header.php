@@ -16,7 +16,6 @@ $primeiroNome = $nomeUsuario ? explode(' ', $nomeUsuario)[0] : '';
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -99,14 +98,14 @@ $primeiroNome = $nomeUsuario ? explode(' ', $nomeUsuario)[0] : '';
         <h2>Samuka Bikes</h2>
         <?php if(isset($_SESSION['logado']) && $_SESSION['logado'] === true): ?>
         <a href="/Projeto_Extensao/index.php">📈 Dashboard</a>
-        <a href="/Projeto_Extensao/view/ProdutoView/produtos.php">📦 Produtos</a>
-        <a href="/Projeto_Extensao/view/ClienteView/clientes.php">👥 Clientes</a>
-        <a href="/Projeto_Extensao/view/FornecedorView/fornecedores.php">🚚 Fornecedores</a>
-        <a href="/Projeto_Extensao/view/ServicoView/servicos.php">🛠 Serviços</a>
-        <a href="/Projeto_Extensao/view/VendaView/vendas.php">💰 Vendas</a>
-        <a href="/Projeto_Extensao/view/UsuarioView/usuarios.php">👥 Usuários</a>
-        <a href="/Projeto_Extensao/controller/CompraController.php">📦 Estoque</a>
-        <a href="/Projeto_Extensao/controller/FinanceiroController.php">📊 Financeiro</a>
+        <a href="/Projeto_Extensao/Controller/ProdutoController.php?acao=listar">📦 Produtos</a>
+        <a href="/Projeto_Extensao/Controller/ClienteController.php?acao=listar">👥 Clientes</a>
+        <a href="/Projeto_Extensao/Controller/FornecedorController.php?acao=listar">🚚 Fornecedores</a>
+        <a href="/Projeto_Extensao/controller/ServicoController.php?acao=listar">🛠 Serviços</a>
+        <a href="/Projeto_Extensao/Controller/VendaController.php?acao=listar">💰 Vendas</a>
+        <a href="/Projeto_Extensao/Controller/UsuarioController.php?acao=listar">👥 Usuários</a>
+        <a href="/Projeto_Extensao/controller/CompraController.php?acao=listar">📦 Estoque</a>
+        <a href="/Projeto_Extensao/controller/FinanceiroController.php?acao=listar">📊 Financeiro</a>
         <a href="/Projeto_Extensao/controller/logout.php">Logout</a>
         <?php else: ?>
             <ul class="navbar-nav">
