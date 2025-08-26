@@ -113,7 +113,7 @@ public function listarVendas() {
         return $stmt->execute();
     }
 
-     public function totalVendasPorMes($mes, $ano) {
+    public function totalVendasPorMes($mes, $ano) {
         $sql = "SELECT SUM(valorTotal) AS totalVendas FROM venda WHERE MONTH(data) = ? AND YEAR(data) = ?";
 
         $stmt = $this->conn->prepare($sql);
@@ -134,7 +134,9 @@ public function listarVendas() {
                         INNER JOIN Usuario ON Venda.idUsuario = Usuario.idUsuario
                         INNER JOIN VendaProduto ON Venda.idVenda = VendaProduto.idVenda
                         INNER JOIN Produto ON VendaProduto.idProduto = Produto.idProduto
-                        ORDER BY data DESC LIMIT ?, ?";
+                        GROUP BY Venda.idVenda
+                        ORDER BY data DESC
+                        LIMIT ?, ?";
     $stmt = $this->conn->prepare($sql);
     $stmt->bind_param("ii", $offset, $limite);
     $stmt->execute();
