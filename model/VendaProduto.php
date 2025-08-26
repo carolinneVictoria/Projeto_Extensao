@@ -45,8 +45,6 @@ public function excluirProdutoVenda($idVenda, $idProduto){
     return ($stmt->execute());
     }
 
-
-
     public function listarProdutosVenda($idVenda) {
     $sql = "SELECT vendaProduto.*, Produto.nomeProduto
             FROM vendaProduto
