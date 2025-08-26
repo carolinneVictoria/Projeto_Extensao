@@ -106,9 +106,6 @@
                     <button onclick="history.back()" class="btn btn-secondary">
                         <i class="fas fa-arrow-left"></i> Voltar
                     </button>
-                    <a href="../controller/VendaController.php?acao=atualizar&id=<?= htmlspecialchars($venda['idVenda']); ?>" class="btn btn-primary">
-                        <i class="fas fa-check"></i> Finalizar Venda
-                    </a>
                 </div>
             </div>
         </div>
