@@ -1,78 +1,71 @@
-<?php 
-include("../../app/header.php");
-include_once('../../config/conexaoBD.php');
-include_once('../../model/Fornecedor.php');
-include_once('../../model/Usuario.php');
+<?php include("../app/header.php"); ?>
 
-session_start();
-
-$fornecedorModel = new Fornecedor($conn);
-$fornecedores = $fornecedorModel->listarFornecedores();
-
-$usuarioModel = new Usuario($conn);
-$usuarios = $usuarioModel->listarUsuarios();
-
-?>
-
-<div class="container-fluid"><p></p>
-    <h4>Insira os dados:</h4>
-    <div class="col-sm-12">
-
-        <form id="formServico" action="/Projeto_Extensao/controller/CompraController.php?acao=cadastrar" method="POST" class="was-validated">
-            <div class="row mt-4">
-
-                <!-- Usuário -->
-                <div class="col-md-3 mb-3">
-                    <div class="form-floating">
-                        <select class="form-control" id="usuario" name="idUsuario" required>
-                            <?php foreach ($usuarios as $usuario): ?>
-                                <option value="<?= $usuario['idUsuario']; ?>"><?= $usuario['nomeUsuario']; ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                        <label for="usuario">Usuário:</label>
-                    </div>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white text-center">
+                    <h4 class="mb-0">Cadastro de Compra</h4>
                 </div>
+                <div class="card-body">
+                    <form id="formServico" action="/Projeto_Extensao/controller/CompraController.php?acao=cadastrar" method="POST" enctype="multipart/form-data" class="was-validated">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <select class="form-select" id="usuario" name="idUsuario" required>
+                                        <option value="" selected disabled>-- Selecione um Usuário --</option>
+                                        <?php foreach ($usuarios as $usuario): ?>
+                                            <option value="<?= htmlspecialchars($usuario['idUsuario']); ?>"><?= htmlspecialchars($usuario['nomeUsuario']); ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <label for="usuario">Usuário:</label>
+                                </div>
+                            </div>
 
-                <!-- Fornecedor -->
-                <div class="col-md-3 mb-3">
-                    <div class="form-floating">
-                        <select class="form-control" id="idFornecedor" name="idFornecedor" required>
-                            <?php foreach ($fornecedores as $fornecedor): ?>
-                                <option value="<?= $fornecedor['idFornecedor']; ?>"><?= $fornecedor['razaoSocial']; ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                        <label for="idFornecedor">Fornecedor:</label>
-                    </div>
-                </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <select class="form-select" id="idFornecedor" name="idFornecedor" required>
+                                        <option value="" selected disabled>-- Selecione um Fornecedor --</option>
+                                        <?php foreach ($fornecedores as $fornecedor): ?>
+                                            <option value="<?= htmlspecialchars($fornecedor['idFornecedor']); ?>"><?= htmlspecialchars($fornecedor['razaoSocial']); ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                    <label for="idFornecedor">Fornecedor:</label>
+                                </div>
+                            </div>
 
-                <!-- Data de Entrada -->
-                <div class="col-md-3 mb-3">
-                    <div class="form-floating">
-                        <input type="date" class="form-control" id="data" name="data" required>
-                        <label for="data">Data da compra:</label>
-                    </div>
-                </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="date" class="form-control" id="data" name="data" required>
+                                    <label for="data">Data da compra:</label>
+                                </div>
+                            </div>
 
-                <!-- Valor Total -->
-                <div class="col-md-3 mb-3">
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="valorTotal" name="valorTotal" >
-                        <label for="valorTotal">Valor Total:</label>
-                    </div>
-                </div>
+                            <input type="hidden" name="valorTotal" id="valorTotal">
+                            
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <textarea class="form-control" id="descricao" name="descricao" placeholder="Descrição" style="height: 100px"></textarea>
+                                    <label for="descricao">Descrição:</label>
+                                </div>
+                            </div>
+                        </div>
 
-                <!-- Descrição -->
-                <div class="col-md-12 mb-4">
-                    <div class="form-floating">
-                        <input type="text" class="form-control" id="descricao" name="descricao" >
-                        <label for="descricao">Descrição:</label>
-                    </div>
-                </div>
+                        <hr class="my-4">
 
-                <div class="d-flex justify-content-end mt-3">
-                    <button type="submit" class="btn btn-primary">Próximo</button>
+                        <div class="d-flex justify-content-between">
+                            <a href="javascript:history.back()" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Voltar
+                            </a>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Cadastrar
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
-        </form>
+        </div>
     </div>
 </div>
+
+<?php include("../app/footer.php"); ?>
