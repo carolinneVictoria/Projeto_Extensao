@@ -8,7 +8,7 @@
                     <h4 class="mb-0">Atualizar Serviço</h4>
                 </div>
                 <div class="card-body">
-                    <form id="formServico" action="/Projeto_Extensao/controller/ServicoController.php?acao=atualizar" method="POST" class="needs-validation" novalidate>
+                    <form id="formServico" action="/Projeto_Extensao/controller/ServicoController.php?acao=atualizar" method="POST" enctype="multipart/form-data" class="was-validated">
                         <input type="hidden" name="idServico" value="<?= htmlspecialchars($idServico); ?>">
 
                         <div class="row g-3">
