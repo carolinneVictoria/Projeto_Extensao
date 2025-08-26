@@ -1,60 +1,73 @@
-<div class="container-fluid"><p></p>
-    <h4>Detalhes da Compra:</h4>
-    <div class="col-sm-12">
+<?php include("../app/header.php"); ?>
 
-        <form>
-            <div class="row mt-4">
-
-            <input type="hidden" name="idCompra" value="<?= $compra['idCompra']; ?> ">
-
-                <!-- Usuário -->
-                <div class="col-md-3 mb-3">
-                    <div class="form-floating border border-info rounded">
-                        <input type="text" class="form-control" id="idUsuario" name="idUsuario" value="<?= htmlspecialchars($compra['nomeUsuario']); ?>" >
-                        <label for="usuario">Usuário:</label>
-                    </div>
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white text-center">
+                    <h4 class="mb-0">Detalhes da Compra</h4>
                 </div>
+                <div class="card-body">
+                    <form>
+                        <input type="hidden" name="idCompra" value="<?= htmlspecialchars($compra['idCompra']); ?>">
 
-                <!-- Fornecedor -->
-                <div class="col-md-3 mb-3">
-                    <div class="form-floating border border-info rounded">
-                        <input type="text" class="form-control" id="idFornecedor" name="idFornecedor" value="<?= htmlspecialchars($compra['razaoSocial']); ?>" >
-                        <label for="idFornecedor">Fornecedor:</label>
-                    </div>
-                </div>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="idUsuario" name="idUsuario" value="<?= htmlspecialchars($compra['nomeUsuario']); ?>" readonly placeholder="Usuário">
+                                    <label for="idUsuario">Usuário:</label>
+                                </div>
+                            </div>
 
-                <!-- Data de Entrada -->
-                <div class="col-md-3 mb-3">
-                    <div class="form-floating border border-info rounded">
-                        <input type="date" class="form-control" id="data" name="data" value="<?= htmlspecialchars($compra['data']); ?>" >
-                        <label for="data">Data da compra:</label>
-                    </div>
-                </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="idFornecedor" name="idFornecedor" value="<?= htmlspecialchars($compra['razaoSocial']); ?>" readonly placeholder="Fornecedor">
+                                    <label for="idFornecedor">Fornecedor:</label>
+                                </div>
+                            </div>
 
-                <!-- Valor Total -->
-                <div class="col-md-3 mb-3">
-                    <div class="form-floating border border-info rounded">
-                        <input type="text" class="form-control" id="valorTotal" name="valorTotal" value="<?= htmlspecialchars($compra['valorTotal']); ?>" >
-                        <label for="valorTotal">Valor Total:</label>
-                    </div>
-                </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="date" class="form-control" id="data" name="data" value="<?= htmlspecialchars($compra['data']); ?>" readonly placeholder="Data da Compra">
+                                    <label for="data">Data da compra:</label>
+                                </div>
+                            </div>
 
-                <!-- Descrição -->
-                <div class="col-md-12 mb-4">
-                    <div class="form-floating border border-info rounded">
-                        <input type="text" class="form-control" id="descricao" name="descricao" value="<?= htmlspecialchars($compra['descricao']); ?>">
-                        <label for="descricao">Descrição:</label>
-                    </div>
-                </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="valorTotal" name="valorTotal" value="R$ <?= number_format($compra['valorTotal'], 2, ',', '.'); ?>" readonly placeholder="Valor Total">
+                                    <label for="valorTotal">Valor Total:</label>
+                                </div>
+                            </div>
 
-                <div class="col-md-12 mb-3">
-                <div class="d-flex justify-content-end gap-2">
-                    <a href='../view/CompraView/formAtualizarCompra.php?id=<?= $idCompra ?>' class='btn btn-primary btn-sm'>Atualizar</a>
-                    <a href='../controller/CompraController.php?acao=excluir&id=<?= $idCompra ?>' class='btn btn-danger btn-sm' onclick='return confirm("Tem certeza que deseja excluir?")'>Excluir</a>
-                    <a href="../controller/CompraController.php" class="btn btn-secondary btn me-2">Voltar</a>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <textarea style="height: 100px" class="form-control" id="descricao" name="descricao" readonly placeholder="Descrição"><?= htmlspecialchars($compra['descricao']); ?></textarea>
+                                    <label for="descricao">Descrição:</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="d-flex justify-content-between">
+                            <button onclick="history.back()" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Voltar
+                            </button>
+                            <div>
+                                <a href='../controller/CompraController.php?acao=formAtualizar&id=<?= htmlspecialchars($idCompra); ?>' class='btn btn-warning me-2 text-white' title="Atualizar">
+                                    <i class="fas fa-edit"></i> Editar
+                                </a>
+                                <a href='../controller/CompraController.php?acao=excluir&id=<?= htmlspecialchars($idCompra); ?>' class='btn btn-danger' onclick='return confirm("Tem certeza que deseja excluir?")' title="Excluir">
+                                    <i class="fas fa-trash"></i> Excluir
+                                </a>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
+
+<?php include("../app/footer.php"); ?>
