@@ -40,7 +40,7 @@ function cadastrarProdutoCompra($produtoModel, $compraProdutoModel) {
         if ($idProduto) {
             $compraProdutoModel->adicionarProdutoCompra($idProduto,$idCompra,$quantidadeProduto,$valorProduto
             );
-            header("Location: /Projeto_Extensao/view/CompraView/produtoCompra.php?id=" . $idCompra);
+            header("Location: /Projeto_Extensao/controller/CompraController.php?acao=formProdutoCompra&id=" . $idCompra);
             exit();
         } else {
             echo "Erro ao cadastrar produto!";
