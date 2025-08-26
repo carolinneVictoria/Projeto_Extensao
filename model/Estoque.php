@@ -6,12 +6,9 @@ class Estoque {
     public function __construct($dbConnection) {
         $this->conn = $dbConnection;
     }
-
     public function getConnection() {
         return $this->conn;
     }
-
-    // Método para cadastrar
     public function cadastrarCompra( $idFornecedor, $idUsuario, $data, $valorTotal, $descricao) {
         // Prepara a query com parâmetros
         $stmt = $this->conn->prepare("INSERT INTO Compra (idFornecedor, idUsuario, data, valorTotal, descricao)
@@ -26,8 +23,6 @@ class Estoque {
             return false;
         }
     }
-
-    //Metodo para listar
     public function listarCompras(){
         $listar = "SELECT Compra.idCompra, Compra.data, Compra.descricao, Compra.valorTotal, Fornecedor.razaoSocial
                     FROM Compra
@@ -36,7 +31,6 @@ class Estoque {
         $res = mysqli_query($this->conn, $listar);
         return $res;
     }
-
     public function atualizarCompra($idCompra, $idFornecedor, $idUsuario, $data, $valorTotal, $descricao) {
         $atualizar = "UPDATE Compra
                         SET  idFornecedor    = '$idFornecedor',
@@ -50,7 +44,6 @@ class Estoque {
         $res = mysqli_query($this->conn, $atualizar);
         return $res;
     }
-
     public function excluirCompra($idCompra) {
         $excluir = "DELETE FROM Compra WHERE idCompra=?";
         $stmt = $this->conn->prepare($excluir);
@@ -61,17 +54,23 @@ class Estoque {
         $stmt->bind_param("i", $idCompra);
         return ($stmt->execute());
     }
-
     public function buscarPorNome($termo) {
-        $buscar = "SELECT * FROM Compra WHERE descricao LIKE ?";
+        $buscar = "SELECT Compra.*, Usuario.nomeUsuario, Fornecedor.razaoSocial
+                        FROM Compra
+                        INNER JOIN Usuario ON Compra.idUsuario = Usuario.idUsuario
+                        INNER JOIN CompraProduto ON Compra.idCompra = CompraProduto.idCompra
+                        INNER JOIN Fornecedor ON Compra.idFornecedor = Fornecedor.idFornecedor
+                        WHERE Fornecedor.razaoSocial LIKE ?
+                            OR Usuario.nomeUsuario LIKE ?
+                            Or compra.descricao LIKE ?
+                        GROUP BY Compra.idCompra";
         $stmt = $this->conn->prepare($buscar);
         $like = "%" . $termo . "%";
-        $stmt->bind_param("s", $like);
+        $stmt->bind_param("sss", $like, $like, $like);
         $stmt->execute();
         $res = $stmt->get_result();
         return $res;
     }
-
     public function buscarCompraPorId($idCompra) {
     $stmt = $this->conn->prepare("SELECT Compra.*, Usuario.nomeUsuario, Fornecedor.razaoSocial
                                     FROM Compra
@@ -87,7 +86,23 @@ class Estoque {
     } else {
         return null;
     }
-}
+    }
+    public function listarComprasPaginadas($limite, $offset) {
+            $sql = "SELECT Compra.idCompra, Compra.data, Compra.descricao, Compra.valorTotal, Fornecedor.razaoSocial
+                    FROM Compra
+                    INNER JOIN Fornecedor ON Compra.idFornecedor = Fornecedor.idFornecedor
+                    ORDER BY Compra.idCompra LIMIT ? OFFSET ?";
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bind_param("ii", $limite, $offset);
+            $stmt->execute();
+            return $stmt->get_result();
+    }
+    public function contarCompras() {
+            $sql = "SELECT COUNT(*) as total FROM Compra";
+            $resultado = $this->conn->query($sql);
+            $row = $resultado->fetch_assoc();
+            return $row['total'];
+    }
 
 }
 
