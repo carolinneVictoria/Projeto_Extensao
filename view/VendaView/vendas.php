@@ -59,17 +59,43 @@ echo "</table>"; ?>
                 <a class="page-link" href="?acao=listar&pagina=<?= $paginaAtual - 1 ?>">Anterior</a>
             </li>
 
-            <?php for ($i = 1; $i <= $totalPaginas; $i++) { ?>
+            <?php
+            $limiteLinks = 5;
+            $primeiroLink = max(1, $paginaAtual - floor($limiteLinks / 2));
+            $ultimoLink = min($totalPaginas, $primeiroLink + $limiteLinks - 1);
+
+            if ($ultimoLink - $primeiroLink + 1 < $limiteLinks) {
+                $primeiroLink = max(1, $ultimoLink - $limiteLinks + 1);
+            }
+
+            if ($primeiroLink > 1) {
+                echo '<li class="page-item"><a class="page-link" href="?acao=listar&pagina=1">1</a></li>';
+                if ($primeiroLink > 2) {
+                    echo '<li class="page-item disabled"><a class="page-link">...</a></li>';
+                }
+            }
+
+            for ($i = $primeiroLink; $i <= $ultimoLink; $i++) {
+                ?>
                 <li class="page-item <?= ($i == $paginaAtual) ? 'active' : '' ?>">
                     <a class="page-link" href="?acao=listar&pagina=<?= $i ?>"><?= $i ?></a>
                 </li>
-            <?php } ?>
+            <?php }
+
+            if ($ultimoLink < $totalPaginas) {
+                if ($ultimoLink < $totalPaginas - 1) {
+                    echo '<li class="page-item disabled"><a class="page-link">...</a></li>';
+                }
+                echo '<li class="page-item"><a class="page-link" href="?acao=listar&pagina=' . $totalPaginas . '">' . $totalPaginas . '</a></li>';
+            }
+            ?>
 
             <li class="page-item <?= ($paginaAtual >= $totalPaginas) ? 'disabled' : '' ?>">
                 <a class="page-link" href="?acao=listar&pagina=<?= $paginaAtual + 1 ?>">Próximo</a>
             </li>
         </ul>
     </nav>
+
 <?php include "../app/footer.php"; ?>
 
 </div>
