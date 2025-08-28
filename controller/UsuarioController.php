@@ -2,8 +2,6 @@
 require_once '../model/Usuario.php';
 include_once '../config/conexaoBD.php';
 
-
-// Instância do Model
 $usuarioModel = new Usuario($conn);
 
 function cadastrarUsuario($usuarioModel) {
@@ -16,10 +14,9 @@ function cadastrarUsuario($usuarioModel) {
         $senhaUsuario = $_POST['senhaUsuario'];
         $confirmarSenhaUsuario = $_POST['confirmarSenhaUsuario'];
 
-        // Verificação de senha
         if ($senhaUsuario !== $confirmarSenhaUsuario) {
             $_SESSION['erroSenhaConfirmar'] = "As senhas não coincidem!";
-            header('Location: ../view/formUsuario.php');
+            header('Location: ../controller/UsuarioController.php?acao=formUsuario');
             exit();
         }
 
@@ -30,7 +27,6 @@ function cadastrarUsuario($usuarioModel) {
             $senhaUsuario = md5(filtrar_entrada($_POST["senhaUsuario"]));
         }
 
-        //Validação do campo confirmarSenhaUsuario
         if(empty($_POST["confirmarSenhaUsuario"])){
             echo "<div class='alert alert-warning text-center'>O campo <strong>CONFIRMAR SENHA</strong> é obrigatório!</div>";
             $erroPreenchimento = true;
@@ -42,116 +38,171 @@ function cadastrarUsuario($usuarioModel) {
             }
         }
 
-        // Verificação da foto
         if ($_FILES["fotoUsuario"]["size"] > 0) {
             $diretorio = "img/";
-            $nomeUnico = uniqid() . '_' . basename($_FILES["fotoUsuario"]["name"]);
-            $fotoUsuario = $diretorio . $nomeUnico; // Caminho relativo para salvar no banco
-            $tipoDaImagem = strtolower(pathinfo($fotoUsuario, PATHINFO_EXTENSION));
+            $extensao = strtolower(pathinfo($_FILES["fotoUsuario"]["name"], PATHINFO_EXTENSION));
+            $nomeUnico = uniqid() . '.' . $extensao;
 
-            // Tamanho
+            $fotoUsuario = $diretorio . $nomeUnico; // esse vai pro banco
+            $caminhoCompleto = __DIR__ . "/../" . $fotoUsuario; // esse é físico no servidor
+
+            // validações
             if ($_FILES["fotoUsuario"]["size"] > 5000000) {
                 $_SESSION['erroUpload'] = "A foto não pode ser maior que 5MB!";
-                header('Location: ../view/formUsuario.php');
+                header('Location: ../controller/UsuarioController.php?acao=formCadastro');
                 exit();
             }
 
-            // Tipo
-            if (!in_array($tipoDaImagem, ["jpg", "jpeg", "png", "webp"])) {
+            if (!in_array($extensao, ["jpg", "jpeg", "png", "webp"])) {
                 $_SESSION['erroUpload'] = "A foto precisa estar nos formatos JPG, JPEG, PNG ou WEBP!";
-                header('Location: ../view/formUsuario.php');
+                header('Location: ../controller/UsuarioController.php?acao=formCadastro');
                 exit();
             }
 
-            // Caminho físico do arquivo (fora da view)
-            $caminhoCompleto = __DIR__ . "/../" . $fotoUsuario;
-
-            // Upload da imagem
+            // tenta mover o arquivo
             if (!move_uploaded_file($_FILES["fotoUsuario"]["tmp_name"], $caminhoCompleto)) {
                 $_SESSION['erroUpload'] = "Erro ao tentar fazer o upload da foto!";
-                header('Location: ../view/formUsuario.php');
+                header('Location: ../controller/UsuarioController.php?acao=formCadastro');
                 exit();
+            } else {
+                $_SESSION['sucessoUpload'] = "Foto enviada com sucesso!";
             }
-}
 
-            // Cadastro no banco via model
-            $resultado = $usuarioModel->cadastrarUsuario(
-                $fotoUsuario,
-                $nomeUsuario,
-                $telefoneUsuario,
-                $emailUsuario,
-                $senhaUsuario
-            );
+        } else {
+            $_SESSION['erroUpload'] = "Nenhuma foto foi enviada!";
+            header('Location: ../controller/UsuarioController.php?acao=formCadastro');
+            exit();
+        }
+
+            $resultado = $usuarioModel->cadastrarUsuario($fotoUsuario,$nomeUsuario,$telefoneUsuario,$emailUsuario,$senhaUsuario);
 
             if ($resultado) {
-                header('Location: ../view/UsuarioView/usuarios.php');
+                listarUsuarios($usuarioModel);
                 exit();
             } else {
                 $_SESSION['erroCadastro'] = "Erro ao cadastrar usuário!";
-                header('Location: ../view/UsuarioView/formUsuario.php');
+                header('Location: ../controller/UsuarioController.php?acao=formCadastro');
                 exit();
             }
         } else {
             $_SESSION['erroUpload'] = "Nenhuma foto foi enviada!";
-            header('Location: ../view/UsuarioView/formUsuario.php');
+            header('Location: ../controller/UsuarioController.php?acao=formCadastro');
             exit();
         }
-    }
-
-
-
+}
 function listarUsuarios($usuarioModel) {
-    $usuarios = $usuarioModel->listarUsuarios();
+    $paginaAtual = isset($_GET['pagina']) ? (int)$_GET['pagina'] : 1;
+    $limite = 5;
+    $offset = ($paginaAtual - 1) * $limite;
+
+    $usuarios = $usuarioModel->listarUsuariosPaginados($limite, $offset);
+    $totalUsuarios = $usuarioModel->contarUsuarios();
+    $totalPaginas = ceil($totalUsuarios/$limite);
 
     include('../view/UsuarioView/usuarios.php');
 }
-
 function atualizarUsuario($usuarioModel) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['idUsuario'])) {
+        session_start();
+
         $idUsuario = $_POST['idUsuario'];
-        $fotoUsuario = $_FILES['fotoUsuario'];
         $nomeUsuario = $_POST['nomeUsuario'];
         $telefoneUsuario = $_POST['telefoneUsuario'];
         $emailUsuario = $_POST['emailUsuario'];
-        $senhaUsuario = $_POST['senhaUsuario'];
 
-        $fotoUsuarioPath = "img/" . basename($fotoUsuario['name']);
-        move_uploaded_file($fotoUsuario['tmp_name'], $fotoUsuarioPath);
+        $senhaUsuario = !empty($_POST['senhaUsuario'])
+            ? md5($_POST['senhaUsuario'])
+            : null;
 
-        if ($usuarioModel->atualizarUsuario(
-            $idUsuario,
-            $fotoUsuarioPath,
-            $nomeUsuario,
-            $telefoneUsuario,
-            $emailUsuario,
-            $senhaUsuario
-        )) {
-            header("Location: ../view/UsuarioView/usuarios.php");
+        $fotoUsuarioPath = $_POST['fotoAntiga'] ?? null;
+
+        if (isset($_FILES['fotoUsuario']) && !empty($_FILES['fotoUsuario']['name'])) {
+            $fotoUsuario = $_FILES['fotoUsuario'];
+            $extensao = strtolower(pathinfo($fotoUsuario['name'], PATHINFO_EXTENSION));
+
+            if (!in_array($extensao, ["jpg", "jpeg", "png", "webp"])) {
+                $_SESSION['erroUpload'] = "A foto precisa estar nos formatos JPG, JPEG, PNG ou WEBP!";
+                header('Location: ../controller/UsuarioController.php?acao=formAtualizar&id=' . $idUsuario);
+                exit();
+            }
+
+            if ($fotoUsuario['size'] > 5000000) {
+                $_SESSION['erroUpload'] = "A foto não pode ser maior que 5MB!";
+                header('Location: ../controller/UsuarioController.php?acao=formAtualizar&id=' . $idUsuario);
+                exit();
+            }
+
+            $nomeUnico = uniqid() . '.' . $extensao;
+            $fotoUsuarioPath = "img/" . $nomeUnico;
+            $caminhoCompleto = __DIR__ . "/../" . $fotoUsuarioPath;
+
+            if (!move_uploaded_file($fotoUsuario['tmp_name'], $caminhoCompleto)) {
+                $_SESSION['erroUpload'] = "Erro ao tentar fazer o upload da foto!";
+                header('Location: ../controller/UsuarioController.php?acao=formAtualizar&id=' . $idUsuario);
+                exit();
+            }
+        }
+
+        if ($usuarioModel->atualizarUsuario($idUsuario, $fotoUsuarioPath, $nomeUsuario, $telefoneUsuario, $emailUsuario, $senhaUsuario)) {
+            $_SESSION['sucesso'] = "Usuário atualizado com sucesso!";
+            listarUsuarios($usuarioModel);
             exit();
         } else {
-            echo "Erro ao atualizar o usuário!";
+            $_SESSION['erroCadastro'] = "Erro ao atualizar o usuário!";
+            header('Location: ../controller/UsuarioController.php?acao=formAtualizar&id=' . $idUsuario);
+            exit();
         }
     }
 }
-
 function excluirUsuario($usuarioModel) {
     $idUsuario = $_GET['id'];
     $resultado = $usuarioModel->excluirUsuario($idUsuario);
     if($resultado) {
-        header('Location: ../view/UsuarioView/usuarios.php');
+        listarUsuarios($usuarioModel);
     } else {
         echo "ERRO AO EXCLUIR! Possivelmente tem associações.";
     }
 }
-
 function buscarUsuarios($usuarioModel) {
     if (isset($_GET['busca'])) {
         $termo = $_GET['busca'];
         $usuarios = $usuarioModel->buscarPorNome($termo);
 
-        include('../view/UsuarioView/verBuscaUsuario.php'); // Mostra os resultados da busca
+        include('../view/UsuarioView/verBuscaUsuario.php');
     } else {
         echo "Nenhum termo de busca informado.";
+    }
+}
+function verUsuario($usuarioModel){
+    if (isset($_GET['id'])) {
+        $idUsuario = $_GET['id'];
+        $usuario = $usuarioModel->buscarUsuarioPorId($idUsuario);
+
+        if ($usuario) {
+            include_once '../view/UsuarioView/verUsuario.php';
+        } else {
+            header('Location: ../view/UsuarioView/usuarios.php&erro=naoencontrado');
+            exit();
+        }
+    } else {
+        header('Location: ../view/UsuarioView/usuarios.php&erro=naoencontrado');
+        exit();
+    }
+}
+function formAtualizar($usuarioModel){
+    if (isset($_GET['id'])) {
+        $idUsuario = $_GET['id'];
+        $usuario = $usuarioModel->buscarUsuarioPorId($idUsuario);
+
+        if ($usuario) {
+            include_once '../view/UsuarioView/formAtualizarUsuario.php';
+        } else {
+            header('Location: ../view/UsuarioView/usuarios.php&erro=naoencontrado');
+            exit();
+        }
+    } else {
+        header('Location: ../view/UsuarioView/usuarios.php&erro=naoencontrado');
+        exit();
     }
 }
 
@@ -169,6 +220,12 @@ if (isset($_GET['acao'])) {
         excluirUsuario($usuarioModel);
     } elseif ($acao == 'buscar') {
         buscarUsuarios($usuarioModel);
+    } elseif($acao == 'ver'){
+        verUsuario($usuarioModel);
+    } elseif($acao == 'formCadastrar'){
+        include_once "../view/UsuarioView/formUsuario.php";
+    } elseif($acao == 'formAtualizar'){
+        formAtualizar($usuarioModel);
     }
 } else {
     listarUsuarios($usuarioModel);
