@@ -1,81 +1,108 @@
-<?php include(__DIR__ ."/../../app/header.php"); 
+<?php include("../app/header.php"); ?>
 
-include ('./../config/conexaoBD.php');
-include ('../../model/Usuario.php');
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white text-center">
+                    <h4 class="mb-0">Atualizar Usuário</h4>
+                </div>
+                <div class="card-body">
+                    <form action="/Projeto_Extensao/controller/UsuarioController.php?acao=atualizar" method="POST" enctype="multipart/form-data" class="was-validated">
+                        <input type="hidden" name="idUsuario" value="<?= htmlspecialchars($usuario['idUsuario']); ?>">
+                        
+                        <div class="row g-3">
+                            <div class="col-12 text-center mb-3">
+                                <?php if (!empty($usuario['fotoUsuario'])): ?>
+                                    <img src="/Projeto_Extensao/<?= htmlspecialchars($usuario['fotoUsuario']); ?>" alt="Foto do Usuário" class="img-fluid rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+                                    <p class="mt-2 text-muted">Foto atual</p>
+                                <?php endif; ?>
+                            </div>
 
-$usuarioModel = new Usuario($conn);
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="nomeUsuario" placeholder="Informe o seu nome" name="nomeUsuario" value="<?= htmlspecialchars($usuario['nomeUsuario']); ?>" required>
+                                    <label for="nomeUsuario">Nome:</label>
+                                </div>
+                            </div>
 
-if (isset($_GET['id'])) {
-    $idUsuario = $_GET['id'];
-    
-    $usuario = $usuarioModel->buscarUsuarioPorId($idUsuario);
-} else {
-    echo "ID do usuário não informado!";
-    exit(); 
-}
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="text" class="form-control" id="telefoneUsuario" placeholder="Informe o seu telefone" name="telefoneUsuario" value="<?= htmlspecialchars($usuario['telefoneUsuario']); ?>" required>
+                                    <label for="telefoneUsuario">Telefone:</label>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="email" class="form-control" id="emailUsuario" placeholder="Informe o seu email" name="emailUsuario" value="<?= htmlspecialchars($usuario['emailUsuario']); ?>" required>
+                                    <label for="emailUsuario">Email:</label>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input type="hidden" name="fotoAntiga" value="<?= htmlspecialchars($usuario['fotoUsuario']); ?>">
+                                    <input type="file" class="form-control" id="fotoUsuario" name="fotoUsuario">
+                                    <label for="fotoUsuario">Nova Foto:</label>
+                                </div>
+                            </div>
 
-?>
+                            <div class="col-md-6">
+                                <div class="form-floating position-relative">
+                                    <input type="password" class="form-control" id="senhaUsuario" name="senhaUsuario" placeholder="Informe uma senha">
+                                    <label for="senhaUsuario">Senha:</label>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary position-absolute top-50 end-0 translate-middle-y me-2" 
+                                            onclick="togglePassword('senhaUsuario', this)">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
 
-<div class="container-fluid">
-    <h3>Atualizar Usuário:</h3>
+                            <div class="col-md-6">
+                                <div class="form-floating position-relative">
+                                    <input type="password" class="form-control" id="confirmarSenhaUsuario" name="confirmarSenhaUsuario" placeholder="Confirme a senha">
+                                    <label for="confirmarSenhaUsuario">Confirme a Senha:</label>
+                                    <button type="button" class="btn btn-sm btn-outline-secondary position-absolute top-50 end-0 translate-middle-y me-2" 
+                                            onclick="togglePassword('confirmarSenhaUsuario', this)">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
 
-    <div class="col-sm-12">
+                        <hr class="my-4">
 
-        <form action="/Projeto_Extensao/controller/UsuarioController.php?acao=atualizar" method="POST" enctype="multipart/form-data" class="was-validated">
-
-            <input type="hidden" name="idUsuario" value="<?= $usuario['idUsuario']; ?>">
-
-            <div class="row">
-
-            <div class="col-md-6 mb-3">
-                <div class="form-floating">
-                    <input type="file" class="form-control" id="fotoUsuario" name="fotoUsuario" value="<?= htmlspecialchars($usuario['fotoUsuario']); ?>">
-                    <label for="fotoUsuario">Foto:</label>
+                        <div class="d-flex justify-content-between">
+                            <a href="javascript:history.back()" class="btn btn-secondary">
+                                <i class="fas fa-arrow-left"></i> Voltar
+                            </a>
+                            <button type="submit" class="btn btn-warning text-white">
+                                <i class="fas fa-save"></i> Atualizar
+                            </button>
+                        </div>
+                    </form>
                 </div>
             </div>
-
-            <div class="col-md-6 mb-3">
-                <div class="form-floating">
-                    <input type="text" class="form-control" id="nomeUsuario" placeholder="Informe o seu nome" name="nomeUsuario" value="<?= htmlspecialchars($usuario['nomeUsuario']); ?>">
-                    <label for="nomeUsuario">Nome:</label>
-                </div>
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <div class="form-floating">
-                    <input type="text" class="form-control" id="telefoneUsuario" placeholder="Informe o seu telefone" name="telefoneUsuario" value="<?= htmlspecialchars($usuario['telefoneUsuario']); ?>">
-                    <label for="telefoneUsuario">Telefone:</label>
-                </div>
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <div class="form-floating">
-                    <input type="email" class="form-control" id="emailUsuario" placeholder="Informe o seu email" name="emailUsuario" value="<?= htmlspecialchars($usuario['emailUsuario']); ?>">
-                    <label for="emailUsuario">Email:</label>
-                </div>
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <div class="form-floating">
-                    <input type="password" class="form-control" id="senhaUsuario" placeholder="Informe uma senha" name="senhaUsuario" value="<?= htmlspecialchars($usuario['senhaUsuario']); ?>">
-                    <label for="senhaUsuario">Senha:</label>
-                </div>
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <div class="form-floating">
-                    <input type="password" class="form-control" id="confirmarSenhaUsuario" placeholder="Confirme a senha" name="confirmarSenhaUsuario" value="<?= htmlspecialchars($usuario['senhaUsuario']); ?>">
-                    <label for="confirmarSenhaUsuario">Confirme a Senha:</label>
-                </div>
-            </div>
-
-            <div class="col-md-12 text-end">
-                <button type="submit" class="btn btn-primary">Atualizar</button>
-            </div>
-
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<?php include(__DIR__ ."/../../app/footer.php"); ?>
+<script>
+function togglePassword(id, btn) {
+    const input = document.getElementById(id);
+    const icon = btn.querySelector("i");
+
+    if (input.type === "password") {
+        input.type = "text";
+        icon.classList.remove("fa-eye");
+        icon.classList.add("fa-eye-slash");
+    } else {
+        input.type = "password";
+        icon.classList.remove("fa-eye-slash");
+        icon.classList.add("fa-eye");
+    }
+}
+</script>
+
+<?php include("../app/footer.php"); ?>
