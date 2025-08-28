@@ -80,14 +80,30 @@ class Usuario {
 
     public function buscarPorNome($termo) {
     $buscarUsuario = "SELECT *
-                      FROM Usuario 
-                      WHERE nomeUsuario LIKE ?";
+                        FROM Usuario
+                        WHERE nomeUsuario LIKE ?";
     $stmt = $this->conn->prepare($buscarUsuario);
     $like = "%" . $termo . "%";
     $stmt->bind_param("s", $like);
     $stmt->execute();
     $res = $stmt->get_result();
     return $res;
-}
+    }
+
+    public function listarUsuariosPaginados($limite, $offset) {
+                $sql = "SELECT * FROM Usuario LIMIT ? OFFSET ?";
+                $stmt = $this->conn->prepare($sql);
+                $stmt->bind_param("ii", $limite, $offset);
+                $stmt->execute();
+                return $stmt->get_result();
+    }
+
+    public function contarUsuarios() {
+            $sql = "SELECT COUNT(*) as total FROM Usuario";
+            $resultado = $this->conn->query($sql);
+            $row = $resultado->fetch_assoc();
+            return $row['total'];
+    }
+
 }
 ?>
