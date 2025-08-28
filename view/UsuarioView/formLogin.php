@@ -1,44 +1,46 @@
 <?php include("../../app/header.php"); ?>
 
-<div class="container-fluid text-center" style="margin-left: 0;">
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white text-center">
+                    <h4 class="mb-0">Acessar o Sistema</h4>
+                </div>
+                <div class="card-body">
+                    <?php if (isset($_GET["erroLogin"]) && $_GET["erroLogin"] == "dadosInvalidos"): ?>
+                        <div class='alert alert-warning text-center' role='alert'>
+                            <strong>Usuário</strong> ou <strong>SENHA</strong> inválidos!
+                        </div>
+                    <?php endif; ?>
 
-    <?php
-        // Exibe a mensagem de erro caso o login falhe
-        if (isset($_GET["erroLogin"]) && $_GET["erroLogin"] == "dadosInvalidos") {
-            echo "<div class='alert alert-warning text-center'>
-                    <strong>Usuário</strong> ou <strong>SENHA</strong> inválidos!
-                </div>";
-        }
-    ?>
+                    <form action="/Projeto_Extensao/controller/LoginController.php" method="POST" class="needs-validation" novalidate>
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" id="emailUsuario" placeholder="Informe o seu email" name="emailUsuario" required>
+                            <label for="emailUsuario">Email:</label>
+                            <div class="invalid-feedback">
+                                Por favor, insira um email válido.
+                            </div>
+                        </div>
 
-    <h2>Acessar o Sistema:</h2>
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" id="senhaUsuario" placeholder="Informe a senha" name="senhaUsuario" required>
+                            <label for="senhaUsuario">Senha:</label>
+                            <div class="invalid-feedback">
+                                Por favor, insira a senha.
+                            </div>
+                        </div>
 
-    <div class="d-flex justify-content-center mb-3">
-        <div class="row">
-            <div class="col-12">
-                <!-- Formulário de login -->
-                <form action="/Projeto_Extensao/controller/LoginController.php" method="POST" class="was-validated">
-                    <div class="form-floating mb-3 mt-3">
-                        <input type="email" class="form-control" id="emailUsuario" placeholder="Informe o seu email" name="emailUsuario" required>
-                        <label for="emailUsuario">Email:</label>
-                    </div>
-
-                    <div class="form-floating mb-3 mt-3">
-                        <input type="password" class="form-control" id="senhaUsuario" placeholder="Informe a senha" name="senhaUsuario" required>
-                        <label for="senhaUsuario">Senha:</label>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">Login</button>
-                </form>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-sign-in-alt"></i> Entrar
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-    
-    <br>
-    <p>
-        Ainda não possui cadastro?
-        <a href="/Projeto_Extensao/view/formUsuario.php" title="Cadastrar-se">Clique aqui!</a>
-    </p>
 </div>
 
 <?php include("../../app/footer.php"); ?>
