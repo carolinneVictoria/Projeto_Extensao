@@ -1,72 +1,104 @@
-<?php include ("../../app/header.php"); ?>
-<!-- Navbar e Barra de Busca -->
-<div class="container-fluid bg-dark d-flex position-fixed" style="top: 50px; left: 160px; width: calc(100% - 160px); height: 50px; z-index: 1030;">
-  <nav class="navbar navbar-expand-sm navbar-dark bg-dark w-100">
-    <div class="container-fluid">
-      <div class="collapse navbar-collapse d-flex justify-content-between" id="mynavbar">
-          <ul class="navbar-nav mb-4 mb-lg-0">
-            <li class="nav-item"><a class="nav-link" href="/Projeto_Extensao/view/UsuarioView/formUsuario.php?acao=cadastrar">Cadastrar novo Usuário</a></li>
-          </ul>
-        <!-- Campo de busca -->
-        <form method="GET" action="/Projeto_Extensao/controller/UsuarioController.php?acao=buscar" class="d-flex me-2" role="search">
-          <input type="hidden" name="acao" value="buscar">
-          <input type="text" name="busca" class="form-control me-2" placeholder="Buscar por Nome"value="<?= $_GET['busca'] ?? '' ?>">
-          <button class="btn btn-outline-light" type="submit">Buscar</button>
-        </form>
-      </div>
+<?php include ("../app/header.php"); ?>
+<div class="container" style="margin-left: -10px; padding-top: 10px;">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Lista de Usuarios</h2>
+        <a href="/Projeto_Extensao/controller/UsuarioController.php?acao=formCadastrar" class="btn btn-success"><i class="fas fa-plus"></i> Novo Usuario</a>
     </div>
-  </nav>
-</div>
 
-<!-- Conteúdo principal -->
-<div class="container" style="margin-left: -10px; padding-top: 50px;">
+    <form action="/Projeto_Extensao/controller/UsuarioController.php?acao=buscar" method="GET" class="mb-3">
+        <div class="input-group">
+            <input type="text" name="busca" class="form-control" placeholder="Pesquisar usuario...">
+            <button class="btn btn-primary" type="submit" name="acao" value="buscar">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+    </form>
 
-<?php
-include ('../../config/conexaoBD.php');
-require_once ('../../model/Usuario.php');
-// Instanciando o Model
-$usuarioModel = new Usuario($conn);
-
-// Listando os usuarios
-$usuarios = $usuarioModel->listarUsuarios();
-
-echo "<h5>Usuarios cadastrados:</h5>";
-
-// Exibindo a tabela de usuarios
-echo "
-    <table class='table table-hover table-bordered table-sm'>
-        <thead class='thead-light'>
-            <tr>
-                <th>ID</th>
-                <th>NOME</th>
-                <th>TELEFONE</th>
-                <th>EMAIL</th>
-                <th>TIPO</th>
-                <th>STATUS</th>
-                <th>AÇÕES</th>
-            </tr>
-        </thead>";
-
-while ($registro = mysqli_fetch_assoc($usuarios)) {
-  $idUsuario = $registro['idUsuario'];
-    echo "
+<div class='table-responsive'>
+        <table class='table table-striped align-middle'>
+            <thead class='table-dark'>
+                <tr>
+                  <th>ID</th>
+                  <th>NOME</th>
+                  <th>TELEFONE</th>
+                  <th>EMAIL</th>
+                  <th>TIPO</th>
+                  <th>STATUS</th>
+                  <th>AÇÕES</th>
+                </tr>
+        </thead>
         <tbody>
-            <tr>
-                <td>{$registro['idUsuario']}</td>
-                <td>{$registro['nomeUsuario']}</td>
-                <td>{$registro['telefoneUsuario']}</td>
-                <td>{$registro['emailUsuario']}</td>
-                <td>{$registro['tipoUsuario']}</td>
-                <td>{$registro['statusUsuario']}</td>
-                <td>
-                <a href='verUsuario.php?id=$idUsuario' class='btn btn-primary btn-sm'>Ver Detalhes</a>
-                </td>
-            </tr>
-        </tbody>
-    ";
-}
-echo "</table>";
-?>
-<?php include "../../app/footer.php"; ?>
+        <?php
+          while ($registro = mysqli_fetch_assoc($usuarios)) {
+            $idUsuario = $registro['idUsuario'];
+              echo "
+                  <tbody>
+                      <tr>
+                          <td>{$registro['idUsuario']}</td>
+                          <td>{$registro['nomeUsuario']}</td>
+                          <td>{$registro['telefoneUsuario']}</td>
+                          <td>{$registro['emailUsuario']}</td>
+                          <td>{$registro['tipoUsuario']}</td>
+                          <td>{$registro['statusUsuario']}</td>
+                          <td class='text-center'>
+                            <a class='btn btn-warning btn-sm' href='../controller/UsuarioController.php?acao=ver&id=$idUsuario'>
+                                <i class='fas fa-edit'></i>
+                            </a>
+                            <a class='btn btn-danger btn-sm' href='../controller/UsuarioController.php?acao=excluir&id=$idUsuario' onclick=\"return confirm('Tem certeza que deseja excluir?')\">
+                                <i class='fas fa-trash'></i>
+                            </a>
+                        </td>
+                      </tr>
+              ";
+          }
+          ?>
+          </tbody>
+        </table>
+    </div>
+
+  <!-- Paginação -->
+    <nav>
+        <ul class="pagination justify-content-center">
+            <li class="page-item <?= ($paginaAtual <= 1) ? 'disabled' : '' ?>">
+                <a class="page-link" href="?acao=listar&pagina=<?= $paginaAtual - 1 ?>">Anterior</a>
+            </li>
+
+            <?php
+            $limiteLinks = 5;
+            $primeiroLink = max(1, $paginaAtual - floor($limiteLinks / 2));
+            $ultimoLink = min($totalPaginas, $primeiroLink + $limiteLinks - 1);
+
+            if ($ultimoLink - $primeiroLink + 1 < $limiteLinks) {
+                $primeiroLink = max(1, $ultimoLink - $limiteLinks + 1);
+            }
+
+            if ($primeiroLink > 1) {
+                echo '<li class="page-item"><a class="page-link" href="?acao=listar&pagina=1">1</a></li>';
+                if ($primeiroLink > 2) {
+                    echo '<li class="page-item disabled"><a class="page-link">...</a></li>';
+                }
+            }
+
+            for ($i = $primeiroLink; $i <= $ultimoLink; $i++) {
+                ?>
+                <li class="page-item <?= ($i == $paginaAtual) ? 'active' : '' ?>">
+                    <a class="page-link" href="?acao=listar&pagina=<?= $i ?>"><?= $i ?></a>
+                </li>
+            <?php }
+
+            if ($ultimoLink < $totalPaginas) {
+                if ($ultimoLink < $totalPaginas - 1) {
+                    echo '<li class="page-item disabled"><a class="page-link">...</a></li>';
+                }
+                echo '<li class="page-item"><a class="page-link" href="?acao=listar&pagina=' . $totalPaginas . '">' . $totalPaginas . '</a></li>';
+            }
+            ?>
+
+            <li class="page-item <?= ($paginaAtual >= $totalPaginas) ? 'disabled' : '' ?>">
+                <a class="page-link" href="?acao=listar&pagina=<?= $paginaAtual + 1 ?>">Próximo</a>
+            </li>
+        </ul>
+    </nav>
 
 </div>
+<?php include "../app/footer.php"; ?>
