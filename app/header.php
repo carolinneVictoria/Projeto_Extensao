@@ -89,6 +89,22 @@ $primeiroNome = $nomeUsuario ? explode(' ', $nomeUsuario)[0] : '';
         .card {
             border-radius: 10px;
         }
+        .perfil-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .perfil-img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #6c757d;
+        }
+        .perfil-nome {
+            margin-top: 10px;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -97,6 +113,10 @@ $primeiroNome = $nomeUsuario ? explode(' ', $nomeUsuario)[0] : '';
     <div class="sidebar">
         <h2>Samuka Bikes</h2>
         <?php if(isset($_SESSION['logado']) && $_SESSION['logado'] === true): ?>
+            <div class="perfil-container">
+                <img src="/Projeto_Extensao/<?= htmlspecialchars($fotoUsuario); ?>" alt="Foto de Perfil" class="perfil-img">
+                <p class="perfil-nome"><?= htmlspecialchars($primeiroNome); ?></p>
+            </div>
         <a href="/Projeto_Extensao/index.php">📈 Dashboard</a>
         <a href="/Projeto_Extensao/Controller/ProdutoController.php?acao=listar">📦 Produtos</a>
         <a href="/Projeto_Extensao/Controller/ClienteController.php?acao=listar">👥 Clientes</a>
