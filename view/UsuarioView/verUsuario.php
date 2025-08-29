@@ -18,21 +18,21 @@
                             
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="nomeUsuario" name="nomeUsuario" value="<?= htmlspecialchars($usuario['nomeUsuario']); ?>" readonly placeholder="Nome do Usuário">
+                                    <input type="text" class="form-control" id="nomeUsuario" name="nomeUsuario" value="<?= htmlspecialchars($usuario['nomeUsuario']); ?>" disabled placeholder="Nome do Usuário">
                                     <label for="nomeUsuario">Nome:</label>
                                 </div>
                             </div>
                             
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="telefoneUsuario" name="telefoneUsuario" value="<?= htmlspecialchars($usuario['telefoneUsuario']); ?>" readonly placeholder="Telefone">
+                                    <input type="text" class="form-control" id="telefoneUsuario" name="telefoneUsuario" value="<?= htmlspecialchars($usuario['telefoneUsuario']); ?>" disabled placeholder="Telefone">
                                     <label for="telefoneUsuario">Telefone:</label>
                                 </div>
                             </div>
                             
                             <div class="col-md-12">
                                 <div class="form-floating">
-                                    <input type="email" class="form-control" id="emailUsuario" name="emailUsuario" value="<?= htmlspecialchars($usuario['emailUsuario']); ?>" readonly placeholder="Email">
+                                    <input type="email" class="form-control" id="emailUsuario" name="emailUsuario" value="<?= htmlspecialchars($usuario['emailUsuario']); ?>" disabled placeholder="Email">
                                     <label for="emailUsuario">Email:</label>
                                 </div>
                             </div>
