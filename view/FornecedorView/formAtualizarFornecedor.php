@@ -4,7 +4,7 @@
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <div class="card shadow-sm">
-                <div class="card-header bg-warning text-white text-center">
+                <div class="card-header bg-primary text-white text-center">
                     <h4 class="mb-0">Atualizar Fornecedor</h4>
                 </div>
                 <div class="card-body">
@@ -47,7 +47,7 @@
                             <a href="javascript:history.back()" class="btn btn-secondary">
                                 <i class="fas fa-arrow-left"></i> Voltar
                             </a>
-                            <button type="submit" class="btn btn-warning text-white">
+                            <button type="submit" class="btn btn-primary text-white">
                                 <i class="fas fa-save"></i> Atualizar
                             </button>
                         </div>
