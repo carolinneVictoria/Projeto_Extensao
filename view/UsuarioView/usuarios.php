@@ -14,49 +14,49 @@
         </div>
     </form>
 
-<div class='table-responsive'>
-        <table class='table table-striped align-middle'>
-            <thead class='table-dark'>
+    <div class='table-responsive'>
+            <table class='table table-striped align-middle'>
+                <thead class='table-dark'>
+                    <tr>
+                        <th>ID</th>
+                        <th>NOME</th>
+                        <th>TELEFONE</th>
+                        <th>EMAIL</th>
+                        <th>TIPO</th>
+                        <th>STATUS</th>
+                        <th>AÇÕES</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                <?php
+                    while ($registro = mysqli_fetch_assoc($usuarios)) {
+                        $idUsuario = $registro['idUsuario'];
+                        echo "
                 <tr>
-                  <th>ID</th>
-                  <th>NOME</th>
-                  <th>TELEFONE</th>
-                  <th>EMAIL</th>
-                  <th>TIPO</th>
-                  <th>STATUS</th>
-                  <th>AÇÕES</th>
+                                    <td>{$registro['idUsuario']}</td>
+                                    <td>{$registro['nomeUsuario']}</td>
+                                    <td>{$registro['telefoneUsuario']}</td>
+                                    <td>{$registro['emailUsuario']}</td>
+                                    <td>{$registro['tipoUsuario']}</td>
+                                    <td>{$registro['statusUsuario']}</td>
+                                    <td class='text-center'>
+                                        <a class='btn btn-warning btn-sm' href='../controller/UsuarioController.php?acao=ver&id=$idUsuario'>
+                                            <i class='fas fa-edit'></i>
+                                        </a>
+                                        <a class='btn btn-danger btn-sm' href='../controller/UsuarioController.php?acao=excluir&id=$idUsuario' onclick=\"return confirm('Tem certeza que deseja excluir?')\">
+                                            <i class='fas fa-trash'></i>
+                                        </a>
+                                    </td>
                 </tr>
-        </thead>
-        <tbody>
-        <?php
-          while ($registro = mysqli_fetch_assoc($usuarios)) {
-            $idUsuario = $registro['idUsuario'];
-              echo "
-                  <tbody>
-                      <tr>
-                          <td>{$registro['idUsuario']}</td>
-                          <td>{$registro['nomeUsuario']}</td>
-                          <td>{$registro['telefoneUsuario']}</td>
-                          <td>{$registro['emailUsuario']}</td>
-                          <td>{$registro['tipoUsuario']}</td>
-                          <td>{$registro['statusUsuario']}</td>
-                          <td class='text-center'>
-                            <a class='btn btn-warning btn-sm' href='../controller/UsuarioController.php?acao=ver&id=$idUsuario'>
-                                <i class='fas fa-edit'></i>
-                            </a>
-                            <a class='btn btn-danger btn-sm' href='../controller/UsuarioController.php?acao=excluir&id=$idUsuario' onclick=\"return confirm('Tem certeza que deseja excluir?')\">
-                                <i class='fas fa-trash'></i>
-                            </a>
-                        </td>
-                      </tr>
-              ";
-          }
-          ?>
-          </tbody>
-        </table>
+        ";
+    }
+?>
+                </tbody>
+            </table>
     </div>
 
-  <!-- Paginação -->
+<!-- Paginação -->
     <nav>
         <ul class="pagination justify-content-center">
             <li class="page-item <?= ($paginaAtual <= 1) ? 'disabled' : '' ?>">
@@ -99,6 +99,6 @@
             </li>
         </ul>
     </nav>
-
 </div>
+
 <?php include "../app/footer.php"; ?>
