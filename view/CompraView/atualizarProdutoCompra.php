@@ -15,7 +15,7 @@
                             
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" id="produto" class="form-control" readonly value="<?= htmlspecialchars($registro['nomeProduto']); ?>" placeholder="Produto">
+                                    <input type="text" id="produto" class="form-control" disabled value="<?= htmlspecialchars($registro['nomeProduto']); ?>" placeholder="Produto">
                                     <label for="produto">Produto:</label>
                                 </div>
                             </div>
@@ -29,13 +29,13 @@
                             
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="valorUnitario" name="valorUnitario" required readonly value="R$ <?= number_format($registro['valorUnitario'], 2, ',', '.'); ?>" placeholder="Valor Unitário">
+                                    <input type="text" class="form-control" id="valorUnitario" name="valorUnitario" disabled value="R$ <?= number_format($registro['valorUnitario'], 2, ',', '.'); ?>" placeholder="Valor Unitário">
                                     <label for="valorUnitario">Valor Unitário:</label>
                                 </div>
                             </div>
 
                             <div class="col-12 text-end">
-                                <button type="submit" class="btn btn-warning text-white">
+                                <button type="submit" class="btn btn-primary text-white">
                                     <i class="fas fa-save"></i> Atualizar Produto
                                 </button>
                             </div>
