@@ -22,9 +22,9 @@
 
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="valorProduto" name="valorProduto" value="<?= htmlspecialchars($produto['valorProduto']); ?>" placeholder="Valor do Produto" required>
+                                    <input type="text" class="form-control" id="valorProdutoMascara"  value="<?= htmlspecialchars($produto['valorProduto']); ?>" placeholder="Valor do Produto" required>
+                                    <input type="hidden" name="valorProduto" id="valorProduto">
                                     <label for="valorProduto">Valor do Produto:</label>
-                                    <div class="invalid-feedback">Por favor, insira um valor válido.</div>
                                 </div>
                             </div>
 
@@ -40,7 +40,6 @@
                                         <?php endforeach; ?>
                                     </select>
                                     <label for="categoriaProduto">Categoria do Produto:</label>
-                                    <div class="invalid-feedback">Por favor, selecione uma categoria.</div>
                                 </div>
                             </div>
 
@@ -48,7 +47,6 @@
                                 <div class="form-floating">
                                     <input type="text" class="form-control" id="quantidadeProduto" name="quantidadeProduto" value="<?= htmlspecialchars($produto['quantidadeProduto']); ?>" placeholder="Quantidade" required>
                                     <label for="quantidadeProduto">Quantidade:</label>
-                                    <div class="invalid-feedback">Por favor, insira a quantidade.</div>
                                 </div>
                             </div>
                             
@@ -76,5 +74,14 @@
         </div>
     </div>
 </div>
+<script>
+document.getElementById('valorProdutoMascara').addEventListener('input', function (e) {
+    let input = e.target.value.replace(/\D/g, '');
+    let valorNumerico = (parseInt(input) / 100).toFixed(2);
+    let valorFormatado = 'R$ ' + valorNumerico.replace('.', ',');
 
+    e.target.value = valorFormatado;
+    document.getElementById('valorProduto').value = valorNumerico;
+});
+</script>
 <?php include("../app/footer.php") ?>
