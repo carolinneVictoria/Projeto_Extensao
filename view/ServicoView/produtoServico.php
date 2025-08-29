@@ -103,9 +103,6 @@
                     <button onclick="history.back()" class="btn btn-secondary">
                         <i class="fas fa-arrow-left"></i> Voltar
                     </button>
-                    <a href="formAtualizarServico.php?id=<?= htmlspecialchars($servico['idServico']); ?>" class="btn btn-primary">
-                        <i class="fas fa-check"></i> Finalizar Serviço
-                    </a>
                 </div>
             </div>
         </div>
