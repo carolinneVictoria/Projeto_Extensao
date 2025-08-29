@@ -4,11 +4,11 @@
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <div class="card shadow-sm">
-                <div class="card-header bg-success text-white text-center">
+                <div class="card-header bg-primary text-white text-center">
                     <h4 class="mb-0">Atualizar Cliente</h4>
                 </div>
                 <div class="card-body">
-                    <form action="../controller/ClienteController.php?acao=atualizar" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                    <form action="../controller/ClienteController.php?acao=atualizar" method="POST" enctype="multipart/form-data" class="was-validated">
                         <input type="hidden" name="idCliente" value="<?= htmlspecialchars($cliente['idCliente']); ?>">
 
                         <div class="row g-3">
@@ -60,7 +60,7 @@
                             <a href="javascript:history.back()" class="btn btn-secondary">
                                 <i class="fas fa-arrow-left"></i> Voltar
                             </a>
-                            <button type="submit" class="btn btn-success text-white">
+                            <button type="submit" class="btn btn-primary text-white">
                                 <i class="fas fa-edit"></i> Atualizar
                             </button>
                         </div>
