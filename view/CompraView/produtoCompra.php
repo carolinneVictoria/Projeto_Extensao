@@ -25,7 +25,6 @@
                                         <?php endforeach; ?>
                                     </select>
                                     <label for="idProduto">Produto:</label>
-                                    <div class="invalid-feedback">Por favor, selecione um produto.</div>
                                 </div>
                             </div>
 
@@ -33,13 +32,12 @@
                                 <div class="form-floating">
                                     <input type="number" class="form-control" id="quantidade" name="quantidade" required min="1" placeholder="Quantidade">
                                     <label for="quantidade">Quantidade:</label>
-                                    <div class="invalid-feedback">Por favor, insira uma quantidade válida.</div>
                                 </div>
                             </div>
 
                             <div class="col-md-4">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="valorUnitario" name="valorUnitario" required readonly placeholder="Valor Unitário">
+                                    <input type="text" class="form-control" id="valorUnitario" name="valorUnitario" required disabled placeholder="Valor Unitário">
                                     <label for="valorUnitario">Valor Unitário:</label>
                                 </div>
                             </div>
