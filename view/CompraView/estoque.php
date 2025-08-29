@@ -18,20 +18,20 @@
 <div class='table-responsive'>
         <table class='table table-striped align-middle'>
             <thead class='table-dark'>
-            <tr>
-                <th>ID</th>
-                <th>DESCRIÇÃO</th>
-                <th>FORNECEDOR</th>
-                <th>DATA DA COMPRA</th>
-                <th>VALOR</th>
-                <th>AÇÕES</th>
-            </tr>
-        </thead>
+                <tr>
+                    <th>ID</th>
+                    <th>DESCRIÇÃO</th>
+                    <th>FORNECEDOR</th>
+                    <th>DATA DA COMPRA</th>
+                    <th>VALOR</th>
+                    <th>AÇÕES</th>
+                </tr>
+            </thead>
         <tbody>
         <?php
 
         while ($registro = mysqli_fetch_assoc($compras)) {
-          $idCompra = $registro['idCompra'];
+            $idCompra = $registro['idCompra'];
             echo "
                 
                     <tr>
@@ -41,62 +41,62 @@
                         <td>R$ " . number_format($registro['valorTotal'], 2, ',', '.') . "</td>
                         <td>{$registro['data']}</td>
                         <td class='text-center'>
-                          <a class='btn btn-warning btn-sm' href='../controller/CompraController.php?acao=ver&id={$idCompra}'>
-                              <i class='fas fa-edit'></i>
-                          </a>
-                          <a class='btn btn-danger btn-sm' href='../controller/CompraController.php?acao=excluir&id={$idCompra}' onclick=\"return confirm('Tem certeza que deseja excluir?')\">
-                              <i class='fas fa-trash'></i>
-                          </a>
+                            <a class='btn btn-warning btn-sm' href='../controller/CompraController.php?acao=ver&id={$idCompra}'>
+                                <i class='fas fa-edit'></i>
+                            </a>
+                            <a class='btn btn-danger btn-sm' href='../controller/CompraController.php?acao=excluir&id={$idCompra}' onclick=\"return confirm('Tem certeza que deseja excluir?')\">
+                                <i class='fas fa-trash'></i>
+                            </a>
                         </td>
                     </tr>
                 </tbody>
             ";
         }
-          echo "</table>"; ?>
+echo "</table>"; ?>
 
-  <!-- Paginação -->
-  <nav>
-      <ul class="pagination justify-content-center">
-          <li class="page-item <?= ($paginaAtual <= 1) ? 'disabled' : '' ?>">
-              <a class="page-link" href="?acao=listar&pagina=<?= $paginaAtual - 1 ?>">Anterior</a>
-          </li>
+    <!-- Paginação -->
+    <nav>
+            <ul class="pagination justify-content-center">
+                <li class="page-item <?= ($paginaAtual <= 1) ? 'disabled' : '' ?>">
+                    <a class="page-link" href="?acao=listar&pagina=<?= $paginaAtual - 1 ?>">Anterior</a>
+                </li>
 
-          <?php
-          $limiteLinks = 5;
-          $primeiroLink = max(1, $paginaAtual - floor($limiteLinks / 2));
-          $ultimoLink = min($totalPaginas, $primeiroLink + $limiteLinks - 1);
+            <?php
+                $limiteLinks = 5;
+                $primeiroLink = max(1, $paginaAtual - floor($limiteLinks / 2));
+                $ultimoLink = min($totalPaginas, $primeiroLink + $limiteLinks - 1);
 
-          if ($ultimoLink - $primeiroLink + 1 < $limiteLinks) {
-              $primeiroLink = max(1, $ultimoLink - $limiteLinks + 1);
-          }
+                if ($ultimoLink - $primeiroLink + 1 < $limiteLinks) {
+                    $primeiroLink = max(1, $ultimoLink - $limiteLinks + 1);
+                }
 
-          if ($primeiroLink > 1) {
-              echo '<li class="page-item"><a class="page-link" href="?acao=listar&pagina=1">1</a></li>';
-              if ($primeiroLink > 2) {
-                  echo '<li class="page-item disabled"><a class="page-link">...</a></li>';
-              }
-          }
+                if ($primeiroLink > 1) {
+                    echo '<li class="page-item"><a class="page-link" href="?acao=listar&pagina=1">1</a></li>';
+                    if ($primeiroLink > 2) {
+                        echo '<li class="page-item disabled"><a class="page-link">...</a></li>';
+                    }
+                }
 
-          for ($i = $primeiroLink; $i <= $ultimoLink; $i++) {
-              ?>
-              <li class="page-item <?= ($i == $paginaAtual) ? 'active' : '' ?>">
-                  <a class="page-link" href="?acao=listar&pagina=<?= $i ?>"><?= $i ?></a>
-              </li>
-          <?php }
+                for ($i = $primeiroLink; $i <= $ultimoLink; $i++) {
+                    ?>
+                    <li class="page-item <?= ($i == $paginaAtual) ? 'active' : '' ?>">
+                        <a class="page-link" href="?acao=listar&pagina=<?= $i ?>"><?= $i ?></a>
+                    </li>
+                <?php }
 
-          if ($ultimoLink < $totalPaginas) {
-              if ($ultimoLink < $totalPaginas - 1) {
-                  echo '<li class="page-item disabled"><a class="page-link">...</a></li>';
-              }
-              echo '<li class="page-item"><a class="page-link" href="?acao=listar&pagina=' . $totalPaginas . '">' . $totalPaginas . '</a></li>';
-          }
-          ?>
+                if ($ultimoLink < $totalPaginas) {
+                    if ($ultimoLink < $totalPaginas - 1) {
+                        echo '<li class="page-item disabled"><a class="page-link">...</a></li>';
+                    }
+                    echo '<li class="page-item"><a class="page-link" href="?acao=listar&pagina=' . $totalPaginas . '">' . $totalPaginas . '</a></li>';
+                }
+            ?>
 
-          <li class="page-item <?= ($paginaAtual >= $totalPaginas) ? 'disabled' : '' ?>">
-              <a class="page-link" href="?acao=listar&pagina=<?= $paginaAtual + 1 ?>">Próximo</a>
-          </li>
-      </ul>
-  </nav>
+            <li class="page-item <?= ($paginaAtual >= $totalPaginas) ? 'disabled' : '' ?>">
+                <a class="page-link" href="?acao=listar&pagina=<?= $paginaAtual + 1 ?>">Próximo</a>
+            </li>
+        </ul>
+    </nav>
 
 <?php include "../app/footer.php"; ?>
 </div>
