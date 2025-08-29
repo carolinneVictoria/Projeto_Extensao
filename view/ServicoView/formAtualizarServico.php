@@ -121,7 +121,7 @@
                                 <a href="/Projeto_Extensao/controller/ServicoController.php?acao=formProdutoServico&id=<?= htmlspecialchars($idServico); ?>" class="btn btn-info me-2 text-white" title="Adicionar Produtos">
                                     <i class="fas fa-plus"></i> Adicionar Produtos
                                 </a>
-                                <button type="submit" class="btn btn-primary text-white">
+                                <button type="submit" class="btn btn-success text-white">
                                     <i class="fas fa-save"></i> Atualizar Serviço
                                 </button>
                             </div>
