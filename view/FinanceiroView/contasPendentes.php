@@ -135,6 +135,6 @@ echo "
             </li>
         </ul>
     </nav>
-
 </div>
+
 <?php include("../app/footer.php"); ?>
