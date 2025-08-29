@@ -14,21 +14,21 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="descricao" name="descricao" value="<?= htmlspecialchars($conta['descricao']); ?>" readonly placeholder="Descrição">
+                                    <input type="text" class="form-control" id="descricao" name="descricao" value="<?= htmlspecialchars($conta['descricao']); ?>" disabled placeholder="Descrição">
                                     <label for="descricao">Descrição:</label>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="valorTotal" name="valorTotal" value="R$ <?= number_format($conta['valorTotal'], 2, ',', '.'); ?>" readonly placeholder="Valor">
+                                    <input type="text" class="form-control" id="valorTotal" name="valorTotal" value="R$ <?= number_format($conta['valorTotal'], 2, ',', '.'); ?>" disabled placeholder="Valor">
                                     <label for="valorTotal">Valor:</label>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="date" class="form-control" id="dataVencimento" name="dataVencimento" value="<?= htmlspecialchars($conta['dataVencimento']); ?>" readonly placeholder="Data de Vencimento">
+                                    <input type="date" class="form-control" id="dataVencimento" name="dataVencimento" value="<?= htmlspecialchars($conta['dataVencimento']); ?>" disabled placeholder="Data de Vencimento">
                                     <label for="dataVencimento">Data de Vencimento:</label>
                                 </div>
                             </div>
@@ -47,9 +47,9 @@
                         <hr class="my-4">
                         
                         <div class="d-flex justify-content-between">
-                            <button onclick="history.back()" class="btn btn-secondary">
+                            <a href="../controller/FinanceiroController.php?acao=listar" class="btn btn-secondary">
                                 <i class="fas fa-arrow-left"></i> Voltar
-                            </button>
+                            </a>
                             <div>
                                 <a href='../controller/FinanceiroController.php?acao=formAtualizar&id=<?= htmlspecialchars($idConta); ?>' class='btn btn-warning me-2 text-white' title="Atualizar">
                                     <i class="fas fa-edit"></i> Editar
