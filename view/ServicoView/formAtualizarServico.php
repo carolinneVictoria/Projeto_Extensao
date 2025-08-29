@@ -14,7 +14,7 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="idCliente" readonly value="<?= htmlspecialchars($servico['nome']); ?>" placeholder="Cliente">
+                                    <input type="text" class="form-control" id="idCliente" disabled value="<?= htmlspecialchars($servico['nome']); ?>" placeholder="Cliente">
                                     <input type="hidden" name="idCliente" value="<?= htmlspecialchars($servico['idCliente']); ?>">
                                     <label for="idCliente">Cliente:</label>
                                 </div>
@@ -22,7 +22,7 @@
 
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="idUsuario" readonly value="<?= htmlspecialchars($servico['nomeUsuario']); ?>" placeholder="Usuário">
+                                    <input type="text" class="form-control" id="idUsuario" disabled value="<?= htmlspecialchars($servico['nomeUsuario']); ?>" placeholder="Usuário">
                                     <input type="hidden" name="idUsuario" value="<?= htmlspecialchars($servico['idUsuario']); ?>">
                                     <label for="idUsuario">Usuário:</label>
                                 </div>
@@ -51,7 +51,7 @@
                             
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="valorTotal" readonly value="R$ <?= number_format($valorTotal + $servico['maodeObra'], 2, ',', '.'); ?>" placeholder="Valor Total">
+                                    <input type="text" class="form-control" id="valorTotal" disabled value="R$ <?= number_format($valorTotal + $servico['maodeObra'], 2, ',', '.'); ?>" placeholder="Valor Total">
                                     <label for="valorTotal">Valor Total:</label>
                                 </div>
                             </div>
@@ -121,7 +121,7 @@
                                 <a href="/Projeto_Extensao/controller/ServicoController.php?acao=formProdutoServico&id=<?= htmlspecialchars($idServico); ?>" class="btn btn-info me-2 text-white" title="Adicionar Produtos">
                                     <i class="fas fa-plus"></i> Adicionar Produtos
                                 </a>
-                                <button type="submit" class="btn btn-success text-white">
+                                <button type="submit" class="btn btn-primary text-white">
                                     <i class="fas fa-save"></i> Atualizar Serviço
                                 </button>
                             </div>
