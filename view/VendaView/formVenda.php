@@ -8,9 +8,8 @@
                     <h4 class="mb-0">Dados da Venda</h4>
                 </div>
                 <div class="card-body">
-                    <form id="formServico" action="/Projeto_Extensao/controller/VendaController.php?acao=cadastrar" method="POST" class="needs-validation" novalidate>
+                    <form id="formServico" action="/Projeto_Extensao/controller/VendaController.php?acao=cadastrar" method="POST" class="was-validated">
                         <div class="row g-3">
-                            <!-- Usuário -->
                             <div class="col-md-6">
                                 <div class="form-floating">
                                     <select class="form-select" id="usuario" name="idUsuario" required>
@@ -20,20 +19,16 @@
                                         <?php endforeach; ?>
                                     </select>
                                     <label for="usuario">Usuário:</label>
-                                    <div class="invalid-feedback">Por favor, selecione um usuário.</div>
                                 </div>
                             </div>
                             
-                            <!-- Data da Venda -->
                             <div class="col-md-6">
                                 <div class="form-floating">
                                     <input type="date" class="form-control" id="data" name="data" required>
                                     <label for="data">Data da Venda:</label>
-                                    <div class="invalid-feedback">Por favor, insira a data da venda.</div>
                                 </div>
                             </div>
                             
-                            <!-- Forma de Pagamento -->
                             <div class="col-md-6">
                                 <div class="form-floating">
                                     <select class="form-select" id="formaPagamento" name="formaPagamento" required>
@@ -44,7 +39,6 @@
                                         <option value="Cartão de Crédito">Cartão de Crédito</option>
                                     </select>
                                     <label for="formaPagamento">Forma de Pagamento:</label>
-                                    <div class="invalid-feedback">Por favor, selecione uma forma de pagamento.</div>
                                 </div>
                             </div>
                             
@@ -58,7 +52,7 @@
                             <a href="javascript:history.back()" class="btn btn-secondary">
                                 <i class="fas fa-arrow-left"></i> Voltar
                             </a>
-                            <button type="submit" class="btn btn-primary">Próximo <i class="fas fa-arrow-right"></i></button>
+                            <button type="submit" class="btn btn-success">Próximo <i class="fas fa-arrow-right"></i></button>
                         </div>
                     </form>
                 </div>
