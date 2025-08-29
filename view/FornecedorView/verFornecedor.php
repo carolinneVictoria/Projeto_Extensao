@@ -4,7 +4,7 @@
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <div class="card shadow-sm">
-                <div class="card-header bg-info text-white text-center">
+                <div class="card-header bg-dark text-white text-center">
                     <h4 class="mb-0">Detalhes do Fornecedor</h4>
                 </div>
                 <div class="card-body">
@@ -14,28 +14,28 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="cnpj" name="cnpj" value="<?= htmlspecialchars($fornecedor['cnpj']); ?>" readonly placeholder="CNPJ">
+                                    <input type="text" class="form-control" id="cnpj" name="cnpj" value="<?= htmlspecialchars($fornecedor['cnpj']); ?>" disabled placeholder="CNPJ">
                                     <label for="cnpj">CNPJ:</label>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="razaoSocial" name="razaoSocial" value="<?= htmlspecialchars($fornecedor['razaoSocial']); ?>" readonly placeholder="Razão Social">
+                                    <input type="text" class="form-control" id="razaoSocial" name="razaoSocial" value="<?= htmlspecialchars($fornecedor['razaoSocial']); ?>" disabled placeholder="Razão Social">
                                     <label for="razaoSocial">Razão Social:</label>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="endereco" name="endereco" value="<?= htmlspecialchars($fornecedor['endereco']); ?>" readonly placeholder="Endereço">
+                                    <input type="text" class="form-control" id="endereco" name="endereco" value="<?= htmlspecialchars($fornecedor['endereco']); ?>" disabled placeholder="Endereço">
                                     <label for="endereco">Endereço:</label>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="telefone" name="telefone" value="<?= htmlspecialchars($fornecedor['telefone']); ?>" readonly placeholder="Telefone">
+                                    <input type="text" class="form-control" id="telefone" name="telefone" value="<?= htmlspecialchars($fornecedor['telefone']); ?>" disabled placeholder="Telefone">
                                     <label for="telefone">Telefone:</label>
                                 </div>
                             </div>
