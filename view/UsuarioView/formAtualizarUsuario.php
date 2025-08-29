@@ -77,7 +77,7 @@
                             <a href="javascript:history.back()" class="btn btn-secondary">
                                 <i class="fas fa-arrow-left"></i> Voltar
                             </a>
-                            <button type="submit" class="btn btn-warning text-white">
+                            <button type="submit" class="btn btn-primary text-white">
                                 <i class="fas fa-save"></i> Atualizar
                             </button>
                         </div>
