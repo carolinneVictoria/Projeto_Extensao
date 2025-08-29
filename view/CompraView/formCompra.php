@@ -4,7 +4,7 @@
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white text-center">
+                <div class="card-header bg-success text-white text-center">
                     <h4 class="mb-0">Cadastro de Compra</h4>
                 </div>
                 <div class="card-body">
@@ -45,7 +45,7 @@
                             
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <textarea class="form-control" id="descricao" name="descricao" placeholder="Descrição" style="height: 100px"></textarea>
+                                    <textarea class="form-control" id="descricao" name="descricao" placeholder="Descrição"></textarea>
                                     <label for="descricao">Descrição:</label>
                                 </div>
                             </div>
@@ -57,7 +57,7 @@
                             <a href="javascript:history.back()" class="btn btn-secondary">
                                 <i class="fas fa-arrow-left"></i> Voltar
                             </a>
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-success">
                                 <i class="fas fa-save"></i> Cadastrar
                             </button>
                         </div>
