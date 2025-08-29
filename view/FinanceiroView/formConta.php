@@ -4,7 +4,7 @@
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <div class="card shadow-sm">
-                <div class="card-header bg-primary text-white text-center">
+                <div class="card-header bg-success text-white text-center">
                     <h4 class="mb-0">Cadastro de Conta</h4>
                 </div>
                 <div class="card-body">
@@ -19,7 +19,8 @@
 
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="valorTotal" name="valorTotal" placeholder="Valor" required>
+                                    <input type="text" class="form-control" id="valorContaMascara" placeholder="Valor" required>
+                                    <input type="hidden" name="valorTotal" id="valorTotal">
                                     <label for="valorTotal">Valor:</label>
                                 </div>
                             </div>
@@ -49,7 +50,7 @@
                             <a href="javascript:history.back()" class="btn btn-secondary">
                                 <i class="fas fa-arrow-left"></i> Voltar
                             </a>
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-success">
                                 <i class="fas fa-save"></i> Cadastrar
                             </button>
                         </div>
@@ -59,5 +60,14 @@
         </div>
     </div>
 </div>
+<script>
+document.getElementById('valorContaMascara').addEventListener('input', function (e) {
+    let input = e.target.value.replace(/\D/g, '');
+    let valorNumerico = (parseInt(input) / 100).toFixed(2);
+    let valorFormatado = 'R$ ' + valorNumerico.replace('.', ',');
 
+    e.target.value = valorFormatado;
+    document.getElementById('valorTotal').value = valorNumerico;
+});
+</script>
 <?php include("../app/footer.php"); ?>
