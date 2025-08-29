@@ -8,7 +8,7 @@
                     <h4 class="mb-0">Adicionar Produtos à Venda</h4>
                 </div>
                 <div class="card-body">
-                    <form id="formProduto" action="/Projeto_Extensao/controller/VendaController.php?acao=adicionarProduto" method="POST" class="needs-validation" novalidate>
+                    <form id="formProduto" action="/Projeto_Extensao/controller/VendaController.php?acao=adicionarProduto" method="POST" class="was-validated">
                         <div class="row g-3">
                             <input type="hidden" name="idVenda" value="<?= htmlspecialchars($venda['idVenda']); ?>">
                             
@@ -30,7 +30,6 @@
                                         <?php endforeach; ?>
                                     </select>
                                     <label for="idProduto">Produto:</label>
-                                    <div class="invalid-feedback">Por favor, selecione um produto.</div>
                                 </div>
                             </div>
 
@@ -38,7 +37,6 @@
                                 <div class="form-floating">
                                     <input type="number" class="form-control" id="quantidade" name="quantidade" required min="1" placeholder="Quantidade">
                                     <label for="quantidade">Quantidade:</label>
-                                    <div class="invalid-feedback">Por favor, insira uma quantidade válida.</div>
                                 </div>
                             </div>
 
@@ -121,7 +119,7 @@ document.getElementById("idProduto").addEventListener("change", function() {
 
 window.addEventListener("load", function() {
     let idProdutoSelect = document.getElementById("idProduto");
-    if (idProdutoSelect.value) { // Verifica se já há uma opção selecionada
+    if (idProdutoSelect.value) {
         idProdutoSelect.dispatchEvent(new Event("change"));
     }
 });
