@@ -14,35 +14,35 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="idUsuario" name="idUsuario" value="<?= htmlspecialchars($compra['nomeUsuario']); ?>" readonly placeholder="Usuário">
+                                    <input type="text" class="form-control" id="idUsuario" name="idUsuario" value="<?= htmlspecialchars($compra['nomeUsuario']); ?>" disabled placeholder="Usuário">
                                     <label for="idUsuario">Usuário:</label>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="idFornecedor" name="idFornecedor" value="<?= htmlspecialchars($compra['razaoSocial']); ?>" readonly placeholder="Fornecedor">
+                                    <input type="text" class="form-control" id="idFornecedor" name="idFornecedor" value="<?= htmlspecialchars($compra['razaoSocial']); ?>" disabled placeholder="Fornecedor">
                                     <label for="idFornecedor">Fornecedor:</label>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="date" class="form-control" id="data" name="data" value="<?= htmlspecialchars($compra['data']); ?>" readonly placeholder="Data da Compra">
+                                    <input type="date" class="form-control" id="data" name="data" value="<?= htmlspecialchars($compra['data']); ?>" disabled placeholder="Data da Compra">
                                     <label for="data">Data da compra:</label>
                                 </div>
                             </div>
 
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="valorTotal" name="valorTotal" value="R$ <?= number_format($compra['valorTotal'], 2, ',', '.'); ?>" readonly placeholder="Valor Total">
+                                    <input type="text" class="form-control" id="valorTotal" name="valorTotal" value="R$ <?= number_format($compra['valorTotal'], 2, ',', '.'); ?>" disabled placeholder="Valor Total">
                                     <label for="valorTotal">Valor Total:</label>
                                 </div>
                             </div>
 
                             <div class="col-12">
                                 <div class="form-floating">
-                                    <textarea style="height: 100px" class="form-control" id="descricao" name="descricao" readonly placeholder="Descrição"><?= htmlspecialchars($compra['descricao']); ?></textarea>
+                                    <textarea style="height: 100px" class="form-control" id="descricao" name="descricao" disabled placeholder="Descrição"><?= htmlspecialchars($compra['descricao']); ?></textarea>
                                     <label for="descricao">Descrição:</label>
                                 </div>
                             </div>
