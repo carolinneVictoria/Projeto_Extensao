@@ -9,50 +9,44 @@
                 </div>
                 <div class="card-body">
                     <div class="row g-3">
-                        <!-- Cliente -->
                         <div class="col-md-4">
                             <div class="form-floating">
-                                <input type="text" class="form-control" id="cliente" readonly value="<?= htmlspecialchars($servico['nome']); ?>" placeholder="Cliente">
+                                <input type="text" class="form-control" id="cliente" disabled value="<?= htmlspecialchars($servico['nome']); ?>" placeholder="Cliente">
                                 <label for="cliente">Cliente:</label>
                             </div>
                         </div>
 
-                        <!-- Usuário Responsável -->
                         <div class="col-md-4">
                             <div class="form-floating">
-                                <input type="text" class="form-control" id="usuario" readonly value="<?= htmlspecialchars($servico['nomeUsuario']); ?>" placeholder="Usuário Responsável">
+                                <input type="text" class="form-control" id="usuario" disabled value="<?= htmlspecialchars($servico['nomeUsuario']); ?>" placeholder="Usuário Responsável">
                                 <label for="usuario">Usuário Responsável:</label>
                             </div>
                         </div>
 
-                        <!-- Data de Entrada -->
                         <div class="col-md-4">
                             <div class="form-floating">
-                                <input type="date" class="form-control" id="dataEntrada" readonly value="<?= htmlspecialchars($servico['dataEntrada']); ?>" placeholder="Data de Entrada">
+                                <input type="date" class="form-control" id="dataEntrada" disabled value="<?= htmlspecialchars($servico['dataEntrada']); ?>" placeholder="Data de Entrada">
                                 <label for="dataEntrada">Data de Entrada:</label>
                             </div>
                         </div>
 
-                        <!-- Mão de Obra -->
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <input type="text" class="form-control" id="maodeObra" readonly value="R$ <?= number_format($servico['maodeObra'], 2, ',', '.') ?>" placeholder="Mão de Obra">
+                                <input type="text" class="form-control" id="maodeObra" disabled value="R$ <?= number_format($servico['maodeObra'], 2, ',', '.') ?>" placeholder="Mão de Obra">
                                 <label for="maodeObra">Mão de Obra:</label>
                             </div>
                         </div>
 
-                        <!-- Valor Total -->
                         <div class="col-md-6">
                             <div class="form-floating">
-                                <input type="text" class="form-control" id="valorTotal" readonly value="R$ <?= number_format($valorTotal, 2, ',', '.'); ?>" placeholder="Valor Total">
+                                <input type="text" class="form-control" id="valorTotal" disabled value="R$ <?= number_format($valorTotal, 2, ',', '.'); ?>" placeholder="Valor Total">
                                 <label for="valorTotal">Valor Total:</label>
                             </div>
                         </div>
 
-                        <!-- Descrição -->
                         <div class="col-md-12">
                             <div class="form-floating">
-                                <textarea style="height: 100px" class="form-control" id="descricao" readonly placeholder="Descrição"><?= htmlspecialchars($servico['descricao']); ?></textarea>
+                                <textarea style="height: 100px" class="form-control" id="descricao" disabled placeholder="Descrição"><?= htmlspecialchars($servico['descricao']); ?></textarea>
                                 <label for="descricao">Descrição:</label>
                             </div>
                         </div>
