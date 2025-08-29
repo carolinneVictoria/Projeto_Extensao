@@ -4,7 +4,7 @@
     <div class="row justify-content-center">
         <div class="col-lg-8">
             <div class="card shadow-sm">
-                <div class="card-header bg-info text-white text-center">
+                <div class="card-header bg-dark text-white text-center">
                     <h4 class="mb-0">Detalhes do Produto</h4>
                 </div>
                 <div class="card-body">
