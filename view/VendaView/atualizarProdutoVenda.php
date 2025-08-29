@@ -15,7 +15,7 @@
 
                             <div class="col-md-4">
                                 <div class="form-floating">
-                                    <input type="text" id="produto" class="form-control" readonly value="<?= htmlspecialchars($registro['nomeProduto']); ?>" placeholder="Produto">
+                                    <input type="text" id="produto" class="form-control" disabled value="<?= htmlspecialchars($registro['nomeProduto']); ?>" placeholder="Produto">
                                     <label for="produto">Produto:</label>
                                 </div>
                             </div>
@@ -24,13 +24,12 @@
                                 <div class="form-floating">
                                     <input type="number" class="form-control" id="quantidade" name="quantidade" required min="1" value="<?= (int) $registro['quantidade']; ?>" placeholder="Quantidade">
                                     <label for="quantidade">Quantidade:</label>
-                                    <div class="invalid-feedback">Por favor, insira a quantidade.</div>
                                 </div>
                             </div>
                             
                             <div class="col-md-4">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="valorUnitario" name="valorUnitario" required readonly value="<?= number_format($registro['valorUnitario'], 2, ',', '.'); ?>" placeholder="Valor Unitário">
+                                    <input type="text" class="form-control" id="valorUnitario" name="valorUnitario" disabled value="<?= number_format($registro['valorUnitario'], 2, ',', '.'); ?>" placeholder="Valor Unitário">
                                     <label for="valorUnitario">Valor Unitário:</label>
                                 </div>
                             </div>
