@@ -21,7 +21,8 @@
 
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="valorTotal" name="valorTotal" value="<?= htmlspecialchars($conta['valorTotal']); ?>" placeholder="Valor" required>
+                                    <input type="text" class="form-control" id="valorContaMascara" value="<?= htmlspecialchars($conta['valorTotal']); ?>" placeholder="Valor" required>
+                                    <input type="hidden" name="valorTotal" id="valorTotal">
                                     <label for="valorTotal">Valor:</label>
                                 </div>
                             </div>
@@ -29,6 +30,7 @@
                             <div class="col-md-6">
                                 <div class="form-floating">
                                     <input type="date" class="form-control" id="dataVencimento" name="dataVencimento" value="<?= htmlspecialchars($conta['dataVencimento']); ?>" placeholder="Data de Vencimento">
+                                    <label for="valorTotal">Data de Vencimento:</label>
                                 </div>
                             </div>
 
@@ -46,10 +48,10 @@
                         <hr class="my-4">
                         
                         <div class="d-flex justify-content-between">
-                            <a href="javascript:history.back()" class="btn btn-secondary">
+                            <a href="../controller/FinanceiroController.php?acao=listar" class="btn btn-secondary">
                                 <i class="fas fa-arrow-left"></i> Voltar
                             </a>
-                            <button type="submit" class="btn btn-warning text-white">
+                            <button type="submit" class="btn btn-primary text-white">
                                 <i class="fas fa-save"></i> Atualizar
                             </button>
                         </div>
@@ -59,5 +61,14 @@
         </div>
     </div>
 </div>
+<script>
+document.getElementById('valorContaMascara').addEventListener('input', function (e) {
+    let input = e.target.value.replace(/\D/g, '');
+    let valorNumerico = (parseInt(input) / 100).toFixed(2);
+    let valorFormatado = 'R$ ' + valorNumerico.replace('.', ',');
 
+    e.target.value = valorFormatado;
+    document.getElementById('valorTotal').value = valorNumerico;
+});
+</script>
 <?php include("../app/footer.php") ?>
