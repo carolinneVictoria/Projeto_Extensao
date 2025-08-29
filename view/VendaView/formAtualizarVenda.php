@@ -4,7 +4,7 @@
     <div class="row justify-content-center">
         <div class="col-lg-10">
             <div class="card shadow-sm">
-                <div class="card-header bg-success text-white text-center">
+                <div class="card-header bg-primary text-white text-center">
                     <h4 class="mb-0">Detalhes da Venda</h4>
                 </div>
                 <div class="card-body">
@@ -12,16 +12,14 @@
                         <input type="hidden" name="idVenda" value="<?= htmlspecialchars($idVenda); ?>">
 
                         <div class="row g-3">
-                            <!-- Usuário -->
                             <div class="col-md-4">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="idUsuario" value="<?= htmlspecialchars($venda['nomeUsuario']); ?>" readonly placeholder="Usuário">
+                                    <input type="text" class="form-control" id="idUsuario" value="<?= htmlspecialchars($venda['nomeUsuario']); ?>" disabled placeholder="Usuário">
                                     <input type="hidden" name="idUsuario" value="<?= htmlspecialchars($venda['idUsuario']); ?>">
                                     <label for="idUsuario">Usuário:</label>
                                 </div>
                             </div>
 
-                            <!-- Data da Venda -->
                             <div class="col-md-4">
                                 <div class="form-floating">
                                     <input type="date" class="form-control" id="data" name="data" value="<?= htmlspecialchars($venda['data']); ?>">
@@ -29,7 +27,6 @@
                                 </div>
                             </div>
 
-                            <!-- Desconto -->
                             <div class="col-md-4">
                                 <div class="form-floating">
                                     <input type="text" class="form-control" id="descontoVenda" name="descontoVenda" value="<?= htmlspecialchars($venda['descontoVenda']); ?>" placeholder="Desconto">
@@ -37,7 +34,6 @@
                                 </div>
                             </div>
                             
-                            <!-- Valor Total -->
                             <div class="col-md-6">
                                 <div class="form-floating">
                                     <input type="hidden" name="valorTotal" value="<?= htmlspecialchars($valorTotal); ?>">
@@ -46,7 +42,6 @@
                                 </div>
                             </div>
 
-                            <!-- Forma de Pagamento -->
                             <div class="col-md-6">
                                 <div class="form-floating">
                                     <select class="form-select" id="formaPagamento" name="formaPagamento" required>
@@ -110,8 +105,8 @@
                                 <a href="../controller/VendaController.php?acao=formProdutoVenda&id=<?= htmlspecialchars($idVenda); ?>" class="btn btn-primary me-2 text-white">
                                     <i class="fas fa-plus"></i> Adicionar Produtos
                                 </a>
-                                <button type="submit" class="btn btn-success">
-                                    <i class="fas fa-save"></i> Realizar Venda
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-save"></i> Finalizar Venda
                                 </button>
                             </div>
                         </div>
