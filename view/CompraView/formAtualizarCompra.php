@@ -14,7 +14,7 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="idUsuario" value="<?= htmlspecialchars($compra['nomeUsuario']); ?>" readonly placeholder="Usuário">
+                                    <input type="text" class="form-control" id="idUsuario" value="<?= htmlspecialchars($compra['nomeUsuario']); ?>" disabled placeholder="Usuário">
                                     <input type="hidden" name="idUsuario" value="<?= htmlspecialchars($compra['idUsuario']); ?>">
                                     <label for="idUsuario">Usuário:</label>
                                 </div>
@@ -22,7 +22,7 @@
 
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="idFornecedor" value="<?= htmlspecialchars($compra['razaoSocial']); ?>" readonly placeholder="Fornecedor">
+                                    <input type="text" class="form-control" id="idFornecedor" value="<?= htmlspecialchars($compra['razaoSocial']); ?>" disabled placeholder="Fornecedor">
                                     <input type="hidden" name="idFornecedor" value="<?= htmlspecialchars($compra['idFornecedor']); ?>">
                                     <label for="idFornecedor">Fornecedor:</label>
                                 </div>
@@ -32,7 +32,6 @@
                                 <div class="form-floating">
                                     <input type="date" class="form-control" id="data" name="data" value="<?= htmlspecialchars($compra['data']); ?>" placeholder="Data da Compra" required>
                                     <label for="data">Data da compra:</label>
-                                    <div class="invalid-feedback">Por favor, insira a data da compra.</div>
                                 </div>
                             </div>
 
@@ -40,7 +39,6 @@
                                 <div class="form-floating">
                                     <input type="text" class="form-control" id="valorTotal" name="valorTotal" value="<?= number_format($compra['valorTotal'], 2, ',', '.'); ?>" placeholder="Valor Total" required>
                                     <label for="valorTotal">Valor Total:</label>
-                                    <div class="invalid-feedback">Por favor, insira o valor total.</div>
                                 </div>
                             </div>
 
@@ -48,7 +46,6 @@
                                 <div class="form-floating">
                                     <textarea style="height: 100px" class="form-control" id="descricao" name="descricao" placeholder="Descrição"><?= htmlspecialchars($compra['descricao']); ?></textarea>
                                     <label for="descricao">Descrição:</label>
-                                    <div class="invalid-feedback">Por favor, insira a descrição.</div>
                                 </div>
                             </div>
                         </div>
@@ -98,10 +95,10 @@
                         <i class="fas fa-arrow-left"></i> Voltar
                     </a>
                     <div>
-                        <a href="../controller/CompraController.php?acao=formProdutoCompra&id=<?= htmlspecialchars($idCompra); ?>" class="btn btn-primary me-2 text-white">
+                        <a href="../controller/CompraController.php?acao=formProdutoCompra&id=<?= htmlspecialchars($idCompra); ?>" class="btn btn-info me-2 text-white">
                             <i class="fas fa-plus"></i> Adicionar Produtos
                         </a>
-                        <button type="submit" class="btn btn-success">
+                        <button type="submit" class="btn btn-primary">
                             <i class="fas fa-save"></i> Realizar Compra
                         </button>
                     </div>
