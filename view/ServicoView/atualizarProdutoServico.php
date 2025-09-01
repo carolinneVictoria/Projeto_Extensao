@@ -30,7 +30,8 @@
                             
                             <div class="col-md-6">
                                 <div class="form-floating">
-                                    <input type="text" id="valorUnitario" name="valorUnitario" class="form-control" disabled required value="R$ <?= number_format($registro['valorUnitario'], 2, ',', '.'); ?>" placeholder="Valor Unitário">
+                                    <input type="text" id="valorUnitarioExibicao" class="form-control" readonly value="R$ <?= number_format($registro['valorUnitario'], 2, ',', '.'); ?>" placeholder="Valor Unitário">
+                                    <input type="hidden" id="valorUnitario" name="valorUnitario" value="<?= $registro['valorUnitario']; ?>">
                                     <label for="valorUnitario">Valor Unitário:</label>
                                 </div>
                             </div>
