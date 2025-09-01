@@ -1,17 +1,13 @@
 <?php
-
 class Servico {
     private $conn;
 
     public function __construct($dbConnection) {
         $this->conn = $dbConnection;
     }
-
     public function getConnection() {
         return $this->conn;
     }
-
-    // Método para listar
     public function listarServicos() {
         $listarServicos = "SELECT Servico.*, Cliente.nome, Usuario.nomeUsuario
                             FROM Servico
@@ -21,7 +17,6 @@ class Servico {
         $res = mysqli_query($this->conn, $listarServicos);
         return $res;
     }
-
     public function listarEntregues() {
         $listarServicos = "SELECT Servico.*, Cliente.nome, Usuario.nomeUsuario
                             FROM Servico
@@ -32,7 +27,6 @@ class Servico {
         $res = mysqli_query($this->conn, $listarServicos);
         return $res;
     }
-
     public function listarPendentes() {
         $listarServicos = "SELECT Servico.*, Cliente.nome, Usuario.nomeUsuario
                             FROM Servico
@@ -43,8 +37,6 @@ class Servico {
         $res = mysqli_query($this->conn, $listarServicos);
         return $res;
     }
-
-    // Método para cadastrar
     public function cadastrarServico($idCliente, $idUsuario, $descricao, $dataEntrada, $entrega, $valorTotal, $maodeObra) {
         $cadastrarServico = "INSERT INTO Servico (idCliente, idUsuario, descricao, dataEntrada, entrega, valorTotal, maodeObra)
                             VALUES ('$idCliente', '$idUsuario', '$descricao', '$dataEntrada', '$entrega', '$valorTotal', '$maodeObra')";
@@ -52,7 +44,6 @@ class Servico {
         $res = mysqli_query($this->conn, $cadastrarServico);
         return $res;
     }
-    //Metódo para atualizar
     public function atualizarServico($idServico, $idCliente, $idUsuario, $descricao, $dataEntrada, $entrega, $valorTotal, $maodeObra){
         $atualizarServico = "UPDATE Servico
                                 SET idCliente       = '$idCliente',
@@ -69,7 +60,6 @@ class Servico {
         $res = mysqli_query($this->conn, $atualizarServico);
         return $res;
     }
-
     public function excluirServico($idServico){
         $query = "DELETE FROM Servico WHERE idServico=?";
         $stmt = $this->conn->prepare($query);
@@ -80,46 +70,41 @@ class Servico {
     $stmt->bind_param("i", $idServico);
     return ($stmt->execute());
     }
-
     public function buscarPorNome($termo) {
-    $buscarPorNome = "SELECT Servico.*, Cliente.nome, Usuario.nomeUsuario
-                            FROM Servico 
-                            INNER JOIN Cliente ON Servico.idCliente = Cliente.idCliente
-                            INNER JOIN Usuario ON Servico.idUsuario = Usuario.idUsuario
-                            WHERE Servico.descricao LIKE ? OR Cliente.nome LIKE ? OR Usuario.nomeUsuario LIKE ?";
-    $stmt = $this->conn->prepare($buscarPorNome);
-    $like = "%" . $termo . "%";
-    $stmt->bind_param("sss", $like, $like, $like);
-    $stmt->execute();
-    $res = $stmt->get_result();
-    return $res;
-}
-
-// Método para buscar os detalhes
-    public function buscarServicoPorId($idServico) {
-    $stmt = $this->conn->prepare("SELECT Servico.*, Cliente.nome, Usuario.nomeUsuario
-                                    FROM Servico
-                                    INNER JOIN Cliente ON Servico.idCliente = Cliente.idCliente
-                                    INNER JOIN Usuario ON Servico.idUsuario = Usuario.idUsuario
-                                    WHERE Servico.idServico = ?");
-    $stmt->bind_param("i", $idServico);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($row = $result->fetch_assoc()) {
-        return $row;
-    } else {
-        return null;
+        $buscarPorNome = "SELECT Servico.*, Cliente.nome, Usuario.nomeUsuario
+                                FROM Servico 
+                                INNER JOIN Cliente ON Servico.idCliente = Cliente.idCliente
+                                INNER JOIN Usuario ON Servico.idUsuario = Usuario.idUsuario
+                                WHERE Servico.descricao LIKE ? OR Cliente.nome LIKE ? OR Usuario.nomeUsuario LIKE ?";
+        $stmt = $this->conn->prepare($buscarPorNome);
+        $like = "%" . $termo . "%";
+        $stmt->bind_param("sss", $like, $like, $like);
+        $stmt->execute();
+        $res = $stmt->get_result();
+        return $res;
     }
-}
+    public function buscarServicoPorId($idServico) {
+        $stmt = $this->conn->prepare("SELECT Servico.*, Cliente.nome, Usuario.nomeUsuario
+                                        FROM Servico
+                                        INNER JOIN Cliente ON Servico.idCliente = Cliente.idCliente
+                                        INNER JOIN Usuario ON Servico.idUsuario = Usuario.idUsuario
+                                        WHERE Servico.idServico = ?");
+        $stmt->bind_param("i", $idServico);
+        $stmt->execute();
+        $result = $stmt->get_result();
 
+        if ($row = $result->fetch_assoc()) {
+            return $row;
+        } else {
+            return null;
+        }
+    }
     public function atualizarValorTotalServico($idServico, $valorTotal) {
         $query = "UPDATE Servico SET valorTotal = ? WHERE idServico = ?";
         $stmt = $this->conn->prepare($query);
         $stmt->bind_param("di", $valorTotal, $idServico);
         return $stmt->execute();
     }
-
     public function totalServicosPorMes($mes, $ano) {
         $sql = "SELECT SUM(valorTotal) AS totalServicos FROM servico WHERE entrega = '0' AND MONTH(dataEntrada) = ? AND YEAR(dataEntrada) = ?";
         
@@ -136,7 +121,6 @@ class Servico {
         
         return $row['totalServicos'] ?? 0;
     }
-
     public function listarServicosPaginados($limite, $offset) {
         $sql = "SELECT Servico.*, Cliente.nome, Usuario.nomeUsuario
                             FROM Servico
@@ -162,7 +146,6 @@ class Servico {
         $stmt->execute();
         return $stmt->get_result();
     }
-
     public function listarServicosPaginadosPendentes($limite, $offset) {
         $sql = "SELECT Servico.*, Cliente.nome, Usuario.nomeUsuario
                             FROM Servico
@@ -176,8 +159,6 @@ class Servico {
         $stmt->execute();
         return $stmt->get_result();
     }
-
-    // Conta o total de registros
     public function contarServicos() {
         $sql = "SELECT COUNT(*) as total FROM Servico";
         $resultado = $this->conn->query($sql);
@@ -197,5 +178,4 @@ class Servico {
         return $row['total'];
     }
 }
-
 ?>
