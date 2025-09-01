@@ -1,5 +1,4 @@
 <?php
-
 class Financeiro{
 private $conn;
 
@@ -7,8 +6,8 @@ private $conn;
         $this->conn = $dbConnection;
     }
     public function getConnection() {
-    return $this->conn;
-}
+        return $this->conn;
+    }
     public function cadastrarConta($descricao, $valorTotal, $dataVencimento, $status){
         $cadastrar = "INSERT INTO Financeiro (descricao, valorTotal, dataVencimento, status)
                             VALUES ('$descricao', '$valorTotal', '$dataVencimento', '$status')";
@@ -107,7 +106,6 @@ private $conn;
         $stmt = $this->conn->prepare($sql);
         
         if (!$stmt) {
-            // Logar o erro ou lidar com a falha na preparação
             return 0;
         }
 
@@ -147,7 +145,5 @@ private $conn;
             $row = $resultado->fetch_assoc();
             return $row['total'];
     }
-
 }
-
 ?>
