@@ -8,7 +8,7 @@
                     <h4 class="mb-0">Atualizar Produto na Venda</h4>
                 </div>
                 <div class="card-body">
-                    <form id="formProduto" action="/Projeto_Extensao/controller/VendaController.php?acao=atualizarProduto" method="POST" class="needs-validation" novalidate>
+                    <form id="formProduto" action="/Projeto_Extensao/controller/VendaController.php?acao=atualizarProduto" method="POST" class="was-validated">
                         <div class="row g-3">
                             <input type="hidden" name="idVenda" value="<?= htmlspecialchars($idVenda); ?>">
                             <input type="hidden" name="idProduto" value="<?= htmlspecialchars($idProduto); ?>">
@@ -29,7 +29,8 @@
                             
                             <div class="col-md-4">
                                 <div class="form-floating">
-                                    <input type="text" class="form-control" id="valorUnitario" name="valorUnitario" disabled value="<?= number_format($registro['valorUnitario'], 2, ',', '.'); ?>" placeholder="Valor Unitário">
+                                    <input type="text" id="valorUnitarioExibicao" class="form-control" readonly value="R$ <?= number_format($registro['valorUnitario'], 2, ',', '.'); ?>" placeholder="Valor Unitário">
+                                    <input type="hidden" id="valorUnitario" name="valorUnitario" value="<?= $registro['valorUnitario']; ?>">
                                     <label for="valorUnitario">Valor Unitário:</label>
                                 </div>
                             </div>
