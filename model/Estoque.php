@@ -10,7 +10,6 @@ class Estoque {
         return $this->conn;
     }
     public function cadastrarCompra( $idFornecedor, $idUsuario, $data, $valorTotal, $descricao) {
-        // Prepara a query com parâmetros
         $stmt = $this->conn->prepare("INSERT INTO Compra (idFornecedor, idUsuario, data, valorTotal, descricao)
                                     VALUES (?, ?, ?, ?, ?)");
         if (!$stmt) {
@@ -103,7 +102,5 @@ class Estoque {
             $row = $resultado->fetch_assoc();
             return $row['total'];
     }
-
 }
-
 ?>
