@@ -97,17 +97,23 @@ function buscarVenda($vendaModel, $vendaProdutoModel, $usuarioModel) {
         echo "Nenhum termo de busca informado.";
     }
 }
-function adicionarProduto($vendaProdutoModel) {
+function adicionarProduto($vendaProdutoModel, $produtoModel) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $idProduto = $_POST['idProduto'];
             $idVenda = $_POST['idVenda'];
             $quantidade = $_POST['quantidade'];
             $valorUnitario = $_POST['valorUnitario'];
 
-            $resultado = $vendaProdutoModel->adicionarProdutoVenda($idProduto, $idVenda, $quantidade, $valorUnitario);
+            $itemExistente = $vendaProdutoModel->buscarProdutoVenda($idVenda, $idProduto);
 
+            if ($itemExistente) {
+                $novaQtd = $itemExistente['quantidade'] + $quantidade;
+                $resultado = $vendaProdutoModel->atualizarProdutoVenda($idVenda, $idProduto, $novaQtd, $valorUnitario);
+            } else {
+                $resultado = $vendaProdutoModel->adicionarProdutoVenda($idProduto, $idVenda, $quantidade, $valorUnitario);
+            }
             if ($resultado) {
-                //$produtoModel->reduzirEstoque($idProduto, $quantidade);
+                $produtoModel->reduzirEstoque($idProduto, $quantidade);
                 header("Location: ../controller/VendaController.php?acao=formProdutoVenda&id=$idVenda");
                 exit();
             } else {
@@ -115,40 +121,53 @@ function adicionarProduto($vendaProdutoModel) {
             }
     }
 }
-function atualizarProduto($vendaProdutoModel) {
+function atualizarProduto($vendaProdutoModel, $produtoModel) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        
-    $idVenda  = $_POST['idVenda'];
-    $idProduto  = $_POST['idProduto'];
-    $quantidade = $_POST['quantidade'];
+        $idVenda  = $_POST['idVenda'];
+        $idProduto  = $_POST['idProduto'];
+        $quantidadeNova = $_POST['quantidade'];
+        $valorUnitario = (float) $_POST['valorUnitario'];
 
-    // limpa o "R$" e formata pra ponto decimal
-    $novoValor = str_replace(['R$', '.', ' '], ['', '', ''], $_POST['valorUnitario']);
-    $novoValor = str_replace(',', '.', $novoValor);
-    $valorUnitario = $novoValor;
+        $item = $vendaProdutoModel->buscarProdutoVenda($idVenda, $idProduto);
+        $quantidadeAntiga = $item ? $item['quantidade'] : 0;
 
-    $resultado = $vendaProdutoModel->atualizarProdutoVenda($idVenda, $idProduto, $quantidade, $valorUnitario);
-    if ($resultado) {
-        header("Location: ../controller/VendaController.php?acao=formAtualizar&id=$idVenda");
-        exit;
-    } else {
-        echo "Erro ao atualizar o produto na venda: " . mysqli_error($vendaProdutoModel->getConnection());
-        header("Location: ../controller/VendaController.php?acao=formAtualizar&id=$idVenda");
-        exit;
+        $diferenca = $quantidadeNova - $quantidadeAntiga;
+
+        $resultado = $vendaProdutoModel->atualizarProdutoVenda($idVenda, $idProduto, $quantidadeNova, $valorUnitario);
+
+        if ($resultado) {
+            if ($diferenca > 0) {
+                $produtoModel->reduzirEstoque($idProduto, $diferenca);
+            } elseif ($diferenca < 0) {
+                $produtoModel->aumentarEstoque($idProduto, abs($diferenca));
+            }
+            header("Location: ../controller/VendaController.php?acao=formAtualizar&id=$idVenda");
+            exit;
+        } else {
+            echo "Erro ao atualizar o produto na compra: " . mysqli_error($vendaProdutoModel->getConnection());
+            exit;
+        }
     }
 }
-}
-function excluirProduto($vendaProdutoModel){
+function excluirProduto($vendaProdutoModel, $produtoModel){
     $idVenda = $_GET['idVenda'];
     $idProduto = $_GET['id'];
-    $resultado = $vendaProdutoModel->excluirProdutoVenda($idVenda, $idProduto);
-    if ($resultado) {
-        header("Location: ../controller/VendaController.php?acao=formAtualizar&id=$idVenda");
-        exit();
+
+    $item = $vendaProdutoModel->buscarProdutoVenda($idVenda, $idProduto);
+
+    if ($item) {
+        $quantidade = $item['quantidade'];
+        $resultado = $vendaProdutoModel->excluirProdutoVenda($idVenda, $idProduto);
+
+        if ($resultado) {
+            $produtoModel->aumentarEstoque($idProduto, $quantidade);
+            header("Location: ../controller/VendaController.php?acao=formAtualizar&id=$idVenda");
+            exit();
+        } else {
+            echo "Erro ao excluir o produto do serviço! " . mysqli_error($vendaProdutoModel->getConnection());
+        }
     } else {
-        echo "Erro ao excluir o produto: " . mysqli_error($vendaProdutoModel->getConnection());
-        header("Location: ../controller/VendaController.php?acao=formAtualizar&id=$idVenda");
-        exit();
+        echo "Produto não encontrado na venda!";
     }
 }
 function verVenda($vendaModel, $vendaProdutoModel){
@@ -233,7 +252,6 @@ function formProdutoVenda($vendaModel, $vendaProdutoModel, $produtoModel){
     include_once '../view/VendaView/produtoVenda.php';
 }
 function formAtualizarProduto($vendaModel, $vendaProdutoModel, $produtoModel){
-    // Verifica se os IDs foram passados corretamente
     if (!isset($_GET['idProduto'], $_GET['idVenda'])) {
         echo "ID da venda ou do produto não informado!";
         exit;
@@ -241,11 +259,12 @@ function formAtualizarProduto($vendaModel, $vendaProdutoModel, $produtoModel){
 
     $idVenda = (int) $_GET['idVenda'];
     $idProduto = (int) $_GET['idProduto'];
-    // Busca os dados necessários
+
     $venda  = $vendaModel->buscarVendaPorId($idVenda);
     $produto  = $produtoModel->buscarProdutoPorId($idProduto);
     $registro = $vendaProdutoModel->buscarProdutoVenda($idVenda, $idProduto);
     $produtosAssociados = $vendaProdutoModel->listarProdutosVenda($idVenda);
+
     if (!$registro) {
         echo "Registro de produto na venda não encontrado!";
         exit;
@@ -272,9 +291,9 @@ if (isset($_GET['acao'])) {
     } elseif($acao == 'adicionarProduto'){
         adicionarProduto($vendaProdutoModel, $produtoModel);
     } elseif($acao == 'atualizarProduto'){
-        atualizarProduto($vendaProdutoModel);
+        atualizarProduto($vendaProdutoModel, $produtoModel);
     } elseif($acao == 'excluirProduto'){
-        excluirProduto($vendaProdutoModel);
+        excluirProduto($vendaProdutoModel, $produtoModel);
     } elseif($acao == 'ver'){
         verVenda($vendaModel, $vendaProdutoModel);
     } elseif($acao == 'formCadastrar'){
