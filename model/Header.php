@@ -13,7 +13,6 @@ class Header {
         }
         return null; // Se não estiver logado
     }
-
     public function sair() {
         session_start();
         session_unset();
