@@ -1,5 +1,4 @@
 <?php
-
 class Cliente{
 private $conn;
 
@@ -7,10 +6,8 @@ private $conn;
         $this->conn = $dbConnection;
     }
     public function getConnection() {
-    return $this->conn;
-}
-
-
+        return $this->conn;
+    }
     public function cadastrarCliente($nome, $telefone, $cpf, $dataNascimento, $endereco, $bicicleta){
         $cadastrar = "INSERT INTO Cliente (nome, telefone, cpf, dataNascimento, endereco, bicicleta)
                             VALUES ('$nome', '$telefone', '$cpf', '$dataNascimento', '$endereco', '$bicicleta')";
@@ -20,13 +17,11 @@ private $conn;
         }
         return $res;
     }
-
     public function listarClientes(){
         $listar = "SELECT * FROM Cliente";
         $res = mysqli_query($this->conn, $listar);
         return $res;
     }
-
     public function atualizarCliente($idCliente, $nome, $telefone, $cpf, $dataNascimento, $endereco, $bicicleta) {
         $atualizar = "UPDATE Cliente
                         SET  nome           = '$nome',
@@ -41,7 +36,6 @@ private $conn;
         $res = mysqli_query($this->conn, $atualizar);
         return $res;
     }
-
     public function excluirCliente($idCliente) {
         $excluir = "DELETE FROM Cliente WHERE idCliente=?";
         $stmt = $this->conn->prepare($excluir);
@@ -52,8 +46,6 @@ private $conn;
         $stmt->bind_param("i", $idCliente);
         return ($stmt->execute());
     }
-
-
     public function buscarPorNome($termo) {
         $buscar = "SELECT * FROM Cliente WHERE nome LIKE ?";
         $stmt = $this->conn->prepare($buscar);
@@ -63,7 +55,6 @@ private $conn;
         $res = $stmt->get_result();
         return $res;
     }
-
     public function buscarClientePorId($idCliente) {
         $stmt = $this->conn->prepare("SELECT * FROM Cliente WHERE idCliente = ?");
         $stmt->bind_param("i", $idCliente);
@@ -76,7 +67,6 @@ private $conn;
             return null;
         }
     }
-
     public function listarClientesPaginados($limite, $offset) {
         $sql = "SELECT * FROM Cliente LIMIT ? OFFSET ?";
         $stmt = $this->conn->prepare($sql);
@@ -84,15 +74,11 @@ private $conn;
         $stmt->execute();
         return $stmt->get_result();
     }
-
-    // Conta o total de registros
     public function contarClientes() {
         $sql = "SELECT COUNT(*) as total FROM Cliente";
         $resultado = $this->conn->query($sql);
         $row = $resultado->fetch_assoc();
         return $row['total'];
     }
-
 }
-
 ?>
