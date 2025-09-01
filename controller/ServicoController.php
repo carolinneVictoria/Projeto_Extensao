@@ -124,54 +124,78 @@ function buscarServico($servicoModel, $clienteModel, $usuarioModel) {
         echo "Nenhum termo de busca informado.";
     }
 }
-function adicionarProduto($servicoProdutoModel) {
+function adicionarProduto($servicoProdutoModel, $produtoModel) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $idProduto = $_POST['idProduto'];
-            $idServico = $_POST['idServico'];
-            $quantidade = $_POST['quantidade'];
-            $valorUnitario = $_POST['valorUnitario'];
+        $idProduto = $_POST['idProduto'];
+        $idServico = $_POST['idServico'];
+        $quantidade = $_POST['quantidade'];
+        $valorUnitario = $_POST['valorUnitario'];
 
+        $itemExistente = $servicoProdutoModel->buscarProdutoServico($idServico, $idProduto);
+
+        if ($itemExistente) {
+            $novaQtd = $itemExistente['quantidade'] + $quantidade;
+            $resultado = $servicoProdutoModel->atualizarProdutoServico($idServico, $idProduto, $novaQtd, $valorUnitario);
+        } else {
             $resultado = $servicoProdutoModel->adicionarProdutoServico($idProduto, $idServico, $quantidade, $valorUnitario);
+        }
 
-            if ($resultado) {
-                header("Location: ../controller/ServicoController.php?acao=formAtualizar&id=$idServico");
-                exit();
-            } else {
-                echo "Erro ao adicionar o produto ao servico! " . mysqli_error($servicoProdutoModel->getConnection());
-            }
+        if ($resultado) {
+            $produtoModel->reduzirEstoque($idProduto, $quantidade);
+            header("Location: ../controller/ServicoController.php?acao=formAtualizar&id=$idServico");
+            exit();
+        } else {
+            echo "Erro ao adicionar o produto ao serviço! " . mysqli_error($servicoProdutoModel->getConnection());
+        }
     }
 }
-function atualizarProduto($servicoProdutoModel) {
+function atualizarProduto($servicoProdutoModel, $produtoModel, $servicoModel) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        
-    $idServico  = $_POST['idServico'];
-    $idProduto  = $_POST['idProduto'];
-    $quantidade = $_POST['quantidade'];
+        $idServico = $_POST['idServico'];
+        $idProduto = $_POST['idProduto'];
+        $quantidadeNova = $_POST['quantidade'];
+        $valorUnitario = (float) $_POST['valorUnitario'];
 
-    // limpa o "R$" e formata pra ponto decimal
-    $novoValor = str_replace(['R$', '.', ' '], ['', '', ''], $_POST['valorUnitario']);
-    $novoValor = str_replace(',', '.', $novoValor);
-    $valorUnitario = $novoValor;
+        $item = $servicoProdutoModel->buscarProdutoServico($idServico, $idProduto);
+        $quantidadeAntiga = $item ? $item['quantidade'] : 0;
 
-    $resultado = $servicoProdutoModel->atualizarProdutoServico($idServico, $idProduto, $quantidade, $valorUnitario);
-    
-    if ($resultado) {
-        header("Location: ../controller/ServicoController.php?acao=formAtualizar&id=$idServico");
-        exit();
-    } else {
-        echo "Erro ao atualizar o produto no servico! " . mysqli_error($servicoProdutoModel->getConnection());
+        $diferenca = $quantidadeNova - $quantidadeAntiga;
+
+        $resultado = $servicoProdutoModel->atualizarProdutoServico($idServico, $idProduto, $quantidadeNova, $valorUnitario);
+
+        if ($resultado) {
+            if ($diferenca > 0) {
+                $produtoModel->reduzirEstoque($idProduto, $diferenca);
+            } elseif ($diferenca < 0) {
+                $produtoModel->aumentarEstoque($idProduto, abs($diferenca));
+            }
+            header("Location: ../controller/ServicoController.php?acao=formAtualizar&id=$idServico");
+            exit;
+        } else {
+            echo "Erro ao atualizar o produto na compra: " . mysqli_error($servicoProdutoModel->getConnection());
+            exit;
+        }
     }
 }
-}
-function excluirProduto($servicoProdutoModel){
+function excluirProduto($servicoProdutoModel, $produtoModel){
     $idServico = $_GET['idServico'];
     $idProduto = $_GET['id'];
-    $resultado = $servicoProdutoModel->excluirProdutoServico($idServico, $idProduto);
-    if ($resultado) {
-        header("Location: ../controller/ServicoController.php?acao=formAtualizar&id=$idServico");
-        exit();
+
+    $item = $servicoProdutoModel->buscarProdutoServico($idServico, $idProduto);
+
+    if ($item) {
+        $quantidade = $item['quantidade'];
+        $resultado = $servicoProdutoModel->excluirProdutoServico($idServico, $idProduto);
+
+        if ($resultado) {
+            $produtoModel->aumentarEstoque($idProduto, $quantidade);
+            header("Location: ../controller/ServicoController.php?acao=formAtualizar&id=$idServico");
+            exit();
+        } else {
+            echo "Erro ao excluir o produto do serviço! " . mysqli_error($servicoProdutoModel->getConnection());
+        }
     } else {
-        echo "Erro ao excluir o produto do servico! " . mysqli_error($servicoProdutoModel->getConnection());
+        echo "Produto não encontrado no serviço!";
     }
 }
 function verServico($servicoModel, $servicoProdutoModel){
@@ -205,7 +229,7 @@ function formAtualizar($servicoModel, $usuarioModel, $clienteModel, $servicoProd
         $idServico = $_GET['id'];
         $servico =  $servicoModel->buscarServicoPorId($idServico);
         $usuarios = $usuarioModel->buscarUsuarioPorId($servico['idUsuario']);
-        $clientes = $clienteModel->buscarClientePorId($servico['idUsuario']);
+        $clientes = $clienteModel->buscarClientePorId($servico['idCliente']);
 
         if ($servico) {
             $valorTotal = 0;
@@ -294,11 +318,11 @@ if (isset($_GET['acao'])) {
     } elseif($acao == 'buscar') {
         buscarServico($servicoModel, $clienteModel, $usuarioModel);
     } elseif($acao == 'adicionarProduto'){
-        adicionarProduto($servicoProdutoModel);
+        adicionarProduto($servicoProdutoModel, $produtoModel);
     } elseif($acao == 'atualizarProduto'){
-        atualizarProduto($servicoProdutoModel);
+        atualizarProduto($servicoProdutoModel, $produtoModel, $servicoModel);
     } elseif($acao == 'excluirProduto'){
-        excluirProduto($servicoProdutoModel);
+        excluirProduto($servicoProdutoModel, $produtoModel);
     } elseif($acao == 'listarPendentes'){
         listarServicosPendentes($servicoModel);
     } elseif($acao == 'listarEntregues'){
