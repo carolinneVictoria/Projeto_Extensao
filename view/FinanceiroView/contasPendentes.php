@@ -1,6 +1,6 @@
 <?php include("../app/header.php"); ?>
 
-< class="container" style="margin-left: -10px; padding-top: 10px;">
+<class="container" style="margin-left: -10px; padding-top: 10px;">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Lista de Contas</h2>
         <a href="/Projeto_Extensao/controller/FinanceiroController.php?acao=formCadastrar" class="btn btn-success"><i class="fas fa-plus"></i> Nova Conta</a>
