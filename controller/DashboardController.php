@@ -26,7 +26,7 @@ class DashboardController {
 
         $servicosEVendas = $vendasNumerico + $servicosNumerico;
 
-        $lucroMes = $vendasNumerico + $servicosNumerico - $despesasNumerico;
+        $lucroMes = ($vendasNumerico + $servicosNumerico) - $despesasNumerico;
         
         $vendasFormatado = number_format($servicosEVendas, 2, ',', '.');
         $despesasFormatado = number_format($despesasNumerico, 2, ',', '.');
