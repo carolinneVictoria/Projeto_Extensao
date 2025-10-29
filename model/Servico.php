@@ -177,5 +177,25 @@ class Servico {
         $row = $resultado->fetch_assoc();
         return $row['total'];
     }
+    public function buscarServicosPorMes($mes, $ano) {
+    $sql = "SELECT Servico.*, Cliente.nome AS nomeCliente, Usuario.nomeUsuario
+            FROM Servico
+            INNER JOIN Cliente ON Servico.idCliente = Cliente.idCliente
+            INNER JOIN Usuario ON Servico.idUsuario = Usuario.idUsuario
+            WHERE MONTH(dataEntrada) = ? AND YEAR(dataEntrada) = ? AND entrega = '0'
+            ORDER BY dataEntrada ASC";
+
+    $stmt = $this->conn->prepare($sql);
+    if (!$stmt) {
+        echo "Erro na preparação da consulta: " . $this->conn->error;
+        return false;
+    }
+
+    $stmt->bind_param("ii", $mes, $ano);
+    $stmt->execute();
+    return $stmt->get_result();
+    }
+
+
 }
 ?>
