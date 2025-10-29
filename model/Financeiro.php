@@ -145,5 +145,22 @@ private $conn;
             $row = $resultado->fetch_assoc();
             return $row['total'];
     }
+    public function buscarContasPorMes($mes, $ano) {
+    $sql = "SELECT * FROM Financeiro 
+            WHERE MONTH(dataVencimento) = ? 
+              AND YEAR(dataVencimento) = ?
+            ORDER BY dataVencimento ASC";
+
+    $stmt = $this->conn->prepare($sql);
+    if (!$stmt) {
+        echo "Erro na preparação da consulta: " . $this->conn->error;
+        return false;
+    }
+
+    $stmt->bind_param("ii", $mes, $ano);
+    $stmt->execute();
+    return $stmt->get_result();
+    }
+
 }
 ?>
