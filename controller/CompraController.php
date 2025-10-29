@@ -78,16 +78,24 @@ function buscarCompra($compraModel) {
         echo "Nenhum termo de busca informado.";
     }
 }
-function adicionarProduto($compraProdutoModel) {
+function adicionarProduto($compraProdutoModel, $produtoModel) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $idProduto = $_POST['idProduto'];
             $idCompra  = $_POST['idCompra'];
             $quantidade = $_POST['quantidade'];
             $valorUnitario = $_POST['valorUnitario'];
 
-            $resultado = $compraProdutoModel->adicionarProdutoCompra($idProduto, $idCompra, $quantidade, $valorUnitario);
+            $itemExistente = $compraProdutoModel->buscarProdutoCompra($idCompra, $idProduto);
+
+            if ($itemExistente) {
+                $novaQtd = $itemExistente['quantidade'] + $quantidade;
+                $resultado = $compraProdutoModel->atualizarProdutoCompra($idCompra, $idProduto, $novaQtd, $valorUnitario);
+            } else {
+                $resultado = $compraProdutoModel->adicionarProdutoCompra($idProduto, $idCompra, $quantidade, $valorUnitario);
+            }
 
             if ($resultado) {
+                $produtoModel->aumentarEstoque($idProduto, $quantidade);
                 header("Location: ../controller/CompraController.php?acao=formProdutoCompra&id=$idCompra");
                 exit();
             } else {
@@ -95,38 +103,53 @@ function adicionarProduto($compraProdutoModel) {
             }
     }
 }
-function atualizarProduto($compraProdutoModel) {
+function atualizarProduto($compraProdutoModel, $produtoModel) {
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        
-    $idCompra   = $_POST['idCompra'];
-    $idProduto  = $_POST['idProduto'];
-    $quantidade = $_POST['quantidade'];
+        $idCompra   = $_POST['idCompra'];
+        $idProduto  = $_POST['idProduto'];
+        $quantidadeNova = $_POST['quantidade'];
+        $valorUnitario = (float) $_POST['valorUnitario'];
 
-    // limpa o "R$" e formata pra ponto decimal
-    $novoValor = str_replace(['R$', '.', ' '], ['', '', ''], $_POST['valorUnitario']);
-    $novoValor = str_replace(',', '.', $novoValor);
-    $valorUnitario = $novoValor;
+        $item = $compraProdutoModel->buscarProdutoCompra($idCompra, $idProduto);
+        $quantidadeAntiga = $item ? $item['quantidade'] : 0;
 
-    $resultado = $compraProdutoModel->atualizarProdutoCompra($idCompra, $idProduto, $quantidade, $valorUnitario);
-    if ($resultado) {
-        header("Location: ../controller/CompraController.php?acao=formAtualizar&id=$idCompra");
-        exit;
-    } else {
-        echo "Erro ao atualizar o produto na compra: " . mysqli_error($compraProdutoModel->getConnection());
-        exit;
+        $diferenca = $quantidadeNova - $quantidadeAntiga;
+
+        $resultado = $compraProdutoModel->atualizarProdutoCompra($idCompra, $idProduto, $quantidadeNova, $valorUnitario);
+
+        if ($resultado) {
+            if ($diferenca > 0) {
+                $produtoModel->aumentarEstoque($idProduto, $diferenca); // aumentou a quantidade → baixa mais estoque
+            } elseif ($diferenca < 0) {
+                $produtoModel->reduzirEstoque($idProduto, abs($diferenca));  // diminuiu a quantidade → devolve a diferença
+            }
+            header("Location: ../controller/CompraController.php?acao=formAtualizar&id=$idCompra");
+            exit;
+        } else {
+            echo "Erro ao atualizar o produto na compra: " . mysqli_error($compraProdutoModel->getConnection());
+            exit;
+        }
     }
 }
-}
-function excluirProduto($compraProdutoModel){
+function excluirProduto($compraProdutoModel, $produtoModel){
     $idCompra = $_GET['idCompra'];
     $idProduto = $_GET['id'];
-    $resultado = $compraProdutoModel->excluirProdutoCompra($idCompra, $idProduto);
-    if ($resultado) {
-        header("Location: ../controller/CompraController.php?acao=formAtualizar&id=$idCompra");
-        exit();
+
+    $item = $compraProdutoModel->buscarProdutoCompra($idCompra, $idProduto);
+
+    if ($item) {
+        $quantidade = $item['quantidade'];
+        $resultado = $compraProdutoModel->excluirProdutoCompra($idCompra, $idProduto);
+
+        if ($resultado) {
+            $produtoModel->reduzirEstoque($idProduto, $quantidade);
+            header("Location: ../controller/CompraController.php?acao=formAtualizar&id=$idCompra");
+            exit();
+        } else {
+            echo "Erro ao excluir o produto da compra! " . mysqli_error($compraProdutoModel->getConnection());
+        }
     } else {
-        echo "Erro ao excluir o produto: " . mysqli_error($compraProdutoModel->getConnection());
-        exit();
+        echo "Produto não encontrado!";
     }
 }
 function verCompra($compraModel) {
@@ -229,11 +252,11 @@ if (isset($_GET['acao'])) {
     } elseif($acao == 'buscar') {
         buscarCompra($compraModel);
     } elseif($acao == 'adicionarProduto'){
-        adicionarProduto($compraProdutoModel);
+        adicionarProduto($compraProdutoModel, $produtoModel);
     } elseif($acao == 'atualizarProduto'){
-        atualizarProduto($compraProdutoModel);
+        atualizarProduto($compraProdutoModel, $produtoModel);
     } elseif($acao == 'excluirProduto'){
-        excluirProduto($compraProdutoModel);
+        excluirProduto($compraProdutoModel, $produtoModel);
     } elseif($acao == 'ver'){
         verCompra($compraModel);
     } elseif($acao == 'formCadastrar'){ //a partir daqui
