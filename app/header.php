@@ -126,6 +126,7 @@ $primeiroNome = $nomeUsuario ? explode(' ', $nomeUsuario)[0] : '';
         <a href="/Projeto_Extensao/Controller/UsuarioController.php?acao=listar">👥 Usuários</a>
         <a href="/Projeto_Extensao/controller/CompraController.php?acao=listar">📦 Estoque</a>
         <a href="/Projeto_Extensao/controller/FinanceiroController.php?acao=listar">📊 Financeiro</a>
+        <a href="/Projeto_Extensao/controller/RelatorioController.php?acao=listar">💰 Relatórios</a>
         <a href="/Projeto_Extensao/controller/logout.php">Logout</a>
         <?php else: ?>
             <ul class="navbar-nav">
