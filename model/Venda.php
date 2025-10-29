@@ -134,5 +134,42 @@ class Venda {
         $row = $resultado->fetch_assoc();
         return $row['total'];
     }
+    public function buscarVendasPorMes($mes, $ano) {
+    $sql = "SELECT Venda.idVenda, Venda.data, Usuario.nomeUsuario,
+                Produto.nomeProduto, VendaProduto.quantidade, VendaProduto.valorUnitario
+            FROM Venda
+            INNER JOIN Usuario ON Venda.idUsuario = Usuario.idUsuario
+            INNER JOIN VendaProduto ON Venda.idVenda = VendaProduto.idVenda
+            INNER JOIN Produto ON VendaProduto.idProduto = Produto.idProduto
+            WHERE MONTH(Venda.data) = ? AND YEAR(Venda.data) = ?
+            ORDER BY Venda.data ASC";
+
+    $stmt = $this->conn->prepare($sql);
+    if (!$stmt) {
+        echo "Erro na preparação da consulta: " . $this->conn->error;
+        return false;
+    }
+
+    $stmt->bind_param("ii", $mes, $ano);
+    $stmt->execute();
+    return $stmt->get_result();
+    }
+    public function buscarProdutosPorVenda($idVenda) {
+    $sql = "SELECT Produto.nomeProduto, VendaProduto.quantidade, VendaProduto.valorUnitario
+            FROM VendaProduto
+            INNER JOIN Produto ON VendaProduto.idProduto = Produto.idProduto
+            WHERE VendaProduto.idVenda = ?";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bind_param("i", $idVenda);
+    $stmt->execute();
+    $res = $stmt->get_result();
+
+    $produtos = [];
+    while($row = $res->fetch_assoc()){
+        $produtos[] = $row;
+    }
+    return $produtos;
+    }
+
 }
 ?>
