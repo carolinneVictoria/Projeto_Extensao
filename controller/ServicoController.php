@@ -301,6 +301,39 @@ function formAtualizarProduto($servicoModel, $servicoProdutoModel, $produtoModel
     $produtos = $produtoModel->listarProdutos();
     include_once '../view/ServicoView/atualizarProdutoServico.php';
 }
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
+function exportarPDF($servicoModel, $servicoProdutoModel) {
+    require_once '../vendor/autoload.php'; // carrega o Dompdf
+
+    if (isset($_GET['id'])) {
+        $idServico = $_GET['id'];
+        $servico = $servicoModel->buscarServicoPorId($idServico);
+
+        if ($servico) {
+            $produtosAssociados = $servicoProdutoModel->listarProdutosServico($idServico);
+
+            ob_start(); // inicia buffer
+            include '../view/ServicoView/pdfServico.php'; // nova view para o PDF
+            $html = ob_get_clean(); // pega o HTML gerado
+
+            $options = new Options();
+            $options->set('isRemoteEnabled', true);
+            $dompdf = new Dompdf($options);
+            $dompdf->loadHtml($html);
+            $dompdf->setPaper('A4', 'portrait');
+            $dompdf->render();
+            $dompdf->stream("servico_$idServico.pdf", ["Attachment" => true]);
+        } else {
+            echo "Serviço não encontrado!";
+        }
+    } else {
+        echo "ID não informado!";
+    }
+}
+
+
 
 // Determina qual ação chamar com base na URL ou método
 if (isset($_GET['acao'])) {
@@ -337,9 +370,11 @@ if (isset($_GET['acao'])) {
         formProdutoServico($servicoModel, $servicoProdutoModel, $produtoModel);
     } elseif($acao == 'formAtualizarProduto'){
         formAtualizarProduto($servicoModel, $servicoProdutoModel, $produtoModel);
-    }
-} else {
+    }elseif ($acao == 'exportarPDF') {
+    exportarPDF($servicoModel, $servicoProdutoModel);
+    } else {
     // Caso nenhuma ação seja especificada, exibe a listagem
     listarServicos($servicoModel);
+    }
 }
 ?>
