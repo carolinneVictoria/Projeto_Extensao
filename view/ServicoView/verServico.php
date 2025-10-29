@@ -85,18 +85,28 @@
                 </div>
                 
                 <div class="card-footer d-flex justify-content-between">
-                    <button onclick="history.back()" class="btn btn-secondary">
-                        <i class="fas fa-arrow-left"></i> Voltar
-                    </button>
-                    <div>
-                        <a href='/Projeto_Extensao/controller/ServicoController.php?acao=formAtualizar&id=<?= htmlspecialchars($idServico); ?>' class='btn btn-warning me-2 text-white' title="Editar Serviço">
-                            <i class="fas fa-edit"></i> Editar
-                        </a>
-                        <a href='/Projeto_Extensao/controller/ServicoController.php?acao=excluir&id=<?= htmlspecialchars($idServico); ?>' class='btn btn-danger' onclick='return confirm("Tem certeza que deseja excluir?")' title="Excluir Serviço">
-                            <i class="fas fa-trash"></i> Excluir
-                        </a>
+    <button onclick="history.back()" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Voltar
+    </button>
+
+                <div>
+                    <!-- Botão de exportação para PDF -->
+                    <a href='/Projeto_Extensao/controller/ServicoController.php?acao=exportarPDF&id=<?= htmlspecialchars($idServico); ?>' class='btn btn-outline-danger me-2' title="Exportar para PDF" target="_blank">
+                        <i class="fas fa-file-pdf"></i> Exportar
+                    </a>
+
+                    <!-- Botão de edição -->
+                    <a href='/Projeto_Extensao/controller/ServicoController.php?acao=formAtualizar&id=<?= htmlspecialchars($idServico); ?>' class='btn btn-warning me-2 text-white' title="Editar Serviço">
+                        <i class="fas fa-edit"></i> Editar
+                    </a>
+
+                    <!-- Botão de exclusão -->
+                    <a href='/Projeto_Extensao/controller/ServicoController.php?acao=excluir&id=<?= htmlspecialchars($idServico); ?>' class='btn btn-danger' onclick='return confirm("Tem certeza que deseja excluir?")' title="Excluir Serviço">
+                        <i class="fas fa-trash"></i> Excluir
+                    </a>
                     </div>
                 </div>
+
             </div>
         </div>
     </div>
